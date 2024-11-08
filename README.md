@@ -74,7 +74,7 @@ Habits Together is designed to help you build and maintain positive habits by al
 | Wake Up Early     | We consider "early" any time before 7 am.                |
 | Exercise          | At least 30 minutes of exercise.                         |
 | Healthy Food      | Eat something healthy during the day (TODO).             |
-| Sufficient Sleep  | At least 6 hours of sleep.                               |
+| Sufficient Sleep  | At least 8 hours of sleep.                               |
 | Reading           | At least 15 minutes of reading.                          |
 | Daily Planning    | Spend at least 5 minutes writing your Daily Plan.        |
 | Daily Reflection  | Spend at least 5 minutes writing about your day.         |

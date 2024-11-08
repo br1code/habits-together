@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SeedService } from './services/seed/seed.service';
+import { HabitsModule } from './modules/habits/habits.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { SeedService } from './services/seed/seed.service';
       inject: [ConfigService],
     }),
     UsersModule,
+    HabitsModule,
   ],
   controllers: [],
   providers: [SeedService],
