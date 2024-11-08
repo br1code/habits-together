@@ -156,3 +156,39 @@ Habits Together is designed to help you build and maintain positive habits by al
     - `related_id` (UUID, optional) - References related entity (e.g., HabitLog ID)
     - `xp_gained` (integer)
     - `created_at` (timestamp)
+
+TODO:
+
+- UserFriendship
+
+## API Endpoints
+
+### Habits
+
+#### `GET /api/habits` ✅
+
+Retrieves all non-deleted habits of the authenticated User.
+
+- **Response:**
+
+  - **Status:** `200 OK`
+  - **Body:**
+
+    ```json
+    [
+      {
+        "id": "uuid",
+        "name": "Exercise",
+        "rules": "At least 30 minutes of exercise"
+      },
+      {
+        "id": "uuid",
+        "name": "Sufficient Sleep",
+        "rules": "At least 8 hours of sleep"
+      }
+    ]
+    ```
+
+## Frontend Pages/Routes
+
+TODO
