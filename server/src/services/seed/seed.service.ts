@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { User } from 'src/modules/users/entities/user.entity';
 import { Habit } from 'src/modules/habits/entities/habit.entity';
 
@@ -39,16 +40,19 @@ export class SeedService {
       {
         username: 'admin',
         email: 'brunogiovagnoli@gmail.com',
-        password: 'password123', // TODO: encrypt
+        password: 'password123', // Plain text password
       },
       {
         username: 'cassie',
         email: 'cassiegiovagnoli@gmail.com',
-        password: 'password123', // TODO: encrypt
+        password: 'password123', // Plain text password
       },
     ];
 
     for (const userData of users) {
+      const hashedPassword = await bcrypt.hash(userData.password, 10);
+      userData.password = hashedPassword;
+
       const user = this.usersRepository.create(userData);
       await this.usersRepository.save(user);
     }

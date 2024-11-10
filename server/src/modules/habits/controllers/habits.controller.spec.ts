@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HabitsController } from './habits.controller';
-import { HabitsService } from './services/habits.service';
-import { ReadHabitDto } from './dtos/read-habit.dto';
+import { ReadHabitDto } from '../dtos/read-habit.dto';
+import { HabitsService } from '../services/habits.service';
 
 describe('HabitsController', () => {
   let habitsController: HabitsController;
@@ -28,20 +28,21 @@ describe('HabitsController', () => {
 
   it('should call HabitsService.getHabits with the correct user ID', async () => {
     // Arrange
-    const userId = 'user-id'; // TODO: update after implementing auth middleware
+    const user = { userId: 'test-user-id', username: 'test-user' };
     const getHabitsSpy = jest
       .spyOn(habitsService, 'getHabits')
       .mockResolvedValue([]);
 
     // Act
-    await habitsController.getHabits();
+    await habitsController.getHabits(user);
 
     // Assert
-    expect(getHabitsSpy).toHaveBeenCalledWith(userId);
+    expect(getHabitsSpy).toHaveBeenCalledWith(user.userId);
   });
 
   it('should return an array of habits from getHabits', async () => {
     // Arrange
+    const user = { userId: 'test-user-id', username: 'test-user' };
     const mockHabits: ReadHabitDto[] = [
       { id: '1', name: 'Exercise', rules: 'At least 30 minutes' },
       { id: '2', name: 'Read', rules: 'At least 20 pages' },
@@ -49,7 +50,7 @@ describe('HabitsController', () => {
     jest.spyOn(habitsService, 'getHabits').mockResolvedValue(mockHabits);
 
     // Act
-    const result = await habitsController.getHabits();
+    const result = await habitsController.getHabits(user);
 
     // Assert
     expect(result).toEqual(mockHabits);
@@ -57,10 +58,13 @@ describe('HabitsController', () => {
 
   it('should handle errors thrown by HabitsService.getHabits', async () => {
     // Arrange
+    const user = { userId: 'test-user-id', username: 'test-user' };
     const error = new Error('Failed to fetch habits');
     jest.spyOn(habitsService, 'getHabits').mockRejectedValue(error);
 
     // Act & Assert
-    await expect(habitsController.getHabits()).rejects.toThrow(error.message);
+    await expect(habitsController.getHabits(user)).rejects.toThrow(
+      error.message,
+    );
   });
 });

@@ -1,10 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.setGlobalPrefix('api');
 
   const configService = app.get(ConfigService);
@@ -23,7 +25,7 @@ async function bootstrap() {
   // TODO: can we use HTTPS?
 
   const port = configService.get<number>('PORT', 5000);
-
   await app.listen(port);
 }
+
 bootstrap();

@@ -4,6 +4,9 @@ import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SeedService } from './services/seed/seed.service';
 import { HabitsModule } from './modules/habits/habits.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -26,9 +29,16 @@ import { HabitsModule } from './modules/habits/habits.module';
     }),
     UsersModule,
     HabitsModule,
+    AuthModule,
   ],
   controllers: [],
-  providers: [SeedService],
+  providers: [
+    SeedService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule implements OnModuleInit {
   constructor(
