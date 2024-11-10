@@ -163,6 +163,76 @@ TODO:
 
 ## API Endpoints
 
+### Auth
+
+#### `POST /api/auth/signup` ✅
+
+Sign up a new user.
+
+- **Request:**
+
+  - **Headers:**
+
+    - `Content-Type: application/json`
+
+  - **Body:**
+
+    ```json
+    {
+      "username": "testuser",
+      "email": "test@example.com",
+      "password": "strongpassword"
+    }
+    ```
+
+- **Response:**
+
+  - **Status:** `201 Created`
+  - **Body:**
+
+    ```json
+    {
+      "username": "testuser",
+      "email": "test@example.com",
+      "profile_picture_url": null,
+      "id": "dcd2f64a-4279-4694-8355-c92bf3afc34a",
+      "level": 1,
+      "experience_points": 0,
+      "created_at": "2024-11-10T23:17:43.884Z",
+      "updated_at": "2024-11-10T23:17:43.884Z"
+    }
+    ```
+
+#### `POST /api/auth/login` ✅
+
+Login existing user with their credentials.
+
+- **Request:**
+
+  - **Headers:**
+
+    - `Content-Type: application/json`
+
+  - **Body:**
+
+    ```json
+    {
+      "username": "testuser",
+      "password": "strongpassword"
+    }
+    ```
+
+- **Response:**
+
+  - **Status:** `201 Created`
+  - **Body:**
+
+    ```json
+    {
+      "access_token": "eyJhbGciOiJIU..."
+    }
+    ```
+
 ### Habits
 
 #### `GET /api/habits` ✅
@@ -187,6 +257,26 @@ Retrieves all non-deleted habits of the authenticated User.
         "rules": "At least 8 hours of sleep"
       }
     ]
+    ```
+
+### Users
+
+#### `GET /api/users/profile` ✅
+
+Retrieves information about the authenticated user.
+
+- **Response:**
+
+  - **Status:** `200 OK`
+  - **Body:**
+
+    ```json
+    {
+      "id": "876b197c-a2d1-485d-9fb2-e933ef0853a5",
+      "username": "cassie",
+      "email": "cassiegiovagnoli@gmail.com",
+      "profile_picture_url": null
+    }
     ```
 
 ## Frontend Pages/Routes
