@@ -2,6 +2,31 @@
 
 A personal habit-tracking app that fosters community accountability through validations, comments, and gamification elements to make habit-building engaging and fun.
 
+## Table of Contents
+
+- [Habits Together](#habits-together)
+  - [Table of Contents](#table-of-contents)
+  - [Description](#description)
+  - [Features](#features)
+  - [Technologies Used](#technologies-used)
+  - [Requirements](#requirements)
+  - [Examples](#examples)
+  - [Database Entities](#database-entities)
+  - [API Endpoints](#api-endpoints)
+    - [Auth](#auth)
+      - [`POST /api/auth/signup` ✅](#post-apiauthsignup-)
+      - [`POST /api/auth/login` ✅](#post-apiauthlogin-)
+    - [Users](#users)
+      - [`GET /api/users/profile` ✅](#get-apiusersprofile-)
+    - [Habits](#habits)
+      - [`GET /api/habits` ✅](#get-apihabits-)
+      - [`POST /api/habits` ✅](#post-apihabits-)
+      - [`PUT /api/habits/{id}` ✅](#put-apihabitsid-)
+      - [`DELETE /api/habits/{id}` ✅](#delete-apihabitsid-)
+  - [Frontend Pages/Routes](#frontend-pagesroutes)
+
+---
+
 ## Description
 
 Habits Together is designed to help you build and maintain positive habits by allowing you to create personal habits and share your progress with your friends. While each user works on their own habits, the app encourages accountability and support through validations and comments from other users. To make the experience more engaging, Habits Together incorporates gamification features like earning experience points, leveling up, and character progression, similar to RPG games.
@@ -167,7 +192,7 @@ TODO:
 
 #### `POST /api/auth/signup` ✅
 
-Sign up a new user.
+Signs up a new user.
 
 - **Request:**
 
@@ -233,6 +258,26 @@ Login existing user with their credentials.
     }
     ```
 
+### Users
+
+#### `GET /api/users/profile` ✅
+
+Retrieves information about the authenticated user.
+
+- **Response:**
+
+  - **Status:** `200 OK`
+  - **Body:**
+
+    ```json
+    {
+      "id": "876b197c-a2d1-485d-9fb2-e933ef0853a5",
+      "username": "cassie",
+      "email": "cassiegiovagnoli@gmail.com",
+      "profile_picture_url": null
+    }
+    ```
+
 ### Habits
 
 #### `GET /api/habits` ✅
@@ -259,11 +304,60 @@ Retrieves all non-deleted habits of the authenticated User.
     ]
     ```
 
-### Users
+#### `POST /api/habits` ✅
 
-#### `GET /api/users/profile` ✅
+Adds a new habit for the authenticated user.
 
-Retrieves information about the authenticated user.
+- **Request:**
+
+  - **Headers:**
+
+    - `Content-Type: application/json`
+
+  - **Body:**
+
+    ```json
+    {
+      "name": "Exercise",
+      "rules": "At least 30 minutes of exercise"
+    }
+    ```
+
+- **Response:**
+
+  - **Status:** `201 Created`
+  - **Body:**
+
+    ```json
+    {
+      "id": "uuid",
+      "name": "Exercise",
+      "rules": "At least 30 minutes of exercise"
+    }
+    ```
+
+#### `PUT /api/habits/{id}` ✅
+
+Updates an existing habit.
+
+- **Parameters:**
+
+  - `id` (required): UUID of the habit to update.
+
+- **Request:**
+
+  - **Headers:**
+
+    - `Content-Type: application/json`
+
+  - **Body:**
+
+    ```json
+    {
+      "name": "Habit Name",
+      "rules": "Habit Rules"
+    }
+    ```
 
 - **Response:**
 
@@ -272,12 +366,23 @@ Retrieves information about the authenticated user.
 
     ```json
     {
-      "id": "876b197c-a2d1-485d-9fb2-e933ef0853a5",
-      "username": "cassie",
-      "email": "cassiegiovagnoli@gmail.com",
-      "profile_picture_url": null
+      "id": "uuid",
+      "name": "Exercise",
+      "rules": "At least 30 minutes of exercise"
     }
     ```
+
+#### `DELETE /api/habits/{id}` ✅
+
+Soft-deletes a habit.
+
+- **Parameters:**
+
+  - `id` (required): UUID of the habit to soft-delete.
+
+- **Response:**
+
+  - **Status:** `204 No Content`
 
 ## Frontend Pages/Routes
 
