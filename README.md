@@ -23,7 +23,12 @@ A personal habit-tracking app that fosters community accountability through vali
       - [`POST /api/habits` ✅](#post-apihabits-)
       - [`PUT /api/habits/{id}` ✅](#put-apihabitsid-)
       - [`DELETE /api/habits/{id}` ✅](#delete-apihabitsid-)
+    - [Habit Logs](#habit-logs)
+      - [`GET /api/logs`](#get-apilogs)
   - [Frontend Pages/Routes](#frontend-pagesroutes)
+    - [Login `/login`](#login-login)
+    - [Signup `/signup`](#signup-signup)
+    - [Home `/`](#home-)
 
 ---
 
@@ -254,7 +259,7 @@ Login existing user with their credentials.
 
     ```json
     {
-      "access_token": "eyJhbGciOiJIU..."
+      "accessToken": "eyJhbGciOiJIU..."
     }
     ```
 
@@ -384,6 +389,76 @@ Soft-deletes a habit.
 
   - **Status:** `204 No Content`
 
+### Habit Logs
+
+#### `GET /api/logs`
+
+TODO
+
 ## Frontend Pages/Routes
+
+### Login `/login`
+
+> If user is already authenticated, it gets redirected to `/`
+
+Allows users to login with their credentials.
+
+Displays a form with the following inputs:
+
+- Text input for the username.
+- Password input for the password.
+- Login button.
+- Link to the signup page (text example: "Don't have an account? Signup here").
+
+Basic client-validation must be implemented (example: required fields, min length?).
+
+The Login button sends a POST request to `/api/auth/login` with the following body:
+
+```json
+{
+  "username": "admin",
+  "password": "password123"
+}
+```
+
+If the request failed, we should display user-friendly errors.
+
+If the request is successfull, we must store the `accessToken` from the response somewhere locally, and use it to execute any following requests to the API (TODO: using an Interceptor or something similar? Find a library.) After that, the user gets redirected to `/`.
+
+The Signup link redirects the page to `/signup`.
+
+### Signup `/signup`
+
+> If user is already authenticated, it gets redirected to `/`
+
+Allows new people to create an user account.
+
+Displays a form with the following inputs:
+
+- Text input for the username.
+- Text input for the email.
+- Password input for the password.
+- Signup button.
+- Link to the login page (text example: "Already have an account? Login here").
+
+Basic client-validation must be implemented (example: required fields, min length?).
+
+The Signup button sends a POST request to `/api/auth/signup` with the following body:
+
+```json
+{
+  "username": "testuser",
+  "email": "test@example.com",
+  "password": "strongpassword"
+}
+```
+
+If the request failed, we must display the server errors (example: 'Username already exists');
+
+If the request is sucessfull, we should display a "User successfully created" notification. After that, the page gets redirected to `/login`.
+
+### Home `/`
+
+> If user is not authenticated, it gets redirected to `/login`
 
 TODO
