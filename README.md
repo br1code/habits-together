@@ -14,21 +14,37 @@ A personal habit-tracking app that fosters community accountability through vali
   - [Database Entities](#database-entities)
   - [API Endpoints](#api-endpoints)
     - [Auth](#auth)
-      - [`POST /api/auth/signup` ✅](#post-apiauthsignup-)
+      - [`POST /api/auth/signup`](#post-apiauthsignup)
       - [`POST /api/auth/login` ✅](#post-apiauthlogin-)
     - [Users](#users)
-      - [`GET /api/users/profile` ✅](#get-apiusersprofile-)
+      - [`GET /api/users/profile`](#get-apiusersprofile)
+    - [`GET api/users/friends`](#get-apiusersfriends)
+      - [`GET /api/users/friends/{id}`](#get-apiusersfriendsid)
     - [Habits](#habits)
-      - [`GET /api/habits` ✅](#get-apihabits-)
+      - [`GET /api/habits`](#get-apihabits)
+      - [`GET /api/habits/{id}`](#get-apihabitsid)
       - [`POST /api/habits` ✅](#post-apihabits-)
       - [`PUT /api/habits/{id}` ✅](#put-apihabitsid-)
       - [`DELETE /api/habits/{id}` ✅](#delete-apihabitsid-)
     - [Habit Logs](#habit-logs)
-      - [`GET /api/logs`](#get-apilogs)
+      - [`GET /api/logs/?habitId={uuid}&pageNumber={number}&pageSize={number}`](#get-apilogshabitiduuidpagenumbernumberpagesizenumber)
+      - [`GET /api/logs/{id}`](#get-apilogsid)
+      - [`POST /api/logs`](#post-apilogs)
+      - [`DELETE /api/logs/{id}`](#delete-apilogsid)
   - [Frontend Pages/Routes](#frontend-pagesroutes)
+    - [Shared/Layout](#sharedlayout)
     - [Login `/login`](#login-login)
     - [Signup `/signup`](#signup-signup)
     - [Home `/`](#home-)
+    - [Profile `/profile`](#profile-profile)
+    - [Habits `/habits`](#habits-habits)
+    - [View Habit `/habits/{id}`](#view-habit-habitsid)
+    - [Create Habit `/habits/new`](#create-habit-habitsnew)
+    - [Edit Habit `/habits/{id}/edit`](#edit-habit-habitsidedit)
+    - [Log Habit](#log-habit)
+    - [View Habit Log](#view-habit-log)
+    - [Friends `/friends`](#friends-friends)
+    - [View Friend `/friends/{id}`](#view-friend-friendsid)
 
 ---
 
@@ -195,7 +211,7 @@ TODO:
 
 ### Auth
 
-#### `POST /api/auth/signup` ✅
+#### `POST /api/auth/signup`
 
 Signs up a new user.
 
@@ -224,12 +240,12 @@ Signs up a new user.
     {
       "username": "testuser",
       "email": "test@example.com",
-      "profile_picture_url": null,
+      "profilePictureUrl": null,
       "id": "dcd2f64a-4279-4694-8355-c92bf3afc34a",
       "level": 1,
-      "experience_points": 0,
-      "created_at": "2024-11-10T23:17:43.884Z",
-      "updated_at": "2024-11-10T23:17:43.884Z"
+      "experiencePoints": "0/100",
+      "createdAt": "2024-11-10T23:17:43.884Z",
+      "updatedAt": "2024-11-10T23:17:43.884Z"
     }
     ```
 
@@ -265,7 +281,7 @@ Login existing user with their credentials.
 
 ### Users
 
-#### `GET /api/users/profile` ✅
+#### `GET /api/users/profile`
 
 Retrieves information about the authenticated user.
 
@@ -278,14 +294,64 @@ Retrieves information about the authenticated user.
     {
       "id": "876b197c-a2d1-485d-9fb2-e933ef0853a5",
       "username": "cassie",
-      "email": "cassiegiovagnoli@gmail.com",
-      "profile_picture_url": null
+      "profilePictureUrl": null,
+      "level": 1,
+      "experiencePoints": "0/100"
+    }
+    ```
+
+### `GET api/users/friends`
+
+Retrieves a list of the user's friends.
+
+**NOTE: UPDATE AFTER IMPLEMENTING FRIENSHIP ENTITY.**
+
+- **Response:**
+
+  - **Status:** `200 OK`
+  - **Body:**
+
+    ```json
+    [
+      {
+        "id": "876b197c-a2d1-485d-9fb2-e933ef0853a5",
+        "username": "cassie",
+        "profile_picture_url": null,
+        "level": 1,
+        "experience_points": 0
+      },
+      {
+        "id": "876b197c-a2d1-485d-9fb2-e933ef0853a5",
+        "username": "cassie",
+        "profile_picture_url": null,
+        "level": 1,
+        "experience_points": 0
+      }
+    ]
+    ```
+
+#### `GET /api/users/friends/{id}`
+
+Retrieves information about a friend.
+
+- **Response:**
+
+  - **Status:** `200 OK`
+  - **Body:**
+
+    ```json
+    {
+      "id": "876b197c-a2d1-485d-9fb2-e933ef0853a5",
+      "username": "cassie",
+      "profile_picture_url": null,
+      "level": 1,
+      "experience_points": 0
     }
     ```
 
 ### Habits
 
-#### `GET /api/habits` ✅
+#### `GET /api/habits`
 
 Retrieves all non-deleted habits of the authenticated User.
 
@@ -299,14 +365,39 @@ Retrieves all non-deleted habits of the authenticated User.
       {
         "id": "uuid",
         "name": "Exercise",
-        "rules": "At least 30 minutes of exercise"
+        "rules": "At least 30 minutes of exercise",
+        "wasLogged": true,
+        "wasValidated": false
       },
       {
         "id": "uuid",
         "name": "Sufficient Sleep",
-        "rules": "At least 8 hours of sleep"
+        "rules": "At least 8 hours of sleep",
+        "wasLogged": true,
+        "wasValidated": false
       }
     ]
+    ```
+
+#### `GET /api/habits/{id}`
+
+Retrieves a specific habit.
+
+- **Response:**
+
+  - **Status:** `200 OK`
+  - **Body:**
+
+    ```json
+      {
+        "id": "uuid",
+        "name": "Exercise",
+        "rules": "At least 30 minutes of exercise",
+        "wasLogged": true,
+        "wasValidated": false,
+        "currentStreak": 1,
+        "highestStreak": 10
+      },
     ```
 
 #### `POST /api/habits` ✅
@@ -391,15 +482,116 @@ Soft-deletes a habit.
 
 ### Habit Logs
 
-#### `GET /api/logs`
+#### `GET /api/logs/?habitId={uuid}&pageNumber={number}&pageSize={number}`
 
-TODO
+Retrieves habit logs, optionally filtered by habitId. Sorted by date (recent first). Paginated.
+
+- **Parameters:**
+
+  - `habitId` (optional): Optional habit to filter logs by.
+    - If `habitId` isn't provided, the endpoint returns logs from any user.
+    - Otherwise the endpoint returns only logs from the given habit (for the owner user).
+  - `pageNumber`: Optional page number for pagination. Defaults to 1.
+  - `pageSize`: Optional page size for pagination. If not provided, all matching questions are returned.
+
+- **Response:**
+
+  - **Status:** `200 OK`
+  - **Body:**
+
+    ```json
+    [
+      {
+        "id": "uuid",
+        "habitId": "uuid",
+        "textEntry": "Text Entry",
+        "photoUrl": "Photo Url",
+        "createdAt": "date",
+        "wasValidated": true
+      }
+    ]
+    ```
+
+#### `GET /api/logs/{id}`
+
+Retrieves a specific habit log.
+
+- **Response:**
+
+  - **Status:** `200 OK`
+  - **Body:**
+
+    ```json
+    {
+      "id": "uuid",
+      "habitId": "uuid",
+      "textEntry": "Text Entry",
+      "photoUrl": "Photo Url",
+      "createdAt": "date",
+      "wasValidated": true
+    }
+    ```
+
+#### `POST /api/logs`
+
+Adds a new log for a habit.
+
+- **Request:**
+
+  - **Headers:**
+
+    - `Content-Type: multipart/form-data`
+
+  - **Form Data:**
+
+    - `habitId`: `string` - The id of the habit.
+    - `picture`: `File` - Image file as the "proof" of the habit.
+    - `text`: `string` - Optional text entry as proof of the habit.
+
+- **Response:**
+
+  - **Status:** `201 Created`
+  - **Body:**
+    ```json
+    {
+      "id": "uuid"
+    }
+    ```
+
+#### `DELETE /api/logs/{id}`
+
+Deletes a habit log.
+
+- **Parameters:**
+
+  - `id` (required): UUID of the habit to delete.
+
+- **Response:**
+
+  - **Status:** `204 No Content`
 
 ## Frontend Pages/Routes
 
+### Shared/Layout
+
+**User is authenticated:**
+
+Displays a navbar with the following links:
+
+- Hamburguer menu button:
+  - Profile: `/profile`
+  - Habits: `/habits`
+  - Friends: `/friends`
+- Logo image: `/`
+- Log Habit button: `/add-log` (TBD)
+
+**User is not authenticated:**
+
+Displays a navbar with a logo `/` (no action links, no menu, etc).
+
 ### Login `/login`
 
-> If user is already authenticated, it gets redirected to `/`
+**If user is already authenticated, it gets redirected to `/`**
 
 Allows users to login with their credentials.
 
@@ -429,7 +621,7 @@ The Signup link redirects the page to `/signup`.
 
 ### Signup `/signup`
 
-> If user is already authenticated, it gets redirected to `/`
+**If user is already authenticated, it gets redirected to `/`**
 
 Allows new people to create an user account.
 
@@ -455,10 +647,116 @@ The Signup button sends a POST request to `/api/auth/signup` with the following 
 
 If the request failed, we must display the server errors (example: 'Username already exists');
 
-If the request is sucessfull, we should display a "User successfully created" notification. After that, the page gets redirected to `/login`.
+If the request is sucessfull, we should display a "User successfully created" alert. After that, the page gets redirected to `/login`.
 
 ### Home `/`
 
 > If user is not authenticated, it gets redirected to `/login`
 
+- Displays a header with statistics of your daily habits (example: Today's habits: 3/10).
+
+  - Users can click this header to go to the habits page `/habits`.
+  - This data can be obtained by executing a GET request to `/api/habits`
+
+- Displays a timeline with the latest habit logs from everyone, similar to how the Instagram/Facebook feed works (with infinite scroll).
+  - Each Habit Log item contains:
+    - Username
+    - Created date (relative, example: "2 hours ago")
+    - Picture
+    - Habit Name
+  - Users can click on these items to go to the View Habit Log page `/logs/{id}`
+  - This data can be obtained by executing a GET request to `/api/logs`
+
+### Profile `/profile`
+
+- Displays the following information about the current user:
+  - Profile picture
+    - Users can click here to update the picture. (TBD)
+  - Username
+  - Email
+  - Level
+  - Experience points (example: "0/100")
+- This data can be obtained by executing a GET request to `/api/users/profile`
+
+### Habits `/habits`
+
+- Displays a "Add Habit" button. Redirects to `/habits/new`
+- Displays a header with the number of logged habits vs total habits (example: "Logged habits: 1/4")
+- Displays a list of your habits:
+  - Each item contains the following data or action items:
+    - Habit Name
+    - Habit Was Logged Icon (☑️)
+    - Habit Was Validated Icon (✅)
+    - View/Edit button 📂: Redirects to `/habits/{id}`
+- The data for this page can be obtained by executing a GET request to `/api/habits`
+
+### View Habit `/habits/{id}`
+
+- Displays the name of the Habit.
+- Displays an alert with information about whether the habit was not logged/validated yet (for the current day).
+- Displays an Edit Habit button: Redirects to `/habits/{id}/edit`
+- Displays a Delete Habit button:
+  - User must confirm before deleting the Habit.
+  - Executes a DELETE request to `/api/habits/{id}`.
+  - After success deletion, redirects to `habits`.
+- Displays a label with information about the current streak, and the highest streak achieved.
+  - Example: "Current Streak: 5 days (Highest: 14 days)"
+- The data for most of this page can be obtained by executing a GET request to `/api/habits/{id}`
+- Displays a list of the latest logs for the habit.
+  - Each item contains the following information:
+    - Created date
+    - An icon indicating whether the log was validated (✅)
+  - The list is sorted by date (recent first).
+  - Users can click to view more details about a Habit Log: Redirects to `/logs/{id}`
+  - The data for this list can be obtained by executing a GET request to `/api/logs/?habitId={uuid}`
+
+### Create Habit `/habits/new`
+
+Allows users to create a new habit.
+
+- Displays a form with the following fields:
+  - Name: input text, required.
+  - Rules: textarea, required.
+  - Create button.
+- Submitting the form will send a POST request to `/api/habits`
+
+### Edit Habit `/habits/{id}/edit`
+
+Allows users to update an existing habit.
+
+- Displays a form with the following fields:
+  - Name: input text, required.
+  - Rules: textarea, required.
+  - Save button.
+- Submitting the form will send a PUT request to `/api/habits/{id}`
+
+### Log Habit
+
+Allows users to submit a log for a Habit.
+
 TODO
+
+### View Habit Log
+
+Allows users to view information about a specific Habit Log, including its comments.
+
+TODO
+
+### Friends `/friends`
+
+Displays a list all users (except the current user):
+
+- Each item contains the following information and action items:
+  - Name
+  - View button: Redirects to `/friends/{id}`
+- This data can be obtained by executing a GET request to `/api/users/friends`
+
+### View Friend `/friends/{id}`
+
+- Displays the following information about the friend:
+  - Profile picture
+  - Username
+  - Email
+  - Level
+  - Experience points (example: "0/100")
+- This data can be obtained by executing a GET request to `/api/users/friends/{id}`
