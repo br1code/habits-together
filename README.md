@@ -31,6 +31,9 @@ A personal habit-tracking app that fosters community accountability through vali
       - [`GET /api/logs/{id}`](#get-apilogsid)
       - [`POST /api/logs`](#post-apilogs)
       - [`DELETE /api/logs/{id}`](#delete-apilogsid)
+      - [`POST /api/logs/{id}/validate`](#post-apilogsidvalidate)
+      - [`GET /api/logs/{logId}/comments`](#get-apilogslogidcomments)
+      - [`POST /api/logs/{logId}/comments`](#post-apilogslogidcomments)
   - [Frontend Pages/Routes](#frontend-pagesroutes)
     - [Shared/Layout](#sharedlayout)
     - [Login `/login`](#login-login)
@@ -41,8 +44,8 @@ A personal habit-tracking app that fosters community accountability through vali
     - [View Habit `/habits/{id}`](#view-habit-habitsid)
     - [Create Habit `/habits/new`](#create-habit-habitsnew)
     - [Edit Habit `/habits/{id}/edit`](#edit-habit-habitsidedit)
-    - [Log Habit](#log-habit)
-    - [View Habit Log](#view-habit-log)
+    - [Log Habit `/logs/new`](#log-habit-logsnew)
+    - [View Habit Log `/logs/{id}`](#view-habit-log-logsid)
     - [Friends `/friends`](#friends-friends)
     - [View Friend `/friends/{id}`](#view-friend-friendsid)
 
@@ -234,7 +237,7 @@ Signs up a new user.
 - **Response:**
 
   - **Status:** `201 Created`
-  - **Body:**
+  - **Body:** (TODO: review)
 
     ```json
     {
@@ -422,7 +425,7 @@ Adds a new habit for the authenticated user.
 - **Response:**
 
   - **Status:** `201 Created`
-  - **Body:**
+  - **Body:** (TODO: review)
 
     ```json
     {
@@ -507,7 +510,7 @@ Retrieves habit logs, optionally filtered by habitId. Sorted by date (recent fir
         "textEntry": "Text Entry",
         "photoUrl": "Photo Url",
         "createdAt": "date",
-        "wasValidated": true
+        "validatedBy": ["Username 1", "Username 2"]
       }
     ]
     ```
@@ -528,7 +531,7 @@ Retrieves a specific habit log.
       "textEntry": "Text Entry",
       "photoUrl": "Photo Url",
       "createdAt": "date",
-      "wasValidated": true
+      "validatedBy": ["Username 1", "Username 2"]
     }
     ```
 
@@ -545,13 +548,13 @@ Adds a new log for a habit.
   - **Form Data:**
 
     - `habitId`: `string` - The id of the habit.
-    - `picture`: `File` - Image file as the "proof" of the habit.
+    - `photo`: `File` - Image file as the "proof" of the habit.
     - `text`: `string` - Optional text entry as proof of the habit.
 
 - **Response:**
 
   - **Status:** `201 Created`
-  - **Body:**
+  - **Body:** (TODO: review)
     ```json
     {
       "id": "uuid"
@@ -569,6 +572,63 @@ Deletes a habit log.
 - **Response:**
 
   - **Status:** `204 No Content`
+
+#### `POST /api/logs/{id}/validate`
+
+Validates a Habit Log from a friend (can be performed only once by the same user).
+
+- **Response:**
+
+  - **Status:** `204 No Content`
+
+#### `GET /api/logs/{logId}/comments`
+
+Retrieves the comments made to a Habit Log.
+
+- **Response:**
+
+  - **Status:** `200 OK`
+  - **Body:**
+
+    ```json
+    [
+      {
+        "id": "uuid",
+        "username": "Username 1",
+        "text": "Good job!",
+        "createdAt": "date"
+      }
+    ]
+    ```
+
+#### `POST /api/logs/{logId}/comments`
+
+Adds a new comment to a Habit Log.
+
+- **Request:**
+
+  - **Headers:**
+
+    - `Content-Type: application/json`
+
+  - **Body:**
+
+    ```json
+    {
+      "text": "Good job!"
+    }
+    ```
+
+- **Response:**
+
+  - **Status:** `201 Created`
+  - **Body:** (TODO: review)
+
+    ```json
+    {
+      "id": "uuid"
+    }
+    ```
 
 ## Frontend Pages/Routes
 
@@ -730,17 +790,56 @@ Allows users to update an existing habit.
   - Save button.
 - Submitting the form will send a PUT request to `/api/habits/{id}`
 
-### Log Habit
+### Log Habit `/logs/new`
 
-Allows users to submit a log for a Habit.
+Allows users to submit a Log for a Habit.
 
-TODO
+- Displays a form with the following fields:
+  - Displays a dropdown for selecting the Habit to log:
+    - Habit Dropdown:
+      - Allows the user to select the Habit to log.
+      - The items for the dropdown can be obtained by executing a GET request to `/api/habits`. Items that were already logged shouldn't be visible.
+  - Picture input:
+    - User should be able to take a picture or select a file from the device.
+  - Text entry (optional): Textarea
+  - Save button.
+- Submitting the form will send a POST request to `/api/logs`
 
-### View Habit Log
+### View Habit Log `/logs/{id}`
 
-Allows users to view information about a specific Habit Log, including its comments.
+Allows users to view information about a specific Habit Log. Users can view and add comments to the Habit Log. Users can validate Habit Logs from their friends. Users can delete a Habit Log (only if they own the Habit Log).
 
-TODO
+- Displays information about the Habit Log:
+
+  - Fields:
+    - Username (owner)
+    - Photo
+    - Habit Name
+    - Created date (relative)
+    - Validated by / Not Validated
+  - The information about the Habit Log can be obtained by executing a GET request to `/api/logs/{id}`.
+
+- Displays a Delete Log button.
+
+  - Only visible to the owner of the Habit Log.
+  - User must confirm the deletion.
+  - Sends a DELETE request to `/api/logs/{id}`.
+
+- Displays a Validate button for validating the habit Log.
+
+  - Not visible to the owner of the Habit Log.
+  - Not visible if the current user already validated the Habit Log.
+  - User must confirm the action.
+  - Sends a POST request to `/api/logs/{id}/validate`.
+
+- Displays a list of the comments made to the Habit Log.
+  - Comment fields:
+    - Username
+    - Comment text
+    - Created Date (relative)
+  - The list of comments can be obtained by executing a GET request to `/api/logs/{logId}/comments`
+- Displays a text input for adding a new comment, including a Add Comment button.
+  - Executes a POST request to `/api/logs/{logId}/comments`
 
 ### Friends `/friends`
 
