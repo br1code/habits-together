@@ -8,6 +8,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { HabitLogsModule } from './modules/habit-logs/habit-logs.module';
+import { FileStorageModule } from './modules/file-storage/file-storage.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { HabitLogsModule } from './modules/habit-logs/habit-logs.module';
     HabitsModule,
     AuthModule,
     HabitLogsModule,
+    FileStorageModule,
   ],
   controllers: [],
   providers: [
