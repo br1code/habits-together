@@ -18,11 +18,11 @@ A personal habit-tracking app that fosters community accountability through vali
       - [`POST /api/auth/login` ✅](#post-apiauthlogin-)
     - [Users](#users)
       - [`GET /api/users/profile` ✅](#get-apiusersprofile-)
-    - [`GET api/users/friends` ✅](#get-apiusersfriends-)
+      - [`GET api/users/friends` ✅](#get-apiusersfriends-)
       - [`GET /api/users/friends/{id}` ✅](#get-apiusersfriendsid-)
     - [Habits](#habits)
-      - [`GET /api/habits`](#get-apihabits)
-      - [`GET /api/habits/{id}`](#get-apihabitsid)
+      - [`GET /api/habits` ✅ (🔨 waiting for implementation of Habit Log)](#get-apihabits---waiting-for-implementation-of-habit-log)
+      - [`GET /api/habits/{id}` ✅ (🔨 waiting for implementation of Habit Log and streaks)](#get-apihabitsid---waiting-for-implementation-of-habit-log-and-streaks)
       - [`POST /api/habits` ✅](#post-apihabits-)
       - [`PUT /api/habits/{id}` ✅](#put-apihabitsid-)
       - [`DELETE /api/habits/{id}` ✅](#delete-apihabitsid-)
@@ -295,7 +295,7 @@ Retrieves information about the authenticated user.
     }
     ```
 
-### `GET api/users/friends` ✅
+#### `GET api/users/friends` ✅
 
 Retrieves a list of the user's friends.
 
@@ -341,7 +341,7 @@ Retrieves information about a friend.
 
 ### Habits
 
-#### `GET /api/habits`
+#### `GET /api/habits` ✅ (🔨 waiting for implementation of Habit Log)
 
 Retrieves all non-deleted habits of the authenticated User.
 
@@ -355,21 +355,13 @@ Retrieves all non-deleted habits of the authenticated User.
       {
         "id": "uuid",
         "name": "Exercise",
-        "rules": "At least 30 minutes of exercise",
-        "wasLogged": true,
-        "wasValidated": false
-      },
-      {
-        "id": "uuid",
-        "name": "Sufficient Sleep",
-        "rules": "At least 8 hours of sleep",
         "wasLogged": true,
         "wasValidated": false
       }
     ]
     ```
 
-#### `GET /api/habits/{id}`
+#### `GET /api/habits/{id}` ✅ (🔨 waiting for implementation of Habit Log and streaks)
 
 Retrieves a specific habit.
 
@@ -412,14 +404,10 @@ Adds a new habit for the authenticated user.
 - **Response:**
 
   - **Status:** `201 Created`
-  - **Body:** (TODO: review)
+  - **Body:**
 
-    ```json
-    {
-      "id": "uuid",
-      "name": "Exercise",
-      "rules": "At least 30 minutes of exercise"
-    }
+    ```
+    uuid
     ```
 
 #### `PUT /api/habits/{id}` ✅
@@ -447,16 +435,7 @@ Updates an existing habit.
 
 - **Response:**
 
-  - **Status:** `200 OK`
-  - **Body:**
-
-    ```json
-    {
-      "id": "uuid",
-      "name": "Exercise",
-      "rules": "At least 30 minutes of exercise"
-    }
-    ```
+  - **Status:** `204 OK`
 
 #### `DELETE /api/habits/{id}` ✅
 

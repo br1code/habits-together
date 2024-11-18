@@ -6,10 +6,11 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Habit } from '../entities/habit.entity';
 import { Repository } from 'typeorm';
-import { ReadHabitDto } from '../dtos/read-habit.dto';
 import { CreateHabitDto } from '../dtos/create-habit.dto';
 import { User } from 'src/modules/users/entities/user.entity';
 import { UpdateHabitDto } from '../dtos/update-habit.dto';
+import { ReadHabitSummaryDto } from '../dtos/read-habit-summary.dto';
+import { ReadHabitDto } from '../dtos/read-habit.dto';
 
 @Injectable()
 export class HabitsService {
@@ -20,18 +21,40 @@ export class HabitsService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  async getHabits(userId: string): Promise<ReadHabitDto[]> {
+  async getHabits(userId: string): Promise<ReadHabitSummaryDto[]> {
     const habits = await this.habitsRepository.find({
       where: { user: { id: userId }, isDeleted: false },
     });
 
-    return habits.map(this.toReadDto);
+    return habits.map((habit) => ({
+      id: habit.id,
+      name: habit.name,
+      wasLoggedToday: false, // TODO: update after implementing Habit Log
+      wasValidatedToday: false, // TODO: update after implementing Habit Log Validation
+    }));
   }
 
-  async createHabit(
-    userId: string,
-    dto: CreateHabitDto,
-  ): Promise<ReadHabitDto> {
+  async getHabit(userId: string, habitId: string): Promise<ReadHabitDto> {
+    const habit = await this.habitsRepository.findOne({
+      where: { id: habitId, user: { id: userId }, isDeleted: false },
+    });
+
+    if (!habit) {
+      throw new NotFoundException(`Habit with Id ${habitId} not found.`);
+    }
+
+    return {
+      id: habit.id,
+      name: habit.name,
+      rules: habit.rules,
+      wasLoggedToday: false, // TODO: update after implementing Habit Log
+      wasValidatedToday: false, // TODO: update after implementing Habit Log
+      currentStreak: 0, // TODO: update after implementing streaks
+      highestStreak: 0, // TODO: update after implementing streaks
+    };
+  }
+
+  async createHabit(userId: string, dto: CreateHabitDto): Promise<string> {
     const user = await this.usersRepository.findOneBy({ id: userId });
 
     if (!user) {
@@ -46,14 +69,10 @@ export class HabitsService {
 
     await this.habitsRepository.save(habit);
 
-    return this.toReadDto(habit);
+    return habit.id;
   }
 
-  async updateHabit(
-    userId: string,
-    habitId: string,
-    dto: UpdateHabitDto,
-  ): Promise<ReadHabitDto> {
+  async updateHabit(userId: string, habitId: string, dto: UpdateHabitDto) {
     const habit = await this.habitsRepository.findOne({
       where: { id: habitId, isDeleted: false },
       relations: ['user'],
@@ -73,8 +92,6 @@ export class HabitsService {
     habit.rules = dto.rules;
 
     await this.habitsRepository.save(habit);
-
-    return this.toReadDto(habit);
   }
 
   async deleteHabit(userId: string, habitId: string): Promise<void> {
@@ -96,13 +113,5 @@ export class HabitsService {
     habit.isDeleted = true;
 
     await this.habitsRepository.save(habit);
-  }
-
-  private toReadDto(habit: Habit): ReadHabitDto {
-    return {
-      id: habit.id,
-      name: habit.name,
-      rules: habit.rules,
-    };
   }
 }
