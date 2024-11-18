@@ -50,7 +50,6 @@ describe('UsersController', () => {
     const expectedResult: ReadUserDto = {
       id: 'test-user-id',
       username: 'test-user',
-      email: 'testuser@example.com',
       profile_picture_url: 'http://example.com/profile.jpg',
     };
 

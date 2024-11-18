@@ -14,7 +14,6 @@ export class UsersController {
     return {
       id: userData.id,
       username: userData.username,
-      email: userData.email,
       profile_picture_url: userData.profile_picture_url,
     } as ReadUserDto;
   }
