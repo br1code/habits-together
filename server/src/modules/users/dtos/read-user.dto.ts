@@ -1,5 +1,8 @@
 export class ReadUserDto {
   id: string;
   username: string;
-  profile_picture_url?: string;
+  profilePictureUrl?: string;
+  level: number;
+  currentExperiencePoints: number;
+  maxExperiencePoints: number;
 }

@@ -14,12 +14,12 @@ A personal habit-tracking app that fosters community accountability through vali
   - [Database Entities](#database-entities)
   - [API Endpoints](#api-endpoints)
     - [Auth](#auth)
-      - [`POST /api/auth/signup`](#post-apiauthsignup)
+      - [`POST /api/auth/signup` ✅](#post-apiauthsignup-)
       - [`POST /api/auth/login` ✅](#post-apiauthlogin-)
     - [Users](#users)
-      - [`GET /api/users/profile`](#get-apiusersprofile)
-    - [`GET api/users/friends`](#get-apiusersfriends)
-      - [`GET /api/users/friends/{id}`](#get-apiusersfriendsid)
+      - [`GET /api/users/profile` ✅](#get-apiusersprofile-)
+    - [`GET api/users/friends` ✅](#get-apiusersfriends-)
+      - [`GET /api/users/friends/{id}` ✅](#get-apiusersfriendsid-)
     - [Habits](#habits)
       - [`GET /api/habits`](#get-apihabits)
       - [`GET /api/habits/{id}`](#get-apihabitsid)
@@ -214,7 +214,7 @@ TODO:
 
 ### Auth
 
-#### `POST /api/auth/signup`
+#### `POST /api/auth/signup` ✅
 
 Signs up a new user.
 
@@ -237,19 +237,10 @@ Signs up a new user.
 - **Response:**
 
   - **Status:** `201 Created`
-  - **Body:** (TODO: review)
+  - **Body:**
 
-    ```json
-    {
-      "username": "testuser",
-      "email": "test@example.com",
-      "profilePictureUrl": null,
-      "id": "dcd2f64a-4279-4694-8355-c92bf3afc34a",
-      "level": 1,
-      "experiencePoints": "0/100",
-      "createdAt": "2024-11-10T23:17:43.884Z",
-      "updatedAt": "2024-11-10T23:17:43.884Z"
-    }
+    ```
+    uuid
     ```
 
 #### `POST /api/auth/login` ✅
@@ -284,7 +275,7 @@ Login existing user with their credentials.
 
 ### Users
 
-#### `GET /api/users/profile`
+#### `GET /api/users/profile` ✅
 
 Retrieves information about the authenticated user.
 
@@ -299,11 +290,12 @@ Retrieves information about the authenticated user.
       "username": "cassie",
       "profilePictureUrl": null,
       "level": 1,
-      "experiencePoints": "0/100"
+      "currentExperiencePoints": 1,
+      "maxExperiencePoints": 100
     }
     ```
 
-### `GET api/users/friends`
+### `GET api/users/friends` ✅
 
 Retrieves a list of the user's friends.
 
@@ -321,19 +313,13 @@ Retrieves a list of the user's friends.
         "username": "cassie",
         "profile_picture_url": null,
         "level": 1,
-        "experience_points": 0
-      },
-      {
-        "id": "876b197c-a2d1-485d-9fb2-e933ef0853a5",
-        "username": "cassie",
-        "profile_picture_url": null,
-        "level": 1,
-        "experience_points": 0
+        "currentExperiencePoints": 1,
+        "maxExperiencePoints": 100
       }
     ]
     ```
 
-#### `GET /api/users/friends/{id}`
+#### `GET /api/users/friends/{id}` ✅
 
 Retrieves information about a friend.
 
@@ -348,7 +334,8 @@ Retrieves information about a friend.
       "username": "cassie",
       "profile_picture_url": null,
       "level": 1,
-      "experience_points": 0
+      "currentExperiencePoints": 1,
+      "maxExperiencePoints": 100
     }
     ```
 

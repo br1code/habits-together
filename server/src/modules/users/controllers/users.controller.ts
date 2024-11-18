@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { GetUser } from 'src/modules/auth/decorators/get-user.decorator';
 import { AuthenticatedUser } from 'src/modules/auth/interfaces';
 import { UsersService } from '../services/users.service';
@@ -9,12 +9,20 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('profile')
-  async getProfile(@GetUser() user: AuthenticatedUser) {
-    const userData = await this.usersService.findOne(user.username);
-    return {
-      id: userData.id,
-      username: userData.username,
-      profile_picture_url: userData.profile_picture_url,
-    } as ReadUserDto;
+  getProfile(@GetUser() user: AuthenticatedUser): Promise<ReadUserDto> {
+    return this.usersService.getUserProfile(user.userId);
+  }
+
+  @Get('friends')
+  getFriends(@GetUser() user: AuthenticatedUser): Promise<ReadUserDto[]> {
+    return this.usersService.getFriendsProfiles(user.userId);
+  }
+
+  @Get('friends/:id')
+  getFriend(
+    @GetUser() user: AuthenticatedUser,
+    @Param('id', new ParseUUIDPipe()) friendId: string,
+  ): Promise<ReadUserDto> {
+    return this.usersService.getFriendProfile(user.userId, friendId);
   }
 }

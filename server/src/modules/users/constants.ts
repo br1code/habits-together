@@ -1,0 +1,1 @@
+export const EXPERIENCE_POINTS_MULTIPLIER = 100;
