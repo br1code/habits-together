@@ -21,8 +21,8 @@ A personal habit-tracking app that fosters community accountability through vali
       - [`GET api/users/friends` ✅](#get-apiusersfriends-)
       - [`GET /api/users/friends/{id}` ✅](#get-apiusersfriendsid-)
     - [Habits](#habits)
-      - [`GET /api/habits` ✅ (🔨 waiting for implementation of Habit Log)](#get-apihabits---waiting-for-implementation-of-habit-log)
-      - [`GET /api/habits/{id}` ✅ (🔨 waiting for implementation of Habit Log and streaks)](#get-apihabitsid---waiting-for-implementation-of-habit-log-and-streaks)
+      - [`GET /api/habits` ✅](#get-apihabits-)
+      - [`GET /api/habits/{id}` ✅](#get-apihabitsid-)
       - [`POST /api/habits` ✅](#post-apihabits-)
       - [`PUT /api/habits/{id}` ✅](#put-apihabitsid-)
       - [`DELETE /api/habits/{id}` ✅](#delete-apihabitsid-)
@@ -341,7 +341,7 @@ Retrieves information about a friend.
 
 ### Habits
 
-#### `GET /api/habits` ✅ (🔨 waiting for implementation of Habit Log)
+#### `GET /api/habits` ✅
 
 Retrieves all non-deleted habits of the authenticated User.
 
@@ -356,12 +356,12 @@ Retrieves all non-deleted habits of the authenticated User.
         "id": "uuid",
         "name": "Exercise",
         "wasLogged": true,
-        "wasValidated": false
+        "wasValidated": false // TODO: update after implementing Habit log Validation entity
       }
     ]
     ```
 
-#### `GET /api/habits/{id}` ✅ (🔨 waiting for implementation of Habit Log and streaks)
+#### `GET /api/habits/{id}` ✅
 
 Retrieves a specific habit.
 
@@ -376,9 +376,9 @@ Retrieves a specific habit.
         "name": "Exercise",
         "rules": "At least 30 minutes of exercise",
         "wasLogged": true,
-        "wasValidated": false,
-        "currentStreak": 1,
-        "highestStreak": 10
+        "wasValidated": false, // TODO: update after implementing Habit log Validation entity
+        "currentStreak": 1, // TODO
+        "highestStreak": 10 // TODO
       },
     ```
 
