@@ -7,6 +7,7 @@ import { HabitsModule } from './modules/habits/habits.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
+import { HabitLogsModule } from './modules/habit-logs/habit-logs.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
     UsersModule,
     HabitsModule,
     AuthModule,
+    HabitLogsModule,
   ],
   controllers: [],
   providers: [

@@ -28,8 +28,8 @@ A personal habit-tracking app that fosters community accountability through vali
       - [`DELETE /api/habits/{id}` ✅](#delete-apihabitsid-)
     - [Habit Logs](#habit-logs)
       - [`GET /api/logs/?habitId={uuid}&pageNumber={number}&pageSize={number}`](#get-apilogshabitiduuidpagenumbernumberpagesizenumber)
-      - [`GET /api/logs/{id}`](#get-apilogsid)
-      - [`POST /api/logs`](#post-apilogs)
+      - [`GET /api/logs/{id}` 🔨](#get-apilogsid-)
+      - [`POST /api/logs` 🔨](#post-apilogs-)
       - [`DELETE /api/logs/{id}`](#delete-apilogsid)
       - [`POST /api/logs/{id}/validate`](#post-apilogsidvalidate)
       - [`GET /api/logs/{logId}/comments`](#get-apilogslogidcomments)
@@ -481,7 +481,7 @@ Retrieves habit logs, optionally filtered by habitId. Sorted by date (recent fir
     ]
     ```
 
-#### `GET /api/logs/{id}`
+#### `GET /api/logs/{id}` 🔨
 
 Retrieves a specific habit log.
 
@@ -501,7 +501,7 @@ Retrieves a specific habit log.
     }
     ```
 
-#### `POST /api/logs`
+#### `POST /api/logs` 🔨
 
 Adds a new log for a habit.
 

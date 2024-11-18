@@ -4,13 +4,17 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/modules/users/entities/user.entity';
 import { Habit } from 'src/modules/habits/entities/habit.entity';
+import { HabitLog } from 'src/modules/habit-logs/entities/habit-log.entity';
 
 @Injectable()
 export class SeedService {
   constructor(
-    @InjectRepository(User) private readonly usersRepository: Repository<User>,
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
     @InjectRepository(Habit)
     private readonly habitsRepository: Repository<Habit>,
+    @InjectRepository(HabitLog)
+    private readonly habitLogsRepository: Repository<HabitLog>,
   ) {}
 
   async seedDatabase() {
@@ -19,6 +23,7 @@ export class SeedService {
 
       await this.createUsers();
       await this.createHabits();
+      await this.createHabitLogs();
 
       console.log('Finished database seed.');
     } catch (error) {
@@ -91,5 +96,44 @@ export class SeedService {
     }
 
     console.log(`Habits created: ${habits.length}`);
+  }
+
+  async createHabitLogs() {
+    const existingLogs = await this.habitLogsRepository.count();
+
+    if (existingLogs > 0) {
+      console.log('Skipping HabitLogs.');
+      return;
+    }
+
+    const habit = await this.habitsRepository.findOneByOrFail({
+      name: 'Exercise',
+    });
+
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+
+    const logs: Partial<HabitLog>[] = [
+      {
+        habit: habit,
+        date: today,
+        text_entry: 'Morning run',
+        photo_url: 'http://example.com/photo1.jpg',
+      },
+      {
+        habit: habit,
+        date: yesterday,
+        text_entry: '8-hour sleep achieved',
+        photo_url: 'http://example.com/photo2.jpg',
+      },
+    ];
+
+    for (const logData of logs) {
+      const log = this.habitLogsRepository.create(logData);
+      await this.habitLogsRepository.save(log);
+    }
+
+    console.log(`HabitLogs created: ${logs.length}`);
   }
 }

@@ -1,9 +1,11 @@
+import { HabitLog } from 'src/modules/habit-logs/entities/habit-log.entity';
 import { User } from 'src/modules/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -33,4 +35,7 @@ export class Habit {
     onDelete: 'CASCADE',
   })
   user: User;
+
+  @OneToMany(() => HabitLog, (habitLog) => habitLog.habit, { cascade: true })
+  logs: HabitLog[];
 }
