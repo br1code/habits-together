@@ -122,7 +122,7 @@ Habits Together is designed to help you build and maintain positive habits by al
 | ----------------- | -------------------------------------------------------- |
 | Wake Up Early     | We consider "early" any time before 7 am.                |
 | Exercise          | At least 30 minutes of exercise.                         |
-| Healthy Food      | Eat something healthy during the day (TODO).             |
+| Healthy Food      | Eat something healthy during the day.                    |
 | Sufficient Sleep  | At least 8 hours of sleep.                               |
 | Reading           | At least 15 minutes of reading.                          |
 | Daily Planning    | Spend at least 5 minutes writing your Daily Plan.        |
@@ -520,11 +520,9 @@ Adds a new log for a habit.
 - **Response:**
 
   - **Status:** `201 Created`
-  - **Body:** (TODO: review)
-    ```json
-    {
-      "id": "uuid"
-    }
+  - **Body:**
+    ```
+    "uuid"
     ```
 
 #### `DELETE /api/logs/{id}`
@@ -588,12 +586,10 @@ Adds a new comment to a Habit Log.
 - **Response:**
 
   - **Status:** `201 Created`
-  - **Body:** (TODO: review)
+  - **Body:**
 
     ```json
-    {
-      "id": "uuid"
-    }
+    "uuid"
     ```
 
 ## Frontend Pages/Routes
