@@ -17,6 +17,7 @@ export class HabitLogValidation {
 
   @ManyToOne(() => HabitLog, (habitLog) => habitLog.validations, {
     nullable: false,
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'habit_log_id' })
   habitLog: HabitLog;

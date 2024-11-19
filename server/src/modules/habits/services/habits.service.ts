@@ -50,33 +50,39 @@ export class HabitsService {
 
     const habit = await this.habitsRepository
       .createQueryBuilder('habit')
-      .leftJoinAndSelect('habit.logs', 'habitLog', 'habitLog.date = :today', {
-        today,
-      })
+      .leftJoinAndSelect('habit.logs', 'habitLog')
       .leftJoinAndSelect(
         'habitLog.validations',
         'habitLogValidation',
         '"habitLogValidation"."validated_at"::date = :today',
         { today },
       )
-
       .where('habit.id = :habitId', { habitId })
       .andWhere('habit.userId = :userId', { userId })
       .andWhere('habit.isDeleted = false')
+      .orderBy('habitLog.date', 'DESC')
       .getOne();
 
     if (!habit) {
       throw new NotFoundException(`Habit with Id ${habitId} not found.`);
     }
 
+    const logDates = habit.logs.map((log) =>
+      log.date instanceof Date
+        ? log.date.toISOString().split('T')[0]
+        : log.date,
+    );
+
+    const { currentStreak, highestStreak } = this.calculateStreaks(logDates);
+
     return {
       id: habit.id,
       name: habit.name,
       rules: habit.rules,
-      wasLoggedToday: habit.logs.length > 0,
+      wasLoggedToday: logDates.includes(today),
       wasValidatedToday: habit.logs.some((log) => log.validations.length > 0),
-      currentStreak: 0, // TODO: update after implementing streaks
-      highestStreak: 0, // TODO: update after implementing streaks
+      currentStreak,
+      highestStreak,
     };
   }
 
@@ -133,5 +139,49 @@ export class HabitsService {
     habit.isDeleted = true;
 
     await this.habitsRepository.save(habit);
+  }
+
+  private calculateStreaks(logDates: string[]): {
+    currentStreak: number;
+    highestStreak: number;
+  } {
+    if (!logDates.length) return { currentStreak: 0, highestStreak: 0 };
+
+    let currentStreak = 0;
+    let highestStreak = 0;
+    let streakCount = 1;
+
+    // Normalize dates and sort them in ascending order
+    const dates = logDates
+      .map((date) => new Date(date))
+      .sort((a, b) => a.getTime() - b.getTime());
+
+    // Calculate streaks
+    for (let i = 1; i < dates.length; i++) {
+      const diff =
+        (dates[i].getTime() - dates[i - 1].getTime()) / (1000 * 60 * 60 * 24); // Difference in days
+
+      if (diff === 1) {
+        // Consecutive days
+        streakCount++;
+      } else {
+        // Break in streak
+        highestStreak = Math.max(highestStreak, streakCount);
+        streakCount = 1;
+      }
+    }
+
+    // Finalize highest streak
+    highestStreak = Math.max(highestStreak, streakCount);
+
+    // Calculate current streak
+    const today = new Date().toISOString().split('T')[0];
+    const mostRecentLog = dates[dates.length - 1].toISOString().split('T')[0];
+
+    if (mostRecentLog === today) {
+      currentStreak = streakCount;
+    }
+
+    return { currentStreak, highestStreak };
   }
 }
