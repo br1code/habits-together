@@ -3,10 +3,11 @@ import {
   Inject,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HabitLog } from '../entities/habit-log.entity';
-import { Repository } from 'typeorm';
+import { Raw, Repository } from 'typeorm';
 import { CreateHabitLogDto } from '../dtos/create-habit-log.dto';
 import { Habit } from 'src/modules/habits/entities/habit.entity';
 import {
@@ -14,6 +15,7 @@ import {
   FileStorageProvider,
 } from 'src/modules/file-storage/interfaces/file-storage.interface';
 import { ReadHabitLogDto } from '../dtos/read-habit-log.dto';
+import { HabitLogValidation } from '../entities/habit-log-validation.entity';
 
 @Injectable()
 export class HabitLogsService {
@@ -22,6 +24,8 @@ export class HabitLogsService {
     private readonly habitsRepository: Repository<Habit>,
     @InjectRepository(HabitLog)
     private readonly habitLogsRepository: Repository<HabitLog>,
+    @InjectRepository(HabitLogValidation)
+    private readonly habitLogValidationsRepository: Repository<HabitLogValidation>,
     @Inject(FILE_STORAGE_PROVIDER)
     private readonly fileStorageProvider: FileStorageProvider,
   ) {}
@@ -40,11 +44,13 @@ export class HabitLogsService {
     }
 
     // TODO: get current date from somewhere else (library?)
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
+    const today = new Date().toISOString().split('T')[0];
 
     const existingLog = await this.habitLogsRepository.findOne({
-      where: { habit: { id: dto.habitId }, date: today },
+      where: {
+        habit: { id: dto.habitId },
+        date: Raw((alias) => `${alias} = :today`, { today }),
+      },
     });
 
     if (existingLog) {
@@ -94,5 +100,101 @@ export class HabitLogsService {
       createdAt: habitLog.created_at.toISOString(),
       validatedBy: [], // TODO: update after implementing Habit Log Validation
     };
+  }
+
+  async deleteHabitLog(userId: string, habitLogId: string): Promise<void> {
+    const habitLog = await this.habitLogsRepository.findOne({
+      where: { id: habitLogId },
+      relations: ['habit', 'habit.user'],
+    });
+
+    if (!habitLog) {
+      throw new NotFoundException(
+        `Habit Log with Id ${habitLogId} was not found.`,
+      );
+    }
+
+    if (habitLog.habit.user.id !== userId) {
+      throw new UnauthorizedException(
+        `You are not authorized to delete this habit.`,
+      );
+    }
+
+    await this.habitLogsRepository.remove(habitLog);
+  }
+
+  async validateHabitLog(userId: string, habitLogId: string): Promise<void> {
+    const habitLog = await this.habitLogsRepository.findOne({
+      where: { id: habitLogId },
+      relations: [
+        'habit',
+        'habit.user',
+        'validations',
+        'validations.validatorUser',
+      ],
+    });
+
+    if (!habitLog) {
+      throw new NotFoundException(
+        `Habit Log with Id ${habitLogId} was not found.`,
+      );
+    }
+
+    if (habitLog.habit.user.id === userId) {
+      throw new UnauthorizedException(
+        `You are not authorized to validate this Habit Log.`,
+      );
+    }
+
+    const existingValidation = habitLog.validations.find(
+      (validation) => validation.validatorUser.id === userId,
+    );
+
+    if (existingValidation) {
+      throw new ConflictException('User has already validated this Habit Log.');
+    }
+
+    const habitLogValidation = this.habitLogValidationsRepository.create({
+      habitLog: habitLog,
+      validatorUser: { id: userId },
+    });
+
+    await this.habitLogValidationsRepository.save(habitLogValidation);
+  }
+
+  async invalidateHabitLog(userId: string, habitLogId: string): Promise<void> {
+    const habitLog = await this.habitLogsRepository.findOne({
+      where: { id: habitLogId },
+      relations: [
+        'habit',
+        'habit.user',
+        'validations',
+        'validations.validatorUser',
+      ],
+    });
+
+    if (!habitLog) {
+      throw new NotFoundException(
+        `Habit Log with Id ${habitLogId} was not found.`,
+      );
+    }
+
+    if (habitLog.habit.user.id === userId) {
+      throw new UnauthorizedException(
+        `You are not authorized to invalidate this Habit Log.`,
+      );
+    }
+
+    const existingValidation = habitLog.validations.find(
+      (validation) => validation.validatorUser.id === userId,
+    );
+
+    if (!existingValidation) {
+      throw new NotFoundException(
+        'Validation by the user for this Habit Log was not found.',
+      );
+    }
+
+    await this.habitLogValidationsRepository.remove(existingValidation);
   }
 }

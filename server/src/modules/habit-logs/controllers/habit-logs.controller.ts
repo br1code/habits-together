@@ -2,7 +2,9 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
   Param,
   ParseUUIDPipe,
   Post,
@@ -30,6 +32,7 @@ export class HabitLogsController {
   }
 
   @Post()
+  @HttpCode(201)
   @UseInterceptors(
     FileInterceptor('photo', {
       storage: memoryStorage(),
@@ -54,5 +57,32 @@ export class HabitLogsController {
     @UploadedFile() photo: Express.Multer.File,
   ): Promise<string> {
     return this.habitLogsService.createHabitLog(dto, photo);
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  deleteHabitLog(
+    @GetUser() user: AuthenticatedUser,
+    @Param('id', new ParseUUIDPipe()) habitLogId: string,
+  ) {
+    return this.habitLogsService.deleteHabitLog(user.userId, habitLogId);
+  }
+
+  @Post(':id/validate')
+  @HttpCode(204)
+  validateHabitLog(
+    @GetUser() user: AuthenticatedUser,
+    @Param('id', new ParseUUIDPipe()) habitLogId: string,
+  ) {
+    return this.habitLogsService.validateHabitLog(user.userId, habitLogId);
+  }
+
+  @Post(':id/invalidate')
+  @HttpCode(204)
+  invalidateHabitLog(
+    @GetUser() user: AuthenticatedUser,
+    @Param('id', new ParseUUIDPipe()) habitLogId: string,
+  ) {
+    return this.habitLogsService.invalidateHabitLog(user.userId, habitLogId);
   }
 }

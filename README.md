@@ -30,8 +30,9 @@ A personal habit-tracking app that fosters community accountability through vali
       - [`GET /api/logs/?habitId={uuid}&pageNumber={number}&pageSize={number}`](#get-apilogshabitiduuidpagenumbernumberpagesizenumber)
       - [`GET /api/logs/{id}` ✅](#get-apilogsid-)
       - [`POST /api/logs` ✅](#post-apilogs-)
-      - [`DELETE /api/logs/{id}`](#delete-apilogsid)
-      - [`POST /api/logs/{id}/validate`](#post-apilogsidvalidate)
+      - [`DELETE /api/logs/{id}` ✅](#delete-apilogsid-)
+      - [`POST /api/logs/{id}/validate` ✅\`](#post-apilogsidvalidate-)
+      - [`POST /api/logs/{id}/invalidate` ✅](#post-apilogsidinvalidate-)
       - [`GET /api/logs/{logId}/comments`](#get-apilogslogidcomments)
       - [`POST /api/logs/{logId}/comments`](#post-apilogslogidcomments)
   - [Frontend Pages/Routes](#frontend-pagesroutes)
@@ -435,7 +436,7 @@ Updates an existing habit.
 
 - **Response:**
 
-  - **Status:** `204 OK`
+  - **Status:** `204 No Content`
 
 #### `DELETE /api/habits/{id}` ✅
 
@@ -529,7 +530,7 @@ Adds a new log for a habit.
     "uuid"
     ```
 
-#### `DELETE /api/logs/{id}`
+#### `DELETE /api/logs/{id}` ✅
 
 Deletes a habit log.
 
@@ -541,9 +542,17 @@ Deletes a habit log.
 
   - **Status:** `204 No Content`
 
-#### `POST /api/logs/{id}/validate`
+#### `POST /api/logs/{id}/validate` ✅`
 
 Validates a Habit Log from a friend (can be performed only once by the same user).
+
+- **Response:**
+
+  - **Status:** `204 No Content`
+
+#### `POST /api/logs/{id}/invalidate` ✅
+
+Removes the validation made by the current user to a Habit Log from a friend.
 
 - **Response:**
 

@@ -4,9 +4,11 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
+import { HabitLogValidation } from './habit-log-validation.entity';
 
 @Entity()
 @Unique(['habit', 'date'])
@@ -28,4 +30,9 @@ export class HabitLog {
 
   @ManyToOne(() => Habit, (habit) => habit.logs, { onDelete: 'CASCADE' })
   habit: Habit;
+
+  @OneToMany(() => HabitLogValidation, (validation) => validation.habitLog, {
+    cascade: true,
+  })
+  validations: HabitLogValidation[];
 }

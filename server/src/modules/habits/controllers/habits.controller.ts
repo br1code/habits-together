@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseUUIDPipe,
   Post,
@@ -36,6 +37,7 @@ export class HabitsController {
   }
 
   @Post()
+  @HttpCode(201)
   createHabit(
     @GetUser() user: AuthenticatedUser,
     @Body() dto: CreateHabitDto,
@@ -44,6 +46,7 @@ export class HabitsController {
   }
 
   @Put(':id')
+  @HttpCode(204)
   updateHabit(
     @GetUser() user: AuthenticatedUser,
     @Param('id', new ParseUUIDPipe()) habitId: string,
@@ -53,10 +56,11 @@ export class HabitsController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   deleteHabit(
     @GetUser() user: AuthenticatedUser,
     @Param('id', new ParseUUIDPipe()) habitId: string,
-  ): Promise<void> {
+  ) {
     return this.habitsService.deleteHabit(user.userId, habitId);
   }
 }

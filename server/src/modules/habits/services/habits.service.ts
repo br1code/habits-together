@@ -25,8 +25,7 @@ export class HabitsService {
   ) {}
 
   async getHabits(userId: string): Promise<ReadHabitSummaryDto[]> {
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
+    const today = new Date().toISOString().split('T')[0];
 
     const habits = await this.habitsRepository
       .createQueryBuilder('habit')
@@ -37,8 +36,6 @@ export class HabitsService {
       .andWhere('habit.isDeleted = false')
       .getMany();
 
-    console.log(habits);
-
     return habits.map((habit) => ({
       id: habit.id,
       name: habit.name,
@@ -48,8 +45,7 @@ export class HabitsService {
   }
 
   async getHabit(userId: string, habitId: string): Promise<ReadHabitDto> {
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
+    const today = new Date().toISOString().split('T')[0];
 
     const habit = await this.habitsRepository
       .createQueryBuilder('habit')
@@ -77,16 +73,10 @@ export class HabitsService {
   }
 
   async createHabit(userId: string, dto: CreateHabitDto): Promise<string> {
-    const user = await this.usersRepository.findOneBy({ id: userId });
-
-    if (!user) {
-      throw new NotFoundException(`User with Id ${userId} not found.`);
-    }
-
     const habit = this.habitsRepository.create({
       name: dto.name,
       rules: dto.rules,
-      user: user,
+      user: { id: userId },
     });
 
     await this.habitsRepository.save(habit);
