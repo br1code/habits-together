@@ -378,8 +378,8 @@ Retrieves a specific habit.
         "rules": "At least 30 minutes of exercise",
         "wasLogged": true,
         "wasValidated": false,
-        "currentStreak": 1, // TODO
-        "highestStreak": 10 // TODO
+        "currentStreak": 1,
+        "highestStreak": 10
       },
     ```
 
