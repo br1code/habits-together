@@ -79,7 +79,12 @@ export class HabitLogsService {
   ): Promise<ReadHabitLogDto> {
     const habitLog = await this.habitLogsRepository.findOne({
       where: { id: habitLogId },
-      relations: ['habit', 'habit.user'],
+      relations: [
+        'habit',
+        'habit.user',
+        'validations',
+        'validations.validatorUser',
+      ],
     });
 
     if (!habitLog) {
@@ -98,7 +103,10 @@ export class HabitLogsService {
       textEntry: habitLog.text_entry,
       photoUrl: habitLog.photo_url,
       createdAt: habitLog.created_at.toISOString(),
-      validatedBy: [], // TODO: update after implementing Habit Log Validation
+      validatedBy: habitLog.validations.map((validation) => ({
+        userId: validation.validatorUser.id,
+        username: validation.validatorUser.username,
+      })),
     };
   }
 

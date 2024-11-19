@@ -357,7 +357,7 @@ Retrieves all non-deleted habits of the authenticated User.
         "id": "uuid",
         "name": "Exercise",
         "wasLogged": true,
-        "wasValidated": false // TODO: update after implementing Habit log Validation entity
+        "wasValidated": false
       }
     ]
     ```
@@ -377,7 +377,7 @@ Retrieves a specific habit.
         "name": "Exercise",
         "rules": "At least 30 minutes of exercise",
         "wasLogged": true,
-        "wasValidated": false, // TODO: update after implementing Habit log Validation entity
+        "wasValidated": false,
         "currentStreak": 1, // TODO
         "highestStreak": 10 // TODO
       },
@@ -477,7 +477,7 @@ Retrieves habit logs, optionally filtered by habitId. Sorted by date (recent fir
         "textEntry": "Text Entry",
         "photoUrl": "Photo Url",
         "createdAt": "date",
-        "validatedBy": ["Username 1", "Username 2"]
+        "validatedBy": [{ "userId": "uuid", "username": "Username 1" }]
       }
     ]
     ```

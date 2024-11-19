@@ -7,21 +7,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Habit } from '../entities/habit.entity';
 import { Repository } from 'typeorm';
 import { CreateHabitDto } from '../dtos/create-habit.dto';
-import { User } from 'src/modules/users/entities/user.entity';
 import { UpdateHabitDto } from '../dtos/update-habit.dto';
 import { ReadHabitSummaryDto } from '../dtos/read-habit-summary.dto';
 import { ReadHabitDto } from '../dtos/read-habit.dto';
-import { HabitLog } from 'src/modules/habit-logs/entities/habit-log.entity';
 
 @Injectable()
 export class HabitsService {
   constructor(
     @InjectRepository(Habit)
     private readonly habitsRepository: Repository<Habit>,
-    @InjectRepository(HabitLog)
-    private readonly habitLogsRepository: Repository<HabitLog>,
-    @InjectRepository(User)
-    private readonly usersRepository: Repository<User>,
   ) {}
 
   async getHabits(userId: string): Promise<ReadHabitSummaryDto[]> {
@@ -32,6 +26,13 @@ export class HabitsService {
       .leftJoinAndSelect('habit.logs', 'habitLog', 'habitLog.date = :today', {
         today,
       })
+      .leftJoinAndSelect(
+        'habitLog.validations',
+        'habitLogValidation',
+        '"habitLogValidation"."validated_at"::date = :today',
+        { today },
+      )
+
       .where('habit.userId = :userId', { userId })
       .andWhere('habit.isDeleted = false')
       .getMany();
@@ -40,7 +41,7 @@ export class HabitsService {
       id: habit.id,
       name: habit.name,
       wasLoggedToday: habit.logs.length > 0,
-      wasValidatedToday: false, // TODO: update after implementing Habit Log Validation
+      wasValidatedToday: habit.logs.some((log) => log.validations.length > 0),
     }));
   }
 
@@ -52,6 +53,13 @@ export class HabitsService {
       .leftJoinAndSelect('habit.logs', 'habitLog', 'habitLog.date = :today', {
         today,
       })
+      .leftJoinAndSelect(
+        'habitLog.validations',
+        'habitLogValidation',
+        '"habitLogValidation"."validated_at"::date = :today',
+        { today },
+      )
+
       .where('habit.id = :habitId', { habitId })
       .andWhere('habit.userId = :userId', { userId })
       .andWhere('habit.isDeleted = false')
@@ -66,7 +74,7 @@ export class HabitsService {
       name: habit.name,
       rules: habit.rules,
       wasLoggedToday: habit.logs.length > 0,
-      wasValidatedToday: false, // TODO: update after implementing Habit Log Validation
+      wasValidatedToday: habit.logs.some((log) => log.validations.length > 0),
       currentStreak: 0, // TODO: update after implementing streaks
       highestStreak: 0, // TODO: update after implementing streaks
     };
