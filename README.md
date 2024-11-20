@@ -27,7 +27,7 @@ A personal habit-tracking app that fosters community accountability through vali
       - [`PUT /api/habits/{id}` ✅](#put-apihabitsid-)
       - [`DELETE /api/habits/{id}` ✅](#delete-apihabitsid-)
     - [Habit Logs](#habit-logs)
-      - [`GET /api/logs/?habitId={uuid}&pageNumber={number}&pageSize={number}`](#get-apilogshabitiduuidpagenumbernumberpagesizenumber)
+      - [`GET /api/logs` ✅](#get-apilogs-)
       - [`GET /api/logs/{id}` ✅](#get-apilogsid-)
       - [`POST /api/logs` ✅](#post-apilogs-)
       - [`DELETE /api/logs/{id}` ✅](#delete-apilogsid-)
@@ -452,9 +452,11 @@ Soft-deletes a habit.
 
 ### Habit Logs
 
-#### `GET /api/logs/?habitId={uuid}&pageNumber={number}&pageSize={number}`
+#### `GET /api/logs` ✅
 
 Retrieves habit logs, optionally filtered by habitId. Sorted by date (recent first). Paginated.
+
+Example: `/api/logs/?habitId={uuid}&pageNumber={number}&pageSize={number}`
 
 - **Parameters:**
 
@@ -474,7 +476,9 @@ Retrieves habit logs, optionally filtered by habitId. Sorted by date (recent fir
       {
         "id": "uuid",
         "habitId": "uuid",
-        "textEntry": "Text Entry",
+        "habitName": "string",
+        "userId": "uuid",
+        "username": "string",
         "photoUrl": "Photo Url",
         "createdAt": "date",
         "validatedBy": [{ "userId": "uuid", "username": "Username 1" }]

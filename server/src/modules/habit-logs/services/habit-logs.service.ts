@@ -16,6 +16,8 @@ import {
 } from 'src/modules/file-storage/interfaces/file-storage.interface';
 import { ReadHabitLogDto } from '../dtos/read-habit-log.dto';
 import { HabitLogValidation } from '../entities/habit-log-validation.entity';
+import { ReadHabitLogsQueryDto } from '../dtos/read-habit-logs-query.dto';
+import { ReadHabitLogSummaryDto } from '../dtos/read-habit-log-summary.dto';
 
 @Injectable()
 export class HabitLogsService {
@@ -29,6 +31,43 @@ export class HabitLogsService {
     @Inject(FILE_STORAGE_PROVIDER)
     private readonly fileStorageProvider: FileStorageProvider,
   ) {}
+
+  async getHabitLogs(
+    query: ReadHabitLogsQueryDto,
+  ): Promise<ReadHabitLogSummaryDto[]> {
+    const queryBuilder = this.habitLogsRepository
+      .createQueryBuilder('habitLog')
+      .leftJoinAndSelect('habitLog.habit', 'habit')
+      .leftJoinAndSelect('habit.user', 'habitOwner')
+      .leftJoinAndSelect('habitLog.validations', 'validation')
+      .leftJoinAndSelect('validation.validatorUser', 'validatorUser')
+      .orderBy('habitLog.created_at', 'DESC');
+
+    if (query.habitId) {
+      queryBuilder.where('habitLog.habitId = :habitId', {
+        habitId: query.habitId,
+      });
+    }
+
+    const logs = await queryBuilder
+      .skip((query.pageNumber - 1) * query.pageSize)
+      .take(query.pageSize)
+      .getMany();
+
+    return logs.map((log) => ({
+      id: log.id,
+      habitId: log.habit.id,
+      habitName: log.habit.name,
+      userId: log.habit.user.id,
+      username: log.habit.user.username,
+      photoUrl: log.photo_url,
+      createdAt: log.created_at.toISOString(),
+      validatedBy: log.validations.map((validation) => ({
+        userId: validation.validatorUser.id,
+        username: validation.validatorUser.username,
+      })),
+    }));
+  }
 
   async createHabitLog(
     dto: CreateHabitLogDto,
@@ -59,6 +98,7 @@ export class HabitLogsService {
       );
     }
 
+    // TODO: consider deleting photo if the following code fails
     const { url: photoUrl } = await this.fileStorageProvider.upload(photo);
 
     const habitLog = this.habitLogsRepository.create({

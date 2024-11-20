@@ -8,6 +8,7 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -18,10 +19,19 @@ import { memoryStorage } from 'multer';
 import { GetUser } from 'src/modules/auth/decorators/get-user.decorator';
 import { AuthenticatedUser } from 'src/modules/auth/interfaces';
 import { ReadHabitLogDto } from '../dtos/read-habit-log.dto';
+import { ReadHabitLogsQueryDto } from '../dtos/read-habit-logs-query.dto';
+import { ReadHabitLogSummaryDto } from '../dtos/read-habit-log-summary.dto';
 
 @Controller('logs')
 export class HabitLogsController {
   constructor(private readonly habitLogsService: HabitLogsService) {}
+
+  @Get()
+  getHabitLogs(
+    @Query() query: ReadHabitLogsQueryDto,
+  ): Promise<ReadHabitLogSummaryDto[]> {
+    return this.habitLogsService.getHabitLogs(query);
+  }
 
   @Get(':id')
   getHabitLog(
