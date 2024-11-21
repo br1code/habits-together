@@ -7,6 +7,7 @@ import { HabitLogsService } from './services/habit-logs.service';
 import { FileStorageModule } from '../file-storage/file-storage.module';
 import { HabitLogValidation } from './entities/habit-log-validation.entity';
 import { HabitLogComment } from './entities/habit-log-comment.entity';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { HabitLogComment } from './entities/habit-log-comment.entity';
       HabitLogComment,
     ]),
     FileStorageModule,
+    UsersModule,
   ],
   exports: [TypeOrmModule],
   providers: [HabitLogsService],

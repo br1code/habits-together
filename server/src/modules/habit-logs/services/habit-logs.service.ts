@@ -20,6 +20,8 @@ import { ReadHabitLogsQueryDto } from '../dtos/read-habit-logs-query.dto';
 import { ReadHabitLogSummaryDto } from '../dtos/read-habit-log-summary.dto';
 import { CreateHabitLogCommentDto } from '../dtos/create-habit-log-comment.dto';
 import { HabitLogComment } from '../entities/habit-log-comment.entity';
+import { UsersService } from 'src/modules/users/services/users.service';
+import { ActivityType } from 'src/modules/users/entities/experience-log.entity';
 
 @Injectable()
 export class HabitLogsService {
@@ -34,6 +36,7 @@ export class HabitLogsService {
     private readonly habitLogCommentsRepository: Repository<HabitLogComment>,
     @Inject(FILE_STORAGE_PROVIDER)
     private readonly fileStorageProvider: FileStorageProvider,
+    private usersService: UsersService,
   ) {}
 
   async getHabitLogs(
@@ -75,12 +78,14 @@ export class HabitLogsService {
   }
 
   async createHabitLog(
+    userId: string,
     dto: CreateHabitLogDto,
     photo: Express.Multer.File,
   ): Promise<string> {
     const habit = await this.habitsRepository.findOneBy({
       id: dto.habitId,
       isDeleted: false,
+      user: { id: userId },
     });
 
     if (!habit) {
@@ -114,6 +119,12 @@ export class HabitLogsService {
     });
 
     await this.habitLogsRepository.save(habitLog);
+
+    await this.usersService.addExperience(
+      userId,
+      ActivityType.HABIT_LOG_CREATION,
+      habitLog.id,
+    );
 
     return habitLog.id;
   }
@@ -234,6 +245,18 @@ export class HabitLogsService {
     });
 
     await this.habitLogValidationsRepository.save(habitLogValidation);
+
+    await this.usersService.addExperience(
+      userId,
+      ActivityType.HABIT_LOG_VALIDATION_PERFORMED,
+      habitLog.id,
+    );
+
+    await this.usersService.addExperience(
+      habitLog.habit.user.id,
+      ActivityType.HABIT_LOG_VALIDATION_RECEIVED,
+      habitLog.id,
+    );
   }
 
   async invalidateHabitLog(userId: string, habitLogId: string): Promise<void> {

@@ -6,10 +6,12 @@ import { HabitsService } from './services/habits.service';
 import { HabitsController } from './controllers/habits.controller';
 import { HabitLog } from '../habit-logs/entities/habit-log.entity';
 import { HabitLogValidation } from '../habit-logs/entities/habit-log-validation.entity';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Habit, HabitLog, HabitLogValidation, User]),
+    UsersModule,
   ],
   exports: [TypeOrmModule],
   providers: [HabitsService],

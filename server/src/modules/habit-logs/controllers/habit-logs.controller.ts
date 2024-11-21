@@ -64,10 +64,11 @@ export class HabitLogsController {
     }),
   )
   createHabitLog(
+    @GetUser() user: AuthenticatedUser,
     @Body() dto: CreateHabitLogDto,
     @UploadedFile() photo: Express.Multer.File,
   ): Promise<string> {
-    return this.habitLogsService.createHabitLog(dto, photo);
+    return this.habitLogsService.createHabitLog(user.userId, dto, photo);
   }
 
   @Delete(':id')

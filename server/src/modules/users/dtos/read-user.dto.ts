@@ -4,5 +4,5 @@ export class ReadUserDto {
   profilePictureUrl?: string;
   level: number;
   currentExperiencePoints: number;
-  maxExperiencePoints: number;
+  requiredExperiencePoints: number;
 }

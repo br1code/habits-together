@@ -10,12 +10,15 @@ import { CreateHabitDto } from '../dtos/create-habit.dto';
 import { UpdateHabitDto } from '../dtos/update-habit.dto';
 import { ReadHabitSummaryDto } from '../dtos/read-habit-summary.dto';
 import { ReadHabitDto } from '../dtos/read-habit.dto';
+import { UsersService } from 'src/modules/users/services/users.service';
+import { ActivityType } from 'src/modules/users/entities/experience-log.entity';
 
 @Injectable()
 export class HabitsService {
   constructor(
     @InjectRepository(Habit)
     private readonly habitsRepository: Repository<Habit>,
+    private usersService: UsersService,
   ) {}
 
   async getHabits(userId: string): Promise<ReadHabitSummaryDto[]> {
@@ -94,6 +97,12 @@ export class HabitsService {
     });
 
     await this.habitsRepository.save(habit);
+
+    await this.usersService.addExperience(
+      userId,
+      ActivityType.HABIT_CREATION,
+      habit.id,
+    );
 
     return habit.id;
   }

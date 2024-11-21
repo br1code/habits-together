@@ -292,7 +292,7 @@ Retrieves information about the authenticated user.
       "profilePictureUrl": null,
       "level": 1,
       "currentExperiencePoints": 1,
-      "maxExperiencePoints": 100
+      "requiredExperiencePoints": 100
     }
     ```
 
@@ -315,7 +315,7 @@ Retrieves a list of the user's friends.
         "profile_picture_url": null,
         "level": 1,
         "currentExperiencePoints": 1,
-        "maxExperiencePoints": 100
+        "requiredExperiencePoints": 100
       }
     ]
     ```
@@ -336,7 +336,7 @@ Retrieves information about a friend.
       "profile_picture_url": null,
       "level": 1,
       "currentExperiencePoints": 1,
-      "maxExperiencePoints": 100
+      "requiredExperiencePoints": 100
     }
     ```
 
