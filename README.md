@@ -624,7 +624,7 @@ Displays a navbar with the following links:
   - Habits: `/habits`
   - Friends: `/friends`
 - Logo image: `/`
-- Log Habit button: `/add-log` (TBD)
+- Log Habit button: `/logs/new`
 
 **User is not authenticated:**
 
