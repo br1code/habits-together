@@ -31,10 +31,10 @@ A personal habit-tracking app that fosters community accountability through vali
       - [`GET /api/logs/{id}` ✅](#get-apilogsid-)
       - [`POST /api/logs` ✅](#post-apilogs-)
       - [`DELETE /api/logs/{id}` ✅](#delete-apilogsid-)
-      - [`POST /api/logs/{id}/validate` ✅\`](#post-apilogsidvalidate-)
+      - [`POST /api/logs/{id}/validate` ✅](#post-apilogsidvalidate-)
       - [`POST /api/logs/{id}/invalidate` ✅](#post-apilogsidinvalidate-)
-      - [`GET /api/logs/{logId}/comments`](#get-apilogslogidcomments)
-      - [`POST /api/logs/{logId}/comments`](#post-apilogslogidcomments)
+      - [`POST /api/logs/{logId}/comments` ✅](#post-apilogslogidcomments-)
+      - [`DELETE /api/logs/{logId}/comments/{commentId}` ✅](#delete-apilogslogidcommentscommentid-)
   - [Frontend Pages/Routes](#frontend-pagesroutes)
     - [Shared/Layout](#sharedlayout)
     - [Login `/login`](#login-login)
@@ -456,15 +456,15 @@ Soft-deletes a habit.
 
 Retrieves habit logs, optionally filtered by habitId. Sorted by date (recent first). Paginated.
 
-Example: `/api/logs/?habitId={uuid}&pageNumber={number}&pageSize={number}`
-
-- **Parameters:**
+- **Query Parameters:**
 
   - `habitId` (optional): Optional habit to filter logs by.
     - If `habitId` isn't provided, the endpoint returns logs from any user.
     - Otherwise the endpoint returns only logs from the given habit (for the owner user).
   - `pageNumber`: Optional page number for pagination. Defaults to 1.
   - `pageSize`: Optional page size for pagination. If not provided, all matching questions are returned.
+
+Example: `/api/logs/?habitId={uuid}&pageNumber={number}&pageSize={number}`
 
 - **Response:**
 
@@ -506,7 +506,16 @@ Retrieves a specific habit log.
       "textEntry": "string",
       "photoUrl": "string",
       "createdAt": "date",
-      "validatedBy": [{ "userId": "uuid", "username": "Username 1" }]
+      "validatedBy": [{ "userId": "uuid", "username": "string" }],
+      "comments": [
+        {
+          "id": "uuid",
+          "userId": "uuid",
+          "username": "string",
+          "text": "string",
+          "createdAt": "string"
+        }
+      ]
     }
     ```
 
@@ -546,7 +555,7 @@ Deletes a habit log.
 
   - **Status:** `204 No Content`
 
-#### `POST /api/logs/{id}/validate` ✅`
+#### `POST /api/logs/{id}/validate` ✅
 
 Validates a Habit Log from a friend (can be performed only once by the same user).
 
@@ -562,27 +571,7 @@ Removes the validation made by the current user to a Habit Log from a friend.
 
   - **Status:** `204 No Content`
 
-#### `GET /api/logs/{logId}/comments`
-
-Retrieves the comments made to a Habit Log.
-
-- **Response:**
-
-  - **Status:** `200 OK`
-  - **Body:**
-
-    ```json
-    [
-      {
-        "id": "uuid",
-        "username": "Username 1",
-        "text": "Good job!",
-        "createdAt": "date"
-      }
-    ]
-    ```
-
-#### `POST /api/logs/{logId}/comments`
+#### `POST /api/logs/{logId}/comments` ✅
 
 Adds a new comment to a Habit Log.
 
@@ -608,6 +597,19 @@ Adds a new comment to a Habit Log.
     ```json
     "uuid"
     ```
+
+#### `DELETE /api/logs/{logId}/comments/{commentId}` ✅
+
+Deletes a comment from a Habit Log (made by the authenticated user).
+
+- **Parameters:**
+
+  - `logId` (required): UUID of the Habit Log.
+  - `commentId` (required): UUID of the comment to delete.
+
+- **Response:**
+
+  - **Status:** `204 No Content`
 
 ## Frontend Pages/Routes
 

@@ -21,6 +21,7 @@ import { AuthenticatedUser } from 'src/modules/auth/interfaces';
 import { ReadHabitLogDto } from '../dtos/read-habit-log.dto';
 import { ReadHabitLogsQueryDto } from '../dtos/read-habit-logs-query.dto';
 import { ReadHabitLogSummaryDto } from '../dtos/read-habit-log-summary.dto';
+import { CreateHabitLogCommentDto } from '../dtos/create-habit-log-comment.dto';
 
 @Controller('logs')
 export class HabitLogsController {
@@ -94,5 +95,29 @@ export class HabitLogsController {
     @Param('id', new ParseUUIDPipe()) habitLogId: string,
   ) {
     return this.habitLogsService.invalidateHabitLog(user.userId, habitLogId);
+  }
+
+  @Post(':id/comments')
+  @HttpCode(204)
+  addComment(
+    @GetUser() user: AuthenticatedUser,
+    @Param('id', new ParseUUIDPipe()) habitLogId: string,
+    @Body() dto: CreateHabitLogCommentDto,
+  ) {
+    return this.habitLogsService.addComment(user.userId, habitLogId, dto);
+  }
+
+  @Delete(':logId/comments/:commentId')
+  @HttpCode(204)
+  deleteComment(
+    @GetUser() user: AuthenticatedUser,
+    @Param('logId', new ParseUUIDPipe()) habitLogId: string,
+    @Param('commentId', new ParseUUIDPipe()) commentId: string,
+  ) {
+    return this.habitLogsService.removeComment(
+      user.userId,
+      habitLogId,
+      commentId,
+    );
   }
 }

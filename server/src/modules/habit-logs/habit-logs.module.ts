@@ -6,10 +6,16 @@ import { HabitLogsController } from './controllers/habit-logs.controller';
 import { HabitLogsService } from './services/habit-logs.service';
 import { FileStorageModule } from '../file-storage/file-storage.module';
 import { HabitLogValidation } from './entities/habit-log-validation.entity';
+import { HabitLogComment } from './entities/habit-log-comment.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Habit, HabitLog, HabitLogValidation]),
+    TypeOrmModule.forFeature([
+      Habit,
+      HabitLog,
+      HabitLogValidation,
+      HabitLogComment,
+    ]),
     FileStorageModule,
   ],
   exports: [TypeOrmModule],

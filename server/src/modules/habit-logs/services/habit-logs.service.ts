@@ -18,6 +18,8 @@ import { ReadHabitLogDto } from '../dtos/read-habit-log.dto';
 import { HabitLogValidation } from '../entities/habit-log-validation.entity';
 import { ReadHabitLogsQueryDto } from '../dtos/read-habit-logs-query.dto';
 import { ReadHabitLogSummaryDto } from '../dtos/read-habit-log-summary.dto';
+import { CreateHabitLogCommentDto } from '../dtos/create-habit-log-comment.dto';
+import { HabitLogComment } from '../entities/habit-log-comment.entity';
 
 @Injectable()
 export class HabitLogsService {
@@ -28,6 +30,8 @@ export class HabitLogsService {
     private readonly habitLogsRepository: Repository<HabitLog>,
     @InjectRepository(HabitLogValidation)
     private readonly habitLogValidationsRepository: Repository<HabitLogValidation>,
+    @InjectRepository(HabitLogComment)
+    private readonly habitLogCommentsRepository: Repository<HabitLogComment>,
     @Inject(FILE_STORAGE_PROVIDER)
     private readonly fileStorageProvider: FileStorageProvider,
   ) {}
@@ -41,10 +45,11 @@ export class HabitLogsService {
       .leftJoinAndSelect('habit.user', 'habitOwner')
       .leftJoinAndSelect('habitLog.validations', 'validation')
       .leftJoinAndSelect('validation.validatorUser', 'validatorUser')
+      .where('habit.isDeleted = false')
       .orderBy('habitLog.created_at', 'DESC');
 
     if (query.habitId) {
-      queryBuilder.where('habitLog.habitId = :habitId', {
+      queryBuilder.andWhere('habitLog.habitId = :habitId', {
         habitId: query.habitId,
       });
     }
@@ -124,6 +129,8 @@ export class HabitLogsService {
         'habit.user',
         'validations',
         'validations.validatorUser',
+        'comments',
+        'comments.user',
       ],
     });
 
@@ -131,6 +138,10 @@ export class HabitLogsService {
       throw new NotFoundException(
         `Habit Log with Id ${habitLogId} was not found.`,
       );
+    }
+
+    if (!habitLog.habit || habitLog.habit.isDeleted) {
+      throw new NotFoundException(`Habit not found.`);
     }
 
     return {
@@ -147,6 +158,13 @@ export class HabitLogsService {
         userId: validation.validatorUser.id,
         username: validation.validatorUser.username,
       })),
+      comments: habitLog.comments.map((comment) => ({
+        id: comment.id,
+        userId: comment.user.id,
+        username: comment.user.username,
+        text: comment.text,
+        createdAt: comment.created_at.toISOString(),
+      })),
     };
   }
 
@@ -160,6 +178,10 @@ export class HabitLogsService {
       throw new NotFoundException(
         `Habit Log with Id ${habitLogId} was not found.`,
       );
+    }
+
+    if (!habitLog.habit || habitLog.habit.isDeleted) {
+      throw new NotFoundException(`Habit not found.`);
     }
 
     if (habitLog.habit.user.id !== userId) {
@@ -186,6 +208,10 @@ export class HabitLogsService {
       throw new NotFoundException(
         `Habit Log with Id ${habitLogId} was not found.`,
       );
+    }
+
+    if (!habitLog.habit || habitLog.habit.isDeleted) {
+      throw new NotFoundException(`Habit not found.`);
     }
 
     if (habitLog.habit.user.id === userId) {
@@ -227,6 +253,10 @@ export class HabitLogsService {
       );
     }
 
+    if (!habitLog.habit || habitLog.habit.isDeleted) {
+      throw new NotFoundException(`Habit not found.`);
+    }
+
     if (habitLog.habit.user.id === userId) {
       throw new UnauthorizedException(
         `You are not authorized to invalidate this Habit Log.`,
@@ -244,5 +274,52 @@ export class HabitLogsService {
     }
 
     await this.habitLogValidationsRepository.remove(existingValidation);
+  }
+
+  async addComment(
+    userId: string,
+    habitLogId: string,
+    dto: CreateHabitLogCommentDto,
+  ) {
+    const habitLog = await this.habitLogsRepository
+      .createQueryBuilder('habitLog')
+      .leftJoinAndSelect('habitLog.habit', 'habit')
+      .where('habitLog.id = :habitLogId', { habitLogId })
+      .andWhere('habit.isDeleted = false')
+      .getOne();
+
+    if (!habitLog) {
+      throw new NotFoundException(
+        `Habit Log with Id ${habitLogId} was not found.`,
+      );
+    }
+
+    const comment = this.habitLogCommentsRepository.create({
+      habitLog: habitLog,
+      user: { id: userId },
+      text: dto.text,
+    });
+
+    await this.habitLogCommentsRepository.save(comment);
+  }
+
+  async removeComment(userId: string, habitLogId: string, commentId: string) {
+    const comment = await this.habitLogCommentsRepository
+      .createQueryBuilder('comment')
+      .leftJoinAndSelect('comment.habitLog', 'habitLog')
+      .leftJoinAndSelect('habitLog.habit', 'habit')
+      .where('comment.id = :commentId', { commentId })
+      .andWhere('habitLog.id = :habitLogId', { habitLogId })
+      .andWhere('comment.user.id = :userId', { userId })
+      .andWhere('habit.isDeleted = false')
+      .getOne();
+
+    if (!comment) {
+      throw new UnauthorizedException(
+        `This comment doesn't exist or you are not authorized to remove it.`,
+      );
+    }
+
+    await this.habitLogCommentsRepository.remove(comment);
   }
 }

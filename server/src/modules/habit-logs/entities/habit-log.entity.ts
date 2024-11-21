@@ -9,6 +9,7 @@ import {
   Unique,
 } from 'typeorm';
 import { HabitLogValidation } from './habit-log-validation.entity';
+import { HabitLogComment } from './habit-log-comment.entity';
 
 @Entity()
 @Unique(['habit', 'date'])
@@ -28,11 +29,19 @@ export class HabitLog {
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
-  @ManyToOne(() => Habit, (habit) => habit.logs, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Habit, (habit) => habit.logs, {
+    onDelete: 'CASCADE',
+    nullable: false,
+  })
   habit: Habit;
 
   @OneToMany(() => HabitLogValidation, (validation) => validation.habitLog, {
     cascade: true,
   })
   validations: HabitLogValidation[];
+
+  @OneToMany(() => HabitLogComment, (comment) => comment.habitLog, {
+    cascade: true,
+  })
+  comments: HabitLogComment[];
 }
