@@ -36,7 +36,7 @@ A personal habit-tracking app that fosters community accountability through vali
       - [`POST /api/logs/{logId}/comments` ✅](#post-apilogslogidcomments-)
       - [`DELETE /api/logs/{logId}/comments/{commentId}` ✅](#delete-apilogslogidcommentscommentid-)
   - [Frontend Pages/Routes](#frontend-pagesroutes)
-    - [Shared/Layout ✅](#sharedlayout-)
+    - [Shared/Layout (Navbar) ✅](#sharedlayout-navbar-)
     - [Login `/login` ✅](#login-login-)
     - [Signup `/signup` ✅](#signup-signup-)
     - [Home `/`](#home-)
@@ -613,7 +613,7 @@ Deletes a comment from a Habit Log (made by the authenticated user).
 
 ## Frontend Pages/Routes
 
-### Shared/Layout ✅
+### Shared/Layout (Navbar) ✅
 
 **User is authenticated:**
 
