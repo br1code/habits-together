@@ -4,8 +4,10 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthContext } from '@/contexts/AuthContext';
 
-const withAuth = (WrappedComponent: React.ComponentType) => {
-  const AuthenticatedComponent: React.FC = (props) => {
+const withAuth = <P extends object>(
+  WrappedComponent: React.ComponentType<P>
+) => {
+  const AuthenticatedComponent: React.FC<P> = (props) => {
     const authContext = useAuthContext();
     const router = useRouter();
 
@@ -19,6 +21,7 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
       return null; // Or a loading indicator
     }
 
+    // Forward props to the wrapped component
     return <WrappedComponent {...props} />;
   };
 

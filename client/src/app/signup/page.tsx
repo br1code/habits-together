@@ -107,7 +107,7 @@ const SignupPage: FC = () => {
         <p className="mt-6 text-center text-sm">
           Ya tienes una cuenta?{' '}
           <Link
-            href="/signup"
+            href="/login"
             className="text-indigo-400 underline hover:text-indigo-500"
           >
             Inicia sesión aquí

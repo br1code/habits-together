@@ -15,6 +15,7 @@ const Navbar: FC = () => {
   };
 
   const onClickLogout = () => {
+    setMenuOpen(false);
     authContext.logout();
   };
 

@@ -1,13 +1,11 @@
+'use client';
+
 import { FC } from 'react';
+import { useParams } from 'next/navigation';
+import withAuth from '@/components/withAuth';
 
-interface ViewHabitLogPageProps {
-  params: {
-    id: string;
-  };
-}
-
-const ViewHabitLogPage: FC<ViewHabitLogPageProps> = async ({ params }) => {
-  const { id } = await params;
+const ViewHabitLogPage: FC = () => {
+  const { id } = useParams<{ id: string }>();
 
   return (
     <main>
@@ -16,4 +14,4 @@ const ViewHabitLogPage: FC<ViewHabitLogPageProps> = async ({ params }) => {
   );
 };
 
-export default ViewHabitLogPage;
+export default withAuth(ViewHabitLogPage);

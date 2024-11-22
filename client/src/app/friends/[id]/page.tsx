@@ -1,13 +1,11 @@
+'use client';
+
 import { FC } from 'react';
+import { useParams } from 'next/navigation';
+import withAuth from '@/components/withAuth';
 
-interface ViewFriendPageProps {
-  params: {
-    id: string;
-  };
-}
-
-const ViewFriendPage: FC<ViewFriendPageProps> = async ({ params }) => {
-  const { id } = await params;
+const ViewFriendPage: FC = () => {
+  const { id } = useParams<{ id: string }>();
 
   return (
     <main>
@@ -16,4 +14,4 @@ const ViewFriendPage: FC<ViewFriendPageProps> = async ({ params }) => {
   );
 };
 
-export default ViewFriendPage;
+export default withAuth(ViewFriendPage);

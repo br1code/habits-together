@@ -1,13 +1,11 @@
+'use client';
+
 import { FC } from 'react';
+import { useParams } from 'next/navigation';
+import withAuth from '@/components/withAuth';
 
-interface EditHabitPageProps {
-  params: {
-    id: string;
-  };
-}
-
-const EditHabitPage: FC<EditHabitPageProps> = async ({ params }) => {
-  const { id } = await params;
+const EditHabitPage: FC = () => {
+  const { id } = useParams<{ id: string }>();
 
   return (
     <main>
@@ -16,4 +14,4 @@ const EditHabitPage: FC<EditHabitPageProps> = async ({ params }) => {
   );
 };
 
-export default EditHabitPage;
+export default withAuth(EditHabitPage);
