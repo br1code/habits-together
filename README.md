@@ -36,9 +36,9 @@ A personal habit-tracking app that fosters community accountability through vali
       - [`POST /api/logs/{logId}/comments` ✅](#post-apilogslogidcomments-)
       - [`DELETE /api/logs/{logId}/comments/{commentId}` ✅](#delete-apilogslogidcommentscommentid-)
   - [Frontend Pages/Routes](#frontend-pagesroutes)
-    - [Shared/Layout](#sharedlayout)
-    - [Login `/login`](#login-login)
-    - [Signup `/signup`](#signup-signup)
+    - [Shared/Layout ✅](#sharedlayout-)
+    - [Login `/login` ✅](#login-login-)
+    - [Signup `/signup` ✅](#signup-signup-)
     - [Home `/`](#home-)
     - [Profile `/profile`](#profile-profile)
     - [Habits `/habits`](#habits-habits)
@@ -613,7 +613,7 @@ Deletes a comment from a Habit Log (made by the authenticated user).
 
 ## Frontend Pages/Routes
 
-### Shared/Layout
+### Shared/Layout ✅
 
 **User is authenticated:**
 
@@ -625,12 +625,13 @@ Displays a navbar with the following links:
   - Friends: `/friends`
 - Logo image: `/`
 - Log Habit button: `/logs/new`
+- Logout button: removes the stored token and redirects to login.
 
 **User is not authenticated:**
 
 Displays a navbar with a logo `/` (no action links, no menu, etc).
 
-### Login `/login`
+### Login `/login` ✅
 
 **If user is already authenticated, it gets redirected to `/`**
 
@@ -656,11 +657,11 @@ The Login button sends a POST request to `/api/auth/login` with the following bo
 
 If the request failed, we should display user-friendly errors.
 
-If the request is successfull, we must store the `accessToken` from the response somewhere locally, and use it to execute any following requests to the API (TODO: using an Interceptor or something similar? Find a library.) After that, the user gets redirected to `/`.
+If the request is successfull, we must store the `accessToken` from the response somewhere locally, and use it to execute any following requests to the API. After that, the user gets redirected to `/`.
 
 The Signup link redirects the page to `/signup`.
 
-### Signup `/signup`
+### Signup `/signup` ✅
 
 **If user is already authenticated, it gets redirected to `/`**
 

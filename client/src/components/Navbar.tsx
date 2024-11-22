@@ -1,15 +1,21 @@
 'use client';
 
+import { useAuthContext } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 import { FiMenu, FiPlus } from 'react-icons/fi';
 import { IoClose } from 'react-icons/io5';
 
 const Navbar: FC = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const authContext = useAuthContext();
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
+  };
+
+  const onClickLogout = () => {
+    authContext.logout();
   };
 
   return (
@@ -17,43 +23,47 @@ const Navbar: FC = () => {
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center">
           {/* Hamburger Menu (Mobile) */}
-          <button
-            onClick={toggleMenu}
-            className="text-2xl md:hidden focus:outline-none mr-4"
-            aria-label="Toggle Menu"
-          >
-            {menuOpen ? <IoClose /> : <FiMenu />}
-          </button>
+          {authContext.isAuthenticated && (
+            <button
+              onClick={toggleMenu}
+              className="text-2xl md:hidden focus:outline-none mr-4"
+              aria-label="Toggle Menu"
+            >
+              {menuOpen ? <IoClose /> : <FiMenu />}
+            </button>
+          )}
 
-          {/* Home Link */}
-          <Link href="/" className="text-lg font-bold">
+          {/* Logo */}
+          <Link href="/" className="text-xl font-bold">
             HABITS TOGETHER
           </Link>
         </div>
 
-        {/* Desktop Menu Links and Plus Icon */}
-        <div className="flex items-center space-x-4">
-          {/* Menu Links (Desktop) */}
-          <div className="hidden md:flex space-x-4">
-            <Link href="/profile">Perfil</Link>
-            <Link href="/habits">Hábitos</Link>
-            <Link href="/friends">Amigos</Link>
-          </div>
+        {/* Show additional items only if authenticated */}
+        {authContext.isAuthenticated && (
+          <div className="flex items-center space-x-4">
+            {/* Menu Links (Desktop) */}
+            <div className="hidden md:flex space-x-4">
+              <Link href="/profile">Perfil</Link>
+              <Link href="/habits">Hábitos</Link>
+              <Link href="/friends">Amigos</Link>
+            </div>
 
-          {/* Plus Icon Button */}
-          <Link href="/logs/new">
-            <button
-              className="text-2xl focus:outline-none"
-              aria-label="Add New"
-            >
-              <FiPlus />
-            </button>
-          </Link>
-        </div>
+            {/* Plus Icon Button */}
+            <Link href="/logs/new">
+              <button
+                className="text-2xl focus:outline-none"
+                aria-label="Add New"
+              >
+                <FiPlus />
+              </button>
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Mobile Menu */}
-      {menuOpen && (
+      {menuOpen && authContext.isAuthenticated && (
         <div className="md:hidden">
           <ul className="bg-black py-4 px-6 space-y-4">
             <li>
@@ -70,6 +80,9 @@ const Navbar: FC = () => {
               <Link href="/friends" onClick={() => setMenuOpen(false)}>
                 Amigos
               </Link>
+            </li>
+            <li>
+              <button onClick={onClickLogout}>Cerrar Sesión</button>
             </li>
           </ul>
         </div>
