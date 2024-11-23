@@ -3,49 +3,86 @@ import { HabitLog } from '@/types';
 import { useEffect, useState } from 'react';
 
 interface UseFetchHabitLogsResult {
-  habitLogs: HabitLog[] | null;
+  habitLogs: HabitLog[];
   loading: boolean;
   error: string | null;
+  hasMore: boolean;
+  loadMore: () => void;
 }
 
 interface FetchHabitLogsParams {
   habitId?: string | null;
-  pageNumber?: number | null;
-  pageSize?: number | null;
+  pageSize?: number;
 }
 
 export const useFetchHabitLogs = (
-  params: FetchHabitLogsParams = {}
+  initialParams: FetchHabitLogsParams = {}
 ): UseFetchHabitLogsResult => {
-  const { habitId = null, pageNumber = null, pageSize = null } = params;
+  const { habitId = null, pageSize = 5 } = initialParams;
 
-  const [habitLogs, setHabitLogs] = useState<HabitLog[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [habitLogs, setHabitLogs] = useState<HabitLog[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [hasMore, setHasMore] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchAndSetHabitLogs = async () => {
+    // Fetch the initial page
+    const fetchInitialHabitLogs = async () => {
       try {
         setLoading(true);
         setError(null);
 
         const fetchedHabitLogs = await fetchHabitLogs({
           habitId,
-          pageNumber,
+          pageNumber: 1,
           pageSize,
         });
+
         setHabitLogs(fetchedHabitLogs);
+
+        if (fetchedHabitLogs.length < pageSize) {
+          setHasMore(false);
+        }
       } catch (error) {
         console.error('Error fetching habit logs:', error);
         setError('Failed to load habit logs.');
-        setHabitLogs(null);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAndSetHabitLogs();
-  }, [habitId, pageNumber, pageSize]);
+    fetchInitialHabitLogs();
+  }, [habitId, pageSize]);
 
-  return { habitLogs, loading, error };
+  const loadMore = async () => {
+    if (loading || !hasMore) return;
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      const nextPage = currentPage + 1;
+      const fetchedHabitLogs = await fetchHabitLogs({
+        habitId,
+        pageNumber: nextPage,
+        pageSize,
+      });
+
+      setHabitLogs((prevHabitLogs) => [...prevHabitLogs, ...fetchedHabitLogs]);
+
+      if (fetchedHabitLogs.length < pageSize) {
+        setHasMore(false);
+      }
+
+      setCurrentPage(nextPage);
+    } catch (error) {
+      console.error('Error fetching habit logs:', error);
+      setError('Failed to load more habit logs.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { habitLogs, loading, error, hasMore, loadMore };
 };

@@ -1,20 +1,26 @@
-import { FC } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { parse, formatDistanceToNow } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { FC, useRef, useCallback } from 'react';
 import { useFetchHabitLogs } from '@/hooks/habitLogs';
+import HabitLogFeedItem from './HabitLogFeedItem';
 
 const HabitLogsFeed: FC = () => {
-  const { habitLogs, loading, error } = useFetchHabitLogs();
+  const { habitLogs, loading, error, hasMore, loadMore } = useFetchHabitLogs();
+  const observer = useRef<IntersectionObserver | null>(null);
 
-  if (loading) {
-    return (
-      <section className="bg-black text-white">
-        <h1 className="text-xl font-bold mb-4">Loading...</h1>
-      </section>
-    );
-  }
+  const lastHabitLogRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          loadMore();
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore, loadMore]
+  );
 
   if (error) {
     return (
@@ -24,62 +30,26 @@ const HabitLogsFeed: FC = () => {
     );
   }
 
-  if (!habitLogs || habitLogs.length === 0) {
-    return null;
-  }
-
   return (
     <section className="bg-black text-white">
-      {habitLogs.map((habitLog) => (
-        <div
-          key={habitLog.id}
-          className="overflow-hidden border-b border-gray-800"
-        >
-          <div className="flex items-center px-4 py-2">
-            <Link href={getProfileLink(habitLog.userId, habitLog.isOwner)}>
-              <p className="font-semibold text-lg">{habitLog.username}</p>
-            </Link>
-          </div>
+      {habitLogs.map((habitLog, index) => {
+        const isLastItem = habitLogs.length === index + 1;
+        const isFirstItem = index === 0;
 
-          <Link href={`/logs/${habitLog.id}`}>
-            <div className="relative w-full overflow-hidden">
-              <div className="w-full h-0 pb-[125%] relative">
-                <Image
-                  src={habitLog.photoUrl}
-                  alt={habitLog.habitName}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </div>
-          </Link>
-
-          <div className="px-4 py-2">
-            <p className="text-sm">
-              <span className="font-semibold">
-                <Link href={getProfileLink(habitLog.userId, habitLog.isOwner)}>
-                  {habitLog.username}
-                </Link>
-              </span>{' '}
-              {habitLog.habitName}
-            </p>
-            <p className="text-xs text-gray-400 uppercase mt-1">
-              {formatTimeAgo(habitLog.createdAt)}
-            </p>
+        return (
+          <div
+            key={habitLog.id}
+            ref={isLastItem ? lastHabitLogRef : undefined}
+            className="overflow-hidden border-b border-gray-800"
+          >
+            {/* Habit Log Content */}
+            <HabitLogFeedItem habitLog={habitLog} isFirstItem={isFirstItem} />
           </div>
-        </div>
-      ))}
+        );
+      })}
+      {loading && <p className="text-center py-4">Loading...</p>}
     </section>
   );
 };
-
-function formatTimeAgo(dateString: string) {
-  const date = parse(dateString, 'dd/MM/yyyy HH:mm', new Date());
-  return formatDistanceToNow(date, { addSuffix: true, locale: es });
-}
-
-function getProfileLink(userId: string, isOwner: boolean): string {
-  return isOwner ? `/profile` : `/friends/${userId}`;
-}
 
 export default HabitLogsFeed;
