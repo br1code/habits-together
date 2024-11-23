@@ -12,6 +12,8 @@ import { ReadHabitSummaryDto } from '../dtos/read-habit-summary.dto';
 import { ReadHabitDto } from '../dtos/read-habit.dto';
 import { UsersService } from 'src/modules/users/services/users.service';
 import { ActivityType } from 'src/modules/users/entities/experience-log.entity';
+import { DateTime } from 'luxon';
+import { getCurrentDateISO, parseDateISO } from 'src/utils/dateUtils';
 
 @Injectable()
 export class HabitsService {
@@ -22,7 +24,7 @@ export class HabitsService {
   ) {}
 
   async getHabits(userId: string): Promise<ReadHabitSummaryDto[]> {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getCurrentDateISO();
 
     const habits = await this.habitsRepository
       .createQueryBuilder('habit')
@@ -49,7 +51,7 @@ export class HabitsService {
   }
 
   async getHabit(userId: string, habitId: string): Promise<ReadHabitDto> {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getCurrentDateISO();
 
     const habit = await this.habitsRepository
       .createQueryBuilder('habit')
@@ -71,9 +73,7 @@ export class HabitsService {
     }
 
     const logDates = habit.logs.map((log) =>
-      log.date instanceof Date
-        ? log.date.toISOString().split('T')[0]
-        : log.date,
+      log.date instanceof Date ? parseDateISO(log.date) : log.date,
     );
 
     const { currentStreak, highestStreak } = this.calculateStreaks(logDates);
@@ -162,13 +162,13 @@ export class HabitsService {
 
     // Normalize dates and sort them in ascending order
     const dates = logDates
-      .map((date) => new Date(date))
-      .sort((a, b) => a.getTime() - b.getTime());
+      .map((date) => DateTime.fromISO(date))
+      .sort((a, b) => a.toMillis() - b.toMillis());
 
     // Calculate streaks
     for (let i = 1; i < dates.length; i++) {
       const diff =
-        (dates[i].getTime() - dates[i - 1].getTime()) / (1000 * 60 * 60 * 24); // Difference in days
+        (dates[i].toMillis() - dates[i - 1].toMillis()) / (1000 * 60 * 60 * 24); // Difference in days
 
       if (diff === 1) {
         // Consecutive days
@@ -184,8 +184,8 @@ export class HabitsService {
     highestStreak = Math.max(highestStreak, streakCount);
 
     // Calculate current streak
-    const today = new Date().toISOString().split('T')[0];
-    const mostRecentLog = dates[dates.length - 1].toISOString().split('T')[0];
+    const today = getCurrentDateISO();
+    const mostRecentLog = dates[dates.length - 1].toISODate();
 
     if (mostRecentLog === today) {
       currentStreak = streakCount;

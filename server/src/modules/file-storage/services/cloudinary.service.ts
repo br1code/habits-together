@@ -13,6 +13,8 @@ export class CloudinaryService implements FileStorageProvider {
     });
   }
 
+  // TODO: this throws a 500 server error when failing, consider catching the exception
+  // TODO: add logging or something to measure the time it takes
   async upload(
     file: Express.Multer.File,
   ): Promise<{ url: string; publicId: string }> {

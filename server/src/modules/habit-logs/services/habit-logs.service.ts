@@ -22,6 +22,7 @@ import { CreateHabitLogCommentDto } from '../dtos/create-habit-log-comment.dto';
 import { HabitLogComment } from '../entities/habit-log-comment.entity';
 import { UsersService } from 'src/modules/users/services/users.service';
 import { ActivityType } from 'src/modules/users/entities/experience-log.entity';
+import { formatDateForDisplay, getCurrentDateISO } from 'src/utils/dateUtils';
 
 @Injectable()
 export class HabitLogsService {
@@ -69,7 +70,7 @@ export class HabitLogsService {
       userId: log.habit.user.id,
       username: log.habit.user.username,
       photoUrl: log.photo_url,
-      createdAt: log.created_at.toISOString(),
+      createdAt: formatDateForDisplay(log.created_at),
       validatedBy: log.validations.map((validation) => ({
         userId: validation.validatorUser.id,
         username: validation.validatorUser.username,
@@ -92,8 +93,7 @@ export class HabitLogsService {
       throw new NotFoundException(`Habit with Id ${dto.habitId} not found.`);
     }
 
-    // TODO: get current date from somewhere else (library?)
-    const today = new Date().toISOString().split('T')[0];
+    const today = getCurrentDateISO();
 
     const existingLog = await this.habitLogsRepository.findOne({
       where: {
@@ -164,7 +164,7 @@ export class HabitLogsService {
       habitName: habitLog.habit.name,
       textEntry: habitLog.text_entry,
       photoUrl: habitLog.photo_url,
-      createdAt: habitLog.created_at.toISOString(),
+      createdAt: formatDateForDisplay(habitLog.created_at),
       validatedBy: habitLog.validations.map((validation) => ({
         userId: validation.validatorUser.id,
         username: validation.validatorUser.username,
@@ -174,7 +174,7 @@ export class HabitLogsService {
         userId: comment.user.id,
         username: comment.user.username,
         text: comment.text,
-        createdAt: comment.created_at.toISOString(),
+        createdAt: formatDateForDisplay(comment.created_at),
       })),
     };
   }

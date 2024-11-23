@@ -28,7 +28,7 @@ const HabitStats: FC = () => {
 
   return (
     <Link href="/habits">
-      <section className="flex justify-center items-center bg-indigo-700 text-white p-4 border border-gray-500 min-h-[75px]">
+      <section className="flex justify-center items-center bg-indigo-700 text-white p-4 border border-gray-500  min-h-[75px]">
         <h1 className="text-2xl font-bold">
           Hábitos Logueados: {loggedHabits}/{totalHabits}
         </h1>

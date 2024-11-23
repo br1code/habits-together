@@ -9,6 +9,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { HabitLogsModule } from './modules/habit-logs/habit-logs.module';
 import { FileStorageModule } from './modules/file-storage/file-storage.module';
+import { ARGENTINA_TIMEZONE } from './constants';
 
 @Module({
   imports: [
@@ -26,6 +27,9 @@ import { FileStorageModule } from './modules/file-storage/file-storage.module';
         database: configService.get('DATABASE_NAME'),
         synchronize: configService.get('DATABASE_SYNCHRONIZE') === 'true',
         autoLoadEntities: true,
+        extra: {
+          options: `-c timezone=${ARGENTINA_TIMEZONE}`,
+        },
       }),
       inject: [ConfigService],
     }),

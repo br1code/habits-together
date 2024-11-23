@@ -5,6 +5,8 @@ import * as bcrypt from 'bcrypt';
 import { User } from 'src/modules/users/entities/user.entity';
 import { Habit } from 'src/modules/habits/entities/habit.entity';
 import { HabitLog } from 'src/modules/habit-logs/entities/habit-log.entity';
+import { DateTime } from 'luxon';
+import { ARGENTINA_TIMEZONE } from 'src/constants';
 
 @Injectable()
 export class SeedService {
@@ -110,20 +112,19 @@ export class SeedService {
       name: 'Exercise',
     });
 
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
+    const today = DateTime.now().setZone(ARGENTINA_TIMEZONE);
+    const yesterday = today.minus({ days: 1 });
 
     const logs: Partial<HabitLog>[] = [
       {
         habit: habit,
-        date: today,
+        date: today.toJSDate(),
         text_entry: 'Morning run',
         photo_url: 'http://example.com/photo1.jpg',
       },
       {
         habit: habit,
-        date: yesterday,
+        date: yesterday.toJSDate(),
         text_entry: '8-hour sleep achieved',
         photo_url: 'http://example.com/photo2.jpg',
       },

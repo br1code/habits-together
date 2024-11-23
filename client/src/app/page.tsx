@@ -6,7 +6,7 @@ import HabitStats from '@/components/habits/HabitsStats';
 
 const HomePage: FC = () => {
   return (
-    <main>
+    <main className="max-w-screen-sm mx-auto">
       <HabitStats />
     </main>
   );
