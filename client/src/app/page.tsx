@@ -2,11 +2,12 @@
 
 import { FC } from 'react';
 import withAuth from '@/components/withAuth';
+import HabitStats from '@/components/habits/HabitsStats';
 
 const HomePage: FC = () => {
   return (
     <main>
-      <h1>Home</h1>
+      <HabitStats />
     </main>
   );
 };

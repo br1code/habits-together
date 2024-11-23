@@ -356,8 +356,8 @@ Retrieves all non-deleted habits of the authenticated User.
       {
         "id": "uuid",
         "name": "Exercise",
-        "wasLogged": true,
-        "wasValidated": false
+        "wasLoggedToday": true,
+        "wasValidatedToday": false
       }
     ]
     ```
@@ -376,8 +376,8 @@ Retrieves a specific habit.
         "id": "uuid",
         "name": "Exercise",
         "rules": "At least 30 minutes of exercise",
-        "wasLogged": true,
-        "wasValidated": false,
+        "wasLoggedToday": true,
+        "wasValidatedToday": false,
         "currentStreak": 1,
         "highestStreak": 10
       },

@@ -1,6 +1,8 @@
-import { postData } from './http';
+import { fetchData, postData } from './http';
 import {
   createdEntityIdSchema,
+  Habit,
+  habitsSchema,
   LoginData,
   LoginResult,
   loginResultSchema,
@@ -13,4 +15,8 @@ export const login = (data: LoginData): Promise<LoginResult> => {
 
 export const signup = (data: SignupData): Promise<string> => {
   return postData('auth/signup', createdEntityIdSchema, data);
+};
+
+export const fetchHabits = (): Promise<Habit[]> => {
+  return fetchData('habits', habitsSchema);
 };

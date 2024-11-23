@@ -5,12 +5,49 @@ const API_URL =
     ? process.env.API_URL // Server-side
     : process.env.NEXT_PUBLIC_API_URL; // Client-side
 
+export const fetchWithAuth = async (
+  input: RequestInfo,
+  init: RequestInit = {}
+): Promise<Response> => {
+  // Retrieve the token from localStorage
+  const token = localStorage.getItem('accessToken');
+
+  // Create a Headers instance from init.headers if it exists, or create a new one
+  const headers = new Headers(init.headers);
+
+  // Set the Authorization header if the token exists
+  if (token) {
+    headers.set('Authorization', `Bearer ${token}`);
+  }
+
+  // Ensure the Content-Type header is set to 'application/json'
+  if (!headers.has('Content-Type')) {
+    headers.set('Content-Type', 'application/json');
+  }
+
+  // Make the fetch request with the updated headers
+  const response = await fetch(input, {
+    ...init,
+    headers, // Pass the Headers instance
+  });
+
+  // Optional: Handle unauthorized responses
+  if (response.status === 401) {
+    // Remove the invalid token
+    localStorage.removeItem('accessToken');
+    // Redirect to login page
+    window.location.href = '/login';
+  }
+
+  return response;
+};
+
 export async function fetchData<T>(
   url: string,
   schema: ZodSchema<T>
 ): Promise<T> {
   try {
-    const response = await fetch(`${API_URL}/${url}`);
+    const response = await fetchWithAuth(`${API_URL}/${url}`);
 
     if (!response.ok) {
       throw new Error('Failed to fetch data');
@@ -32,7 +69,7 @@ export async function postData<T, U>(
   try {
     const isFormData = data instanceof FormData;
 
-    const response = await fetch(`${API_URL}/${url}`, {
+    const response = await fetchWithAuth(`${API_URL}/${url}`, {
       method: 'POST',
       headers: isFormData ? undefined : { 'Content-Type': 'application/json' },
       body: isFormData ? data : JSON.stringify(data),
@@ -55,7 +92,7 @@ export async function postData<T, U>(
 
 export async function putData<T, U>(url: string, data: U): Promise<T> {
   try {
-    const response = await fetch(`${API_URL}/${url}`, {
+    const response = await fetchWithAuth(`${API_URL}/${url}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -79,7 +116,7 @@ export async function putData<T, U>(url: string, data: U): Promise<T> {
 
 export async function deleteData(url: string): Promise<void> {
   try {
-    const response = await fetch(`${API_URL}/${url}`, {
+    const response = await fetchWithAuth(`${API_URL}/${url}`, {
       method: 'DELETE',
     });
 

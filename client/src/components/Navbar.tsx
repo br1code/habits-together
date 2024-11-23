@@ -35,7 +35,11 @@ const Navbar: FC = () => {
           )}
 
           {/* Logo */}
-          <Link href="/" className="text-xl font-bold">
+          <Link
+            href="/"
+            className="text-xl font-bold"
+            onClick={() => setMenuOpen(false)}
+          >
             HABITS TOGETHER
           </Link>
         </div>
