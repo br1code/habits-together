@@ -39,7 +39,7 @@ A personal habit-tracking app that fosters community accountability through vali
     - [Shared/Layout (Navbar) ✅](#sharedlayout-navbar-)
     - [Login `/login` ✅](#login-login-)
     - [Signup `/signup` ✅](#signup-signup-)
-    - [Home `/`](#home-)
+    - [Home `/` ✅](#home--)
     - [Profile `/profile`](#profile-profile)
     - [Habits `/habits`](#habits-habits)
     - [View Habit `/habits/{id}`](#view-habit-habitsid)
@@ -479,6 +479,7 @@ Example: `/api/logs/?habitId={uuid}&pageNumber={number}&pageSize={number}`
         "habitName": "string",
         "userId": "uuid",
         "username": "string",
+        "isOwner": false,
         "photoUrl": "Photo Url",
         "createdAt": "date",
         "validatedBy": [{ "userId": "uuid", "username": "Username 1" }]
@@ -691,7 +692,7 @@ If the request failed, we must display the server errors (example: 'Username alr
 
 If the request is sucessfull, we should display a "User successfully created" alert. After that, the page gets redirected to `/login`.
 
-### Home `/`
+### Home `/` ✅
 
 > If user is not authenticated, it gets redirected to `/login`
 

@@ -29,9 +29,10 @@ export class HabitLogsController {
 
   @Get()
   getHabitLogs(
+    @GetUser() user: AuthenticatedUser,
     @Query() query: ReadHabitLogsQueryDto,
   ): Promise<ReadHabitLogSummaryDto[]> {
-    return this.habitLogsService.getHabitLogs(query);
+    return this.habitLogsService.getHabitLogs(user.userId, query);
   }
 
   @Get(':id')

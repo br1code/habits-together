@@ -41,6 +41,7 @@ export class HabitLogsService {
   ) {}
 
   async getHabitLogs(
+    userId: string,
     query: ReadHabitLogsQueryDto,
   ): Promise<ReadHabitLogSummaryDto[]> {
     const queryBuilder = this.habitLogsRepository
@@ -69,6 +70,7 @@ export class HabitLogsService {
       habitName: log.habit.name,
       userId: log.habit.user.id,
       username: log.habit.user.username,
+      isOwner: userId === log.habit.user.id,
       photoUrl: log.photo_url,
       createdAt: formatDateForDisplay(log.created_at),
       validatedBy: log.validations.map((validation) => ({
