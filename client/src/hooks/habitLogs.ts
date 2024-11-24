@@ -15,6 +15,7 @@ interface FetchHabitLogsParams {
   pageSize?: number;
 }
 
+// TODO: use SWR package
 export const useFetchHabitLogs = (
   initialParams: FetchHabitLogsParams = {}
 ): UseFetchHabitLogsResult => {

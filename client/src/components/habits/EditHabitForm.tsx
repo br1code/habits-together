@@ -1,40 +1,65 @@
-import { FC, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { updateHabit } from '@/api';
+import { useFetchHabit } from '@/hooks/habits';
 import Link from 'next/link';
-import { createHabit } from '@/api';
+import { useRouter } from 'next/navigation';
+import { FC, useEffect, useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
-interface NewHabitFormValues {
+interface EditHabitFormProps {
+  habitId: string;
+}
+
+interface EditHabitFormValues {
   name: string;
   rules: string;
 }
-
-const NewHabitForm: FC = () => {
+const EditHabitForm: FC<EditHabitFormProps> = ({ habitId }) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  const { habit, loading, error } = useFetchHabit(habitId);
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors: formErrors },
-  } = useForm<NewHabitFormValues>();
+  } = useForm<EditHabitFormValues>();
 
   const router = useRouter();
 
-  const onSubmit: SubmitHandler<NewHabitFormValues> = async (data) => {
+  useEffect(() => {
+    if (habit) {
+      setValue('name', habit.name);
+      setValue('rules', habit.rules);
+    }
+  }, [habit, setValue]);
+
+  const onSubmit: SubmitHandler<EditHabitFormValues> = async (data) => {
     try {
       setIsSubmitting(true);
-      await createHabit(data);
-      alert('El Hábito ha sido creado correctamente');
-      router.push(`/habits`);
+      await updateHabit(habitId, data);
+      alert('El Hábito ha sido actualizado correctamente');
+      router.push(`/habits/${habitId}`);
     } catch (error) {
-      console.log('An error occurred during Habit creation:', error);
+      console.log('An error occurred during Habit update:', error);
       alert(
-        'Ocurrió un problema al crear este hábito. Por favor intente de nuevo.'
+        'Ocurrió un problema al actualizar este hábito. Por favor intente de nuevo.'
       );
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  // TODO: use loading spinner
+  if (loading) {
+    return <div className="text-center">Cargando...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="text-center text-red-500">Error cargando el Hábito</div>
+    );
+  }
 
   return (
     <section className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4">
@@ -42,7 +67,7 @@ const NewHabitForm: FC = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md"
       >
-        <h1 className="text-4xl font-bold mb-6 text-center">Crear Hábito</h1>
+        <h1 className="text-4xl font-bold mb-6 text-center">Editar Hábito</h1>
 
         <div className="mb-4">
           <label htmlFor="name" className="block mb-2 text-sm font-medium">
@@ -93,7 +118,7 @@ const NewHabitForm: FC = () => {
 
         <p className="mt-6 text-center text-sm">
           <Link
-            href={'/habits/'}
+            href={`/habits/${habitId}`}
             className="text-indigo-700 underline hover:text-indigo-800"
           >
             Volver
@@ -104,4 +129,4 @@ const NewHabitForm: FC = () => {
   );
 };
 
-export default NewHabitForm;
+export default EditHabitForm;

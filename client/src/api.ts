@@ -1,8 +1,10 @@
-import { fetchData, postData } from './http';
+import { fetchData, postData, putData } from './http';
 import {
   createdEntityIdSchema,
   CreateHabitRequest,
   Habit,
+  HabitDetails,
+  habitDetailsSchema,
   HabitLog,
   habitLogsSchema,
   habitsSchema,
@@ -10,6 +12,7 @@ import {
   LoginResult,
   loginResultSchema,
   SignupRequest,
+  UpdateHabitRequest,
 } from './types';
 
 export const login = (data: LoginRequest): Promise<LoginResult> => {
@@ -22,6 +25,10 @@ export const signup = (data: SignupRequest): Promise<string> => {
 
 export const fetchHabits = (): Promise<Habit[]> => {
   return fetchData('habits', habitsSchema);
+};
+
+export const fetchHabit = (habitId: string): Promise<HabitDetails> => {
+  return fetchData(`habits/${habitId}`, habitDetailsSchema);
 };
 
 export const fetchHabitLogs = (params: {
@@ -55,4 +62,11 @@ export const createHabitLog = (formData: FormData): Promise<string> => {
 
 export const createHabit = (data: CreateHabitRequest): Promise<string> => {
   return postData('habits', createdEntityIdSchema, data);
+};
+
+export const updateHabit = (
+  habitId: string,
+  data: UpdateHabitRequest
+): Promise<void> => {
+  return putData(`habits/${habitId}`, data);
 };

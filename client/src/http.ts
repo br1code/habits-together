@@ -110,7 +110,10 @@ export async function putData<T, U>(url: string, data: U): Promise<T> {
       throw new Error('Failed to update data');
     }
 
-    const responseData = await response.json();
+    const contentType = response.headers.get('Content-Type') || '';
+    const responseData = contentType.includes('application/json')
+      ? await response.json()
+      : await response.text();
     return responseData;
   } catch (error) {
     throw new Error(`Failed to update data: ${(error as Error).message}`);

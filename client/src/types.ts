@@ -28,6 +28,16 @@ export const habitSchema = z.object({
 
 export const habitsSchema = z.array(habitSchema);
 
+export const habitDetailsSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  rules: z.string(),
+  wasLoggedToday: z.boolean(),
+  wasValidatedToday: z.boolean(),
+  currentStreak: z.number(),
+  highestStreak: z.number(),
+});
+
 export const habitLogValidationSchema = z.object({
   userId: z.string().uuid(),
   username: z.string(),
@@ -52,11 +62,18 @@ export const createHabitRequest = z.object({
   rules: z.string(),
 });
 
+export const updateHabitRequest = z.object({
+  name: z.string(),
+  rules: z.string(),
+});
+
 // Types
 
 export type LoginRequest = z.infer<typeof loginRequestSchema>;
 export type LoginResult = z.infer<typeof loginResultSchema>;
 export type SignupRequest = z.infer<typeof signupRequestSchema>;
 export type Habit = z.infer<typeof habitSchema>;
+export type HabitDetails = z.infer<typeof habitDetailsSchema>;
 export type HabitLog = z.infer<typeof habitLogSchema>;
 export type CreateHabitRequest = z.infer<typeof createHabitRequest>;
+export type UpdateHabitRequest = z.infer<typeof updateHabitRequest>;
