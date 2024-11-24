@@ -41,11 +41,11 @@ A personal habit-tracking app that fosters community accountability through vali
     - [Signup `/signup` ✅](#signup-signup-)
     - [Home `/` ✅](#home--)
     - [Profile `/profile`](#profile-profile)
-    - [Habits `/habits`](#habits-habits)
+    - [Habits `/habits` ✅](#habits-habits-)
     - [View Habit `/habits/{id}`](#view-habit-habitsid)
     - [Create Habit `/habits/new`](#create-habit-habitsnew)
     - [Edit Habit `/habits/{id}/edit`](#edit-habit-habitsidedit)
-    - [Log Habit `/logs/new`](#log-habit-logsnew)
+    - [Log Habit `/logs/new` ✅](#log-habit-logsnew-)
     - [View Habit Log `/logs/{id}`](#view-habit-log-logsid)
     - [Friends `/friends`](#friends-friends)
     - [View Friend `/friends/{id}`](#view-friend-friendsid)
@@ -721,7 +721,7 @@ If the request is sucessfull, we should display a "User successfully created" al
   - Experience points (example: "0/100")
 - This data can be obtained by executing a GET request to `/api/users/profile`
 
-### Habits `/habits`
+### Habits `/habits` ✅
 
 - Displays a "Add Habit" button. Redirects to `/habits/new`
 - Displays a header with the number of logged habits vs total habits (example: "Logged habits: 1/4")
@@ -773,7 +773,7 @@ Allows users to update an existing habit.
   - Save button.
 - Submitting the form will send a PUT request to `/api/habits/{id}`
 
-### Log Habit `/logs/new`
+### Log Habit `/logs/new` ✅
 
 Allows users to submit a Log for a Habit.
 
@@ -786,7 +786,8 @@ Allows users to submit a Log for a Habit.
     - User should be able to take a picture or select a file from the device.
   - Text entry (optional): Textarea
   - Save button.
-- Submitting the form will send a POST request to `/api/logs`
+- Submitting the form will send a POST request to `/api/logs`.
+  - After submission, an alert is displayed and the user is redirected to `/logs/{id}`.
 
 ### View Habit Log `/logs/{id}`
 

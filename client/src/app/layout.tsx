@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${roboto.variable} antialiased bg-gray-600`}>
+      <body className={`${roboto.variable} antialiased bg-gray-50`}>
         <AuthContextProvider>
           <Navbar />
           {children}

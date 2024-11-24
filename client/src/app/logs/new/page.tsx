@@ -6,7 +6,7 @@ import NewHabitLogForm from '@/components/logs/NewHabitLogForm';
 
 const NewLogPage: FC = () => {
   return (
-    <main className="max-w-screen-sm mx-auto">
+    <main>
       <NewHabitLogForm />
     </main>
   );

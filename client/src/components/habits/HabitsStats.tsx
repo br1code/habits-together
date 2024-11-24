@@ -8,7 +8,6 @@ const HabitStats: FC = () => {
   if (loading) {
     return (
       <section className="flex justify-center items-center bg-indigo-700 text-white p-4 border border-gray-500 min-h-[75px]">
-        {/* Loading Spinner */}
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-white"></div>
       </section>
     );
@@ -22,7 +21,7 @@ const HabitStats: FC = () => {
     );
   }
 
-  const totalHabits = habits?.length || 0;
+  const totalHabitsCount = habits?.length || 0;
   const loggedHabits =
     habits?.filter((habit) => habit.wasLoggedToday).length || 0;
 
@@ -30,7 +29,7 @@ const HabitStats: FC = () => {
     <Link href="/habits">
       <section className="flex justify-center items-center bg-indigo-700 text-white p-4 border border-gray-500  min-h-[75px]">
         <h1 className="text-2xl font-bold">
-          Hábitos Logueados: {loggedHabits}/{totalHabits}
+          Hábitos Logueados: {loggedHabits}/{totalHabitsCount}
         </h1>
       </section>
     </Link>
