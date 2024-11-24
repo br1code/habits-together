@@ -48,7 +48,7 @@ const SignupPage: FC = () => {
             id="username"
             type="text"
             autoComplete="username"
-            className="w-full p-2 bg-gray-50 border border-gray-400 rounded focus:outline-none focus:ring focus:ring-indigo-700"
+            className="w-full p-2 bg-gray-50 border border-gray-500 rounded focus:outline-none focus:ring focus:ring-indigo-700"
             {...register('username', {
               required: 'El nombre de usuario es requerido',
             })}
@@ -68,7 +68,7 @@ const SignupPage: FC = () => {
             id="email"
             type="email"
             autoComplete="email"
-            className="w-full p-2 bg-gray-50 border border-gray-400 rounded focus:outline-none focus:ring focus:ring-indigo-700"
+            className="w-full p-2 bg-gray-50 border border-gray-500 rounded focus:outline-none focus:ring focus:ring-indigo-700"
             {...register('email', {
               required: 'El email es requerido',
             })}
@@ -88,7 +88,7 @@ const SignupPage: FC = () => {
             id="password"
             type="password"
             autoComplete="new-password"
-            className="w-full p-2 bg-gray-50 border border-gray-400 rounded focus:outline-none focus:ring focus:ring-indigo-700"
+            className="w-full p-2 bg-gray-50 border border-gray-500 rounded focus:outline-none focus:ring focus:ring-indigo-700"
             {...register('password', {
               required: 'La contraseña es requerida',
             })}

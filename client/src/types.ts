@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 // Schemas
 
-export const loginDataSchema = z.object({
+export const loginRequestSchema = z.object({
   username: z.string(),
   password: z.string(),
 });
@@ -11,7 +11,7 @@ export const loginResultSchema = z.object({
   accessToken: z.string(),
 });
 
-export const signupDataSchema = z.object({
+export const signupRequestSchema = z.object({
   username: z.string(),
   email: z.string().email(),
   password: z.string(),
@@ -47,10 +47,16 @@ export const habitLogSchema = z.object({
 
 export const habitLogsSchema = z.array(habitLogSchema);
 
+export const createHabitRequest = z.object({
+  name: z.string(),
+  rules: z.string(),
+});
+
 // Types
 
-export type LoginData = z.infer<typeof loginDataSchema>;
+export type LoginRequest = z.infer<typeof loginRequestSchema>;
 export type LoginResult = z.infer<typeof loginResultSchema>;
-export type SignupData = z.infer<typeof signupDataSchema>;
+export type SignupRequest = z.infer<typeof signupRequestSchema>;
 export type Habit = z.infer<typeof habitSchema>;
 export type HabitLog = z.infer<typeof habitLogSchema>;
+export type CreateHabitRequest = z.infer<typeof createHabitRequest>;

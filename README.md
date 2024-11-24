@@ -43,8 +43,8 @@ A personal habit-tracking app that fosters community accountability through vali
     - [Profile `/profile`](#profile-profile)
     - [Habits `/habits` ✅](#habits-habits-)
     - [View Habit `/habits/{id}`](#view-habit-habitsid)
-    - [Create Habit `/habits/new`](#create-habit-habitsnew)
-    - [Edit Habit `/habits/{id}/edit`](#edit-habit-habitsidedit)
+    - [Create Habit `/habits/new` ✅](#create-habit-habitsnew-)
+    - [Edit Habit `/habits/{id}/edit` 🔨](#edit-habit-habitsidedit-)
     - [Log Habit `/logs/new` ✅](#log-habit-logsnew-)
     - [View Habit Log `/logs/{id}`](#view-habit-log-logsid)
     - [Friends `/friends`](#friends-friends)
@@ -753,7 +753,7 @@ If the request is sucessfull, we should display a "User successfully created" al
   - Users can click to view more details about a Habit Log: Redirects to `/logs/{id}`
   - The data for this list can be obtained by executing a GET request to `/api/logs/?habitId={uuid}`
 
-### Create Habit `/habits/new`
+### Create Habit `/habits/new` ✅
 
 Allows users to create a new habit.
 
@@ -763,7 +763,7 @@ Allows users to create a new habit.
   - Create button.
 - Submitting the form will send a POST request to `/api/habits`
 
-### Edit Habit `/habits/{id}/edit`
+### Edit Habit `/habits/{id}/edit` 🔨
 
 Allows users to update an existing habit.
 

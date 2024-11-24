@@ -1,21 +1,22 @@
 import { fetchData, postData } from './http';
 import {
   createdEntityIdSchema,
+  CreateHabitRequest,
   Habit,
   HabitLog,
   habitLogsSchema,
   habitsSchema,
-  LoginData,
+  LoginRequest,
   LoginResult,
   loginResultSchema,
-  SignupData,
+  SignupRequest,
 } from './types';
 
-export const login = (data: LoginData): Promise<LoginResult> => {
+export const login = (data: LoginRequest): Promise<LoginResult> => {
   return postData('auth/login', loginResultSchema, data);
 };
 
-export const signup = (data: SignupData): Promise<string> => {
+export const signup = (data: SignupRequest): Promise<string> => {
   return postData('auth/signup', createdEntityIdSchema, data);
 };
 
@@ -50,4 +51,8 @@ export const fetchHabitLogs = (params: {
 
 export const createHabitLog = (formData: FormData): Promise<string> => {
   return postData('logs', createdEntityIdSchema, formData);
+};
+
+export const createHabit = (data: CreateHabitRequest): Promise<string> => {
+  return postData('habits', createdEntityIdSchema, data);
 };

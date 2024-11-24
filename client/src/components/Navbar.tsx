@@ -52,6 +52,7 @@ const Navbar: FC = () => {
               <Link href="/profile">Perfil</Link>
               <Link href="/habits">Hábitos</Link>
               <Link href="/friends">Amigos</Link>
+              <button onClick={onClickLogout}>Cerrar Sesión</button>
             </div>
 
             {/* Plus Icon Button */}
