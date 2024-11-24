@@ -123,10 +123,10 @@ export class HabitsService {
       );
     }
 
-    habit.name = dto.name;
-    habit.rules = dto.rules;
-
-    await this.habitsRepository.save(habit);
+    await this.habitsRepository.update(habitId, {
+      name: dto.name,
+      rules: dto.rules,
+    });
   }
 
   async deleteHabit(userId: string, habitId: string): Promise<void> {
