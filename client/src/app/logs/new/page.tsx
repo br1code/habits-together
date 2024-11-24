@@ -2,11 +2,12 @@
 
 import { FC } from 'react';
 import withAuth from '@/components/withAuth';
+import NewHabitLogForm from '@/components/logs/NewHabitLogForm';
 
 const NewLogPage: FC = () => {
   return (
-    <main>
-      <h1>New Log</h1>
+    <main className="max-w-screen-sm mx-auto">
+      <NewHabitLogForm />
     </main>
   );
 };

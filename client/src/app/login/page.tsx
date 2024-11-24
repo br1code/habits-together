@@ -43,7 +43,7 @@ const LoginPage: FC = () => {
 
         <div className="mb-4">
           <label htmlFor="username" className="block mb-2 text-sm font-medium">
-            Nombre de Usuario
+            Usuario
           </label>
           <input
             id="username"

@@ -20,8 +20,11 @@ export const fetchWithAuth = async (
     headers.set('Authorization', `Bearer ${token}`);
   }
 
-  // Ensure the Content-Type header is set to 'application/json'
-  if (!headers.has('Content-Type')) {
+  // Check if the body is FormData
+  const isFormData = init.body instanceof FormData;
+
+  // Only set Content-Type to 'application/json' if not sending FormData and Content-Type isn't already set
+  if (!headers.has('Content-Type') && !isFormData) {
     headers.set('Content-Type', 'application/json');
   }
 

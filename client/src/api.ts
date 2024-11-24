@@ -47,3 +47,7 @@ export const fetchHabitLogs = (params: {
 
   return fetchData(`logs${searchQuery}`, habitLogsSchema);
 };
+
+export const createHabitLog = (formData: FormData): Promise<string> => {
+  return postData('logs', createdEntityIdSchema, formData);
+};
