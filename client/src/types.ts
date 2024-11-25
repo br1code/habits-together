@@ -67,13 +67,23 @@ export const updateHabitRequest = z.object({
   rules: z.string(),
 });
 
+export const userProfileSchema = z.object({
+  id: z.string().uuid(),
+  username: z.string(),
+  profilePictureUrl: z.string().optional(),
+  level: z.number(),
+  currentExperiencePoints: z.number(),
+  requiredExperiencePoints: z.number(),
+});
+
 // Types
 
 export type LoginRequest = z.infer<typeof loginRequestSchema>;
-export type LoginResult = z.infer<typeof loginResultSchema>;
+// export type LoginResult = z.infer<typeof loginResultSchema>;
 export type SignupRequest = z.infer<typeof signupRequestSchema>;
 export type Habit = z.infer<typeof habitSchema>;
 export type HabitDetails = z.infer<typeof habitDetailsSchema>;
 export type HabitLog = z.infer<typeof habitLogSchema>;
 export type CreateHabitRequest = z.infer<typeof createHabitRequest>;
 export type UpdateHabitRequest = z.infer<typeof updateHabitRequest>;
+export type UserProfileResult = z.infer<typeof userProfileSchema>;
