@@ -49,6 +49,7 @@ export const habitLogSchema = z.object({
   habitName: z.string(),
   userId: z.string().uuid(),
   username: z.string(),
+  userProfilePictureUrl: z.string().nullable(),
   isOwner: z.boolean(),
   photoUrl: z.string(),
   createdAt: z.string(),
@@ -70,7 +71,7 @@ export const updateHabitRequest = z.object({
 export const userProfileSchema = z.object({
   id: z.string().uuid(),
   username: z.string(),
-  profilePictureUrl: z.string().optional(),
+  profilePictureUrl: z.string().nullable(),
   level: z.number(),
   currentExperiencePoints: z.number(),
   requiredExperiencePoints: z.number(),
@@ -79,11 +80,11 @@ export const userProfileSchema = z.object({
 // Types
 
 export type LoginRequest = z.infer<typeof loginRequestSchema>;
-// export type LoginResult = z.infer<typeof loginResultSchema>;
+export type LoginResult = z.infer<typeof loginResultSchema>;
 export type SignupRequest = z.infer<typeof signupRequestSchema>;
 export type Habit = z.infer<typeof habitSchema>;
 export type HabitDetails = z.infer<typeof habitDetailsSchema>;
 export type HabitLog = z.infer<typeof habitLogSchema>;
 export type CreateHabitRequest = z.infer<typeof createHabitRequest>;
 export type UpdateHabitRequest = z.infer<typeof updateHabitRequest>;
-export type UserProfileResult = z.infer<typeof userProfileSchema>;
+export type UserProfile = z.infer<typeof userProfileSchema>;

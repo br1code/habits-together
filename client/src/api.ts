@@ -13,6 +13,8 @@ import {
   loginResultSchema,
   SignupRequest,
   UpdateHabitRequest,
+  UserProfile,
+  userProfileSchema,
 } from './types';
 
 export const login = (data: LoginRequest): Promise<LoginResult> => {
@@ -21,6 +23,10 @@ export const login = (data: LoginRequest): Promise<LoginResult> => {
 
 export const signup = (data: SignupRequest): Promise<string> => {
   return postData('auth/signup', createdEntityIdSchema, data);
+};
+
+export const fetchUserProfile = (): Promise<UserProfile> => {
+  return fetchData('users/profile', userProfileSchema);
 };
 
 export const fetchHabits = (): Promise<Habit[]> => {
@@ -64,9 +70,10 @@ export const createHabit = (data: CreateHabitRequest): Promise<string> => {
   return postData('habits', createdEntityIdSchema, data);
 };
 
-export const updateHabit = (
-  habitId: string,
-  data: UpdateHabitRequest
-): Promise<void> => {
-  return putData(`habits/${habitId}`, data);
+export const updateHabit = (habitId: string, data: UpdateHabitRequest) => {
+  return putData(`habits/${habitId}`, null, data);
+};
+
+export const updateUserAvatar = (formData: FormData) => {
+  return putData('users/avatar', null, formData);
 };

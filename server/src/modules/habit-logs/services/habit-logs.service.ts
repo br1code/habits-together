@@ -70,6 +70,7 @@ export class HabitLogsService {
       habitName: log.habit.name,
       userId: log.habit.user.id,
       username: log.habit.user.username,
+      userProfilePictureUrl: log.habit.user.profile_picture_url,
       isOwner: userId === log.habit.user.id,
       photoUrl: log.photo_url,
       createdAt: formatDateForDisplay(log.created_at),

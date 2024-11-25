@@ -4,6 +4,7 @@ export class ReadHabitLogSummaryDto {
   habitName: string;
   userId: string;
   username: string;
+  userProfilePictureUrl: string;
   isOwner: boolean;
   photoUrl: string;
   createdAt: string;

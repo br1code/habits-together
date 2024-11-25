@@ -479,6 +479,7 @@ Example: `/api/logs/?habitId={uuid}&pageNumber={number}&pageSize={number}`
         "habitName": "string",
         "userId": "uuid",
         "username": "string",
+        "userProfilePictureUrl": "string",
         "isOwner": false,
         "photoUrl": "Photo Url",
         "createdAt": "date",

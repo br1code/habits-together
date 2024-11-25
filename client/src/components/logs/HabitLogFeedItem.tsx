@@ -10,12 +10,25 @@ interface HabitLogFeedItemProps {
   isFirstItem: boolean;
 }
 
+const DEFAULT_AVATAR_PICTURE_URL = '/default-avatar.png';
+
 const HabitLogFeedItem: FC<HabitLogFeedItemProps> = ({
   habitLog,
   isFirstItem,
 }) => (
   <>
     <div className="flex items-center px-4 py-2">
+      {/* Avatar */}
+      <Image
+        src={habitLog.userProfilePictureUrl || DEFAULT_AVATAR_PICTURE_URL}
+        alt={`${habitLog.username}'s avatar`}
+        width={40}
+        height={40}
+        className="rounded-full object-cover mr-2"
+        priority={isFirstItem}
+      />
+
+      {/* Username */}
       <Link href={getProfileLink(habitLog.userId, habitLog.isOwner)}>
         <p className="font-semibold text-lg">{habitLog.username}</p>
       </Link>

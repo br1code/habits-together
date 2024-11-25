@@ -83,22 +83,44 @@ export async function postData<T, U>(
     }
 
     const contentType = response.headers.get('Content-Type') || '';
-    const responseData = contentType.includes('application/json')
-      ? await response.json()
-      : await response.text();
+    if (contentType.includes('application/json')) {
+      const responseData = await response.json();
+      return schema.parse(responseData);
+    } else if (response.status === 204) {
+      // Return a default value for void responses
+      return '' as unknown as T;
+    } else {
+      const responseData = await response.text();
+      if (responseData) {
+        // Handle plain text response directly
+        if (typeof responseData === 'string') {
+          return responseData as unknown as T;
+        }
 
-    return schema.parse(responseData);
+        // Attempt schema parsing for JSON-like text
+        return schema.parse(JSON.parse(responseData));
+      }
+    }
+
+    // Fallback in case of unexpected situations
+    return '' as unknown as T;
   } catch (error) {
     throw new Error(`Failed to submit data: ${(error as Error).message}`);
   }
 }
 
-export async function putData<T, U>(url: string, data: U): Promise<T> {
+export async function putData<T, U>(
+  url: string,
+  schema: ZodSchema<T> | null,
+  data: U | FormData
+): Promise<T | void> {
   try {
+    const isFormData = data instanceof FormData;
+
     const response = await fetchWithAuth(`${API_URL}/${url}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      headers: isFormData ? undefined : { 'Content-Type': 'application/json' },
+      body: isFormData ? data : JSON.stringify(data),
     });
 
     if (!response.ok) {
@@ -111,10 +133,28 @@ export async function putData<T, U>(url: string, data: U): Promise<T> {
     }
 
     const contentType = response.headers.get('Content-Type') || '';
-    const responseData = contentType.includes('application/json')
-      ? await response.json()
-      : await response.text();
-    return responseData;
+    if (contentType.includes('application/json')) {
+      const responseData = await response.json();
+      return schema ? schema.parse(responseData) : (responseData as T);
+    } else if (response.status === 204) {
+      // No content to return
+      return;
+    } else {
+      const responseData = await response.text();
+      if (responseData) {
+        // Handle plain text response directly
+        if (typeof responseData === 'string') {
+          return schema
+            ? schema.parse(responseData)
+            : (responseData as unknown as T);
+        }
+
+        // Attempt schema parsing for JSON-like text
+        return schema
+          ? schema.parse(JSON.parse(responseData))
+          : (responseData as T);
+      }
+    }
   } catch (error) {
     throw new Error(`Failed to update data: ${(error as Error).message}`);
   }

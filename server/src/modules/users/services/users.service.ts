@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
@@ -13,6 +13,10 @@ import {
   EXPERIENCE_POINTS_BASE,
   EXPERIENCE_POINTS_MULTIPLIER,
 } from '../constants';
+import {
+  FILE_STORAGE_PROVIDER,
+  FileStorageProvider,
+} from 'src/modules/file-storage/interfaces/file-storage.interface';
 
 @Injectable()
 export class UsersService {
@@ -21,6 +25,8 @@ export class UsersService {
     private usersRepository: Repository<User>,
     @InjectRepository(ExperienceLog)
     private experienceLogsRepository: Repository<ExperienceLog>,
+    @Inject(FILE_STORAGE_PROVIDER)
+    private readonly fileStorageProvider: FileStorageProvider,
   ) {}
 
   async findOne(username: string): Promise<User> {
@@ -128,6 +134,24 @@ export class UsersService {
     await this.experienceLogsRepository.save(experienceLog);
   }
 
+  async updateAvatar(userId: string, photo: Express.Multer.File) {
+    const user = await this.usersRepository.findOneBy({ id: userId });
+
+    if (!user) {
+      throw new NotFoundException(`User not found.`);
+    }
+
+    if (user.profile_picture_url) {
+      await this.fileStorageProvider.delete(user.profile_picture_url);
+    }
+
+    const { url: photoUrl } = await this.fileStorageProvider.upload(photo);
+
+    this.usersRepository.update(userId, {
+      profile_picture_url: photoUrl,
+    });
+  }
+
   private calculateExponentialLevel(
     totalXp: number,
     currentLevel: number,
@@ -151,9 +175,9 @@ export class UsersService {
     }
 
     return {
-      currentXp: totalXp, // Remaining XP after leveling up
-      requiredXp, // XP required for the next level
-      leveledUp, // Whether the user leveled up
+      currentXp: Math.round(totalXp),
+      requiredXp: Math.round(requiredXp),
+      leveledUp,
     };
   }
 
