@@ -40,7 +40,7 @@ A personal habit-tracking app that fosters community accountability through vali
     - [Login `/login` ✅](#login-login-)
     - [Signup `/signup` ✅](#signup-signup-)
     - [Home `/` ✅](#home--)
-    - [Profile `/profile`](#profile-profile)
+    - [Profile `/profile` ✅](#profile-profile-)
     - [Habits `/habits` ✅](#habits-habits-)
     - [View Habit `/habits/{id}`](#view-habit-habitsid)
     - [Create Habit `/habits/new` ✅](#create-habit-habitsnew-)
@@ -704,20 +704,19 @@ If the request is sucessfull, we should display a "User successfully created" al
 
 - Displays a timeline with the latest habit logs from everyone, similar to how the Instagram/Facebook feed works (with infinite scroll).
   - Each Habit Log item contains:
-    - Username
+    - Username + Avatar Picture
     - Created date (relative, example: "2 hours ago")
     - Picture
     - Habit Name
   - Users can click on these items to go to the View Habit Log page `/logs/{id}`
   - This data can be obtained by executing a GET request to `/api/logs`
 
-### Profile `/profile`
+### Profile `/profile` ✅
 
 - Displays the following information about the current user:
   - Profile picture
-    - Users can click here to update the picture. (TBD)
+    - Users can click here to update the picture.
   - Username
-  - Email
   - Level
   - Experience points (example: "0/100")
 - This data can be obtained by executing a GET request to `/api/users/profile`
