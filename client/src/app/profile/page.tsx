@@ -73,7 +73,7 @@ const ProfilePage: FC = () => {
       {/* Update Picture Button */}
       <button
         onClick={handleUpdatePicture}
-        className={`text-blue-500 underline text-base mb-4 ${
+        className={`text-blue-500 underline text-base mb-2 ${
           isUploading ? 'opacity-50 cursor-not-allowed' : ''
         }`}
         disabled={isUploading}
@@ -95,11 +95,11 @@ const ProfilePage: FC = () => {
       </div>
 
       <div className="text-lg text-gray-800 mb-2">
-        Level: {userProfile.level}
+        Nivel: {userProfile.level}
       </div>
 
       <div className="text-base text-gray-700">
-        Experience Points: {userProfile.currentExperiencePoints} /{' '}
+        Puntos de Experiencia: {userProfile.currentExperiencePoints} /{' '}
         {userProfile.requiredExperiencePoints}
       </div>
     </div>

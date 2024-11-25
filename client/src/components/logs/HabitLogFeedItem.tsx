@@ -18,19 +18,22 @@ const HabitLogFeedItem: FC<HabitLogFeedItemProps> = ({
 }) => (
   <>
     <div className="flex items-center px-4 py-2">
-      {/* Avatar */}
-      <Image
-        src={habitLog.userProfilePictureUrl || DEFAULT_AVATAR_PICTURE_URL}
-        alt={`${habitLog.username}'s avatar`}
-        width={40}
-        height={40}
-        className="rounded-full object-cover mr-2"
-        priority={isFirstItem}
-      />
+      <Link href={getProfileLink(habitLog.userId, habitLog.isOwner)}>
+        <div className="w-10 h-10 relative rounded-full overflow-hidden">
+          <Image
+            src={habitLog.userProfilePictureUrl || DEFAULT_AVATAR_PICTURE_URL}
+            alt={`${habitLog.username}'s avatar`}
+            fill
+            className="object-cover"
+            priority={isFirstItem}
+            sizes="40px"
+          />
+        </div>
+      </Link>
 
       {/* Username */}
       <Link href={getProfileLink(habitLog.userId, habitLog.isOwner)}>
-        <p className="font-semibold text-lg">{habitLog.username}</p>
+        <p className="font-semibold text-lg ml-2">{habitLog.username}</p>
       </Link>
     </div>
 
