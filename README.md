@@ -46,7 +46,7 @@ A personal habit-tracking app that fosters community accountability through vali
     - [Create Habit `/habits/new` ✅](#create-habit-habitsnew-)
     - [Edit Habit `/habits/{id}/edit` ✅](#edit-habit-habitsidedit-)
     - [Log Habit `/logs/new` ✅](#log-habit-logsnew-)
-    - [View Habit Log `/logs/{id}`](#view-habit-log-logsid)
+    - [View Habit Log `/logs/{id}` ✅](#view-habit-log-logsid-)
     - [Friends `/friends`](#friends-friends)
     - [View Friend `/friends/{id}`](#view-friend-friendsid)
 
@@ -483,7 +483,14 @@ Example: `/api/logs/?habitId={uuid}&pageNumber={number}&pageSize={number}`
         "isOwner": false,
         "photoUrl": "Photo Url",
         "createdAt": "date",
-        "validatedBy": [{ "userId": "uuid", "username": "Username 1" }]
+        "validatedBy": [
+          {
+            "userId": "uuid",
+            "username": "Username 1",
+            "userProfilePictureUrl": "string",
+            "validatedAt": "string"
+          }
+        ]
       }
     ]
     ```
@@ -508,12 +515,20 @@ Retrieves a specific habit log.
       "textEntry": "string",
       "photoUrl": "string",
       "createdAt": "date",
-      "validatedBy": [{ "userId": "uuid", "username": "string" }],
+      "validatedBy": [
+        {
+          "userId": "uuid",
+          "username": "string",
+          "userProfilePictureUrl": "string",
+          "validatedAt": "string"
+        }
+      ],
       "comments": [
         {
           "id": "uuid",
           "userId": "uuid",
           "username": "string",
+          "userProfilePictureUrl": "string",
           "text": "string",
           "createdAt": "string"
         }
@@ -789,19 +804,20 @@ Allows users to submit a Log for a Habit.
 - Submitting the form will send a POST request to `/api/logs`.
   - After submission, an alert is displayed and the user is redirected to `/logs/{id}`.
 
-### View Habit Log `/logs/{id}`
+### View Habit Log `/logs/{id}` ✅
 
 Allows users to view information about a specific Habit Log. Users can view and add comments to the Habit Log. Users can validate Habit Logs from their friends. Users can delete a Habit Log (only if they own the Habit Log).
+
+The information about the Habit Log can be obtained by executing a GET request to `/api/logs/{id}`.
 
 - Displays information about the Habit Log:
 
   - Fields:
-    - Username (owner)
+    - Username (owner) + Avatar
     - Photo
     - Habit Name
+    - Text entry
     - Created date (relative)
-    - Validated by / Not Validated
-  - The information about the Habit Log can be obtained by executing a GET request to `/api/logs/{id}`.
 
 - Displays a Delete Log button.
 
@@ -816,12 +832,16 @@ Allows users to view information about a specific Habit Log. Users can view and 
   - User must confirm the action.
   - Sends a POST request to `/api/logs/{id}/validate`.
 
+- Displays a list of the validations made to the Habit Log:
+
+  - Username + Avatar
+  - Validation date (relative)
+
 - Displays a list of the comments made to the Habit Log.
   - Comment fields:
     - Username
     - Comment text
     - Created Date (relative)
-  - The list of comments can be obtained by executing a GET request to `/api/logs/{logId}/comments`
 - Displays a text input for adding a new comment, including a Add Comment button.
   - Executes a POST request to `/api/logs/{logId}/comments`
 

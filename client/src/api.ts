@@ -1,11 +1,14 @@
-import { fetchData, postData, putData } from './http';
+import { deleteData, fetchData, postData, putData } from './http';
 import {
   createdEntityIdSchema,
+  CreateHabitLogCommentRequest,
   CreateHabitRequest,
   Habit,
   HabitDetails,
   habitDetailsSchema,
   HabitLog,
+  HabitLogDetails,
+  habitLogDetailsSchema,
   habitLogsSchema,
   habitsSchema,
   LoginRequest,
@@ -62,8 +65,31 @@ export const fetchHabitLogs = (params: {
   return fetchData(`logs${searchQuery}`, habitLogsSchema);
 };
 
+export const fetchHabitLog = (habitLogId: string): Promise<HabitLogDetails> => {
+  return fetchData(`logs/${habitLogId}`, habitLogDetailsSchema);
+};
+
 export const createHabitLog = (formData: FormData): Promise<string> => {
   return postData('logs', createdEntityIdSchema, formData);
+};
+
+export const createHabitLogComment = (
+  habitLogId: string,
+  data: CreateHabitLogCommentRequest
+) => {
+  return postData(`logs/${habitLogId}/comments`, createdEntityIdSchema, data);
+};
+
+export const validateHabitLog = (habitLogId: string) => {
+  return postData(`logs/${habitLogId}/validate`, null, null);
+};
+
+export const invalidateHabitLog = (habitLogId: string) => {
+  return postData(`logs/${habitLogId}/invalidate`, null, null);
+};
+
+export const deletehabitlog = (habitLogId: string) => {
+  return deleteData(`logs/${habitLogId}`);
 };
 
 export const createHabit = (data: CreateHabitRequest): Promise<string> => {

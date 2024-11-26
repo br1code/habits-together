@@ -1,6 +1,6 @@
-import { fetchHabitLogs } from '@/api';
-import { HabitLog } from '@/types';
-import { useEffect, useState } from 'react';
+import { fetchHabitLog, fetchHabitLogs } from '@/api';
+import { HabitLog, HabitLogDetails } from '@/types';
+import { useCallback, useEffect, useState } from 'react';
 
 interface UseFetchHabitLogsResult {
   habitLogs: HabitLog[];
@@ -86,4 +86,40 @@ export const useFetchHabitLogs = (
   };
 
   return { habitLogs, loading, error, hasMore, loadMore };
+};
+
+interface UseFetchHabitLogResult {
+  habitLog: HabitLogDetails | null;
+  loading: boolean;
+  error: string | null;
+  refresh: () => Promise<void>;
+}
+
+// TODO: PLEASE use SWR package
+export const useFetchHabitLog = (habitId: string): UseFetchHabitLogResult => {
+  const [habitLog, setHabitLog] = useState<HabitLogDetails | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchAndSetHabitLog = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const fetchedUserProfile = await fetchHabitLog(habitId);
+      setHabitLog(fetchedUserProfile);
+    } catch (error) {
+      console.error('Error fetching habit log:', error);
+      setError('Failed to load habit log.');
+      setHabitLog(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [habitId]);
+
+  useEffect(() => {
+    fetchAndSetHabitLog();
+  }, [fetchAndSetHabitLog]);
+
+  return { habitLog, loading, error, refresh: fetchAndSetHabitLog };
 };

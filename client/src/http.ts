@@ -66,7 +66,7 @@ export async function fetchData<T>(
 
 export async function postData<T, U>(
   url: string,
-  schema: ZodSchema<T>,
+  schema: ZodSchema<T> | null,
   data: U | FormData
 ): Promise<T> {
   try {
@@ -75,7 +75,7 @@ export async function postData<T, U>(
     const response = await fetchWithAuth(`${API_URL}/${url}`, {
       method: 'POST',
       headers: isFormData ? undefined : { 'Content-Type': 'application/json' },
-      body: isFormData ? data : JSON.stringify(data),
+      body: data ? (isFormData ? data : JSON.stringify(data)) : null,
     });
 
     if (!response.ok) {
@@ -85,7 +85,7 @@ export async function postData<T, U>(
     const contentType = response.headers.get('Content-Type') || '';
     if (contentType.includes('application/json')) {
       const responseData = await response.json();
-      return schema.parse(responseData);
+      return schema ? schema.parse(responseData) : (responseData as T);
     } else if (response.status === 204) {
       // Return a default value for void responses
       return '' as unknown as T;
@@ -98,7 +98,9 @@ export async function postData<T, U>(
         }
 
         // Attempt schema parsing for JSON-like text
-        return schema.parse(JSON.parse(responseData));
+        return schema
+          ? schema.parse(JSON.parse(responseData))
+          : (responseData as T);
       }
     }
 

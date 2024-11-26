@@ -99,13 +99,14 @@ export class HabitLogsController {
     return this.habitLogsService.invalidateHabitLog(user.userId, habitLogId);
   }
 
+  // TODO: stop returning plain values like strings, always return a JSON content or no content at all
   @Post(':id/comments')
   @HttpCode(204)
   addComment(
     @GetUser() user: AuthenticatedUser,
     @Param('id', new ParseUUIDPipe()) habitLogId: string,
     @Body() dto: CreateHabitLogCommentDto,
-  ) {
+  ): Promise<string> {
     return this.habitLogsService.addComment(user.userId, habitLogId, dto);
   }
 

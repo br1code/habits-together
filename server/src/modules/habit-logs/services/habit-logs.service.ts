@@ -77,6 +77,8 @@ export class HabitLogsService {
       validatedBy: log.validations.map((validation) => ({
         userId: validation.validatorUser.id,
         username: validation.validatorUser.username,
+        userProfilePictureUrl: validation.validatorUser.profile_picture_url,
+        validatedAt: formatDateForDisplay(validation.validatedAt),
       })),
     }));
   }
@@ -162,6 +164,7 @@ export class HabitLogsService {
       id: habitLog.id,
       userId: habitLog.habit.user.id,
       username: habitLog.habit.user.username,
+      userProfilePictureUrl: habitLog.habit.user.profile_picture_url,
       isOwner: userId === habitLog.habit.user.id,
       habitId: habitLog.habit.id,
       habitName: habitLog.habit.name,
@@ -171,14 +174,22 @@ export class HabitLogsService {
       validatedBy: habitLog.validations.map((validation) => ({
         userId: validation.validatorUser.id,
         username: validation.validatorUser.username,
+        userProfilePictureUrl: validation.validatorUser.profile_picture_url,
+        validatedAt: formatDateForDisplay(validation.validatedAt),
       })),
-      comments: habitLog.comments.map((comment) => ({
-        id: comment.id,
-        userId: comment.user.id,
-        username: comment.user.username,
-        text: comment.text,
-        createdAt: formatDateForDisplay(comment.created_at),
-      })),
+      comments: habitLog.comments
+        .sort(
+          (a, b) =>
+            new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+        ) // TODO: put this somewhere else
+        .map((comment) => ({
+          id: comment.id,
+          userId: comment.user.id,
+          username: comment.user.username,
+          userProfilePictureUrl: comment.user.profile_picture_url,
+          text: comment.text,
+          createdAt: formatDateForDisplay(comment.created_at),
+        })),
     };
   }
 
@@ -306,7 +317,7 @@ export class HabitLogsService {
     userId: string,
     habitLogId: string,
     dto: CreateHabitLogCommentDto,
-  ) {
+  ): Promise<string> {
     const habitLog = await this.habitLogsRepository
       .createQueryBuilder('habitLog')
       .leftJoinAndSelect('habitLog.habit', 'habit')
@@ -327,6 +338,7 @@ export class HabitLogsService {
     });
 
     await this.habitLogCommentsRepository.save(comment);
+    return comment.id;
   }
 
   async removeComment(userId: string, habitLogId: string, commentId: string) {

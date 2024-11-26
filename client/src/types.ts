@@ -41,6 +41,8 @@ export const habitDetailsSchema = z.object({
 export const habitLogValidationSchema = z.object({
   userId: z.string().uuid(),
   username: z.string(),
+  userProfilePictureUrl: z.string().nullable(),
+  validatedAt: z.string(),
 });
 
 export const habitLogSchema = z.object({
@@ -57,6 +59,34 @@ export const habitLogSchema = z.object({
 });
 
 export const habitLogsSchema = z.array(habitLogSchema);
+
+export const habitLogCommentSchema = z.object({
+  id: z.string().uuid(),
+  userId: z.string().uuid(),
+  username: z.string(),
+  userProfilePictureUrl: z.string().nullable(),
+  text: z.string(),
+  createdAt: z.string(),
+});
+
+export const habitLogDetailsSchema = z.object({
+  id: z.string().uuid(),
+  habitId: z.string().uuid(),
+  habitName: z.string(),
+  userId: z.string().uuid(),
+  username: z.string(),
+  userProfilePictureUrl: z.string().nullable(),
+  isOwner: z.boolean(),
+  textEntry: z.string().optional(),
+  photoUrl: z.string(),
+  createdAt: z.string(),
+  validatedBy: z.array(habitLogValidationSchema),
+  comments: z.array(habitLogCommentSchema),
+});
+
+export const createHabitLogCommentRequest = z.object({
+  text: z.string(),
+});
 
 export const createHabitRequest = z.object({
   name: z.string(),
@@ -85,6 +115,10 @@ export type SignupRequest = z.infer<typeof signupRequestSchema>;
 export type Habit = z.infer<typeof habitSchema>;
 export type HabitDetails = z.infer<typeof habitDetailsSchema>;
 export type HabitLog = z.infer<typeof habitLogSchema>;
+export type HabitLogDetails = z.infer<typeof habitLogDetailsSchema>;
 export type CreateHabitRequest = z.infer<typeof createHabitRequest>;
 export type UpdateHabitRequest = z.infer<typeof updateHabitRequest>;
 export type UserProfile = z.infer<typeof userProfileSchema>;
+export type CreateHabitLogCommentRequest = z.infer<
+  typeof createHabitLogCommentRequest
+>;
