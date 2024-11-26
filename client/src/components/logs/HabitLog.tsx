@@ -154,7 +154,7 @@ const HabitLog: FC<HabitLogProps> = ({ habitLogId }) => {
                   onClick={handleValidateHabitLog}
                   disabled={actionLoading}
                 >
-                  {hasUserValidated ? 'Invalidar Log ❌' : 'Validar Log✅'}
+                  {hasUserValidated ? 'Invalidar Log ❌' : 'Validar Log ✅'}
                 </button>
               )}
 
