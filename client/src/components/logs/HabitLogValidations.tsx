@@ -39,6 +39,7 @@ const HabitLogValidations: FC<HabitLogValidationsProps> = ({ validations }) => {
                 <div>
                   <p className="text-sm">
                     <span className="font-semibold mr-2">
+                      {/* TODO: use react-icons */}
                       {validation.username} ✅
                     </span>
                   </p>

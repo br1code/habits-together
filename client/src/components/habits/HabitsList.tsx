@@ -33,7 +33,10 @@ const HabitsList: FC<HabitsListProps> = ({ habits }) => {
               <td className="py-2 px-4 text-right">
                 <Link href={`/habits/${habit.id}`}>
                   <button className="p-2 bg-gray-200 hover:bg-gray-300 rounded-full">
-                    <HiArrowRight className="text-gray-600" size={18} />
+                    <HiArrowRight
+                      className="text-gray-600 hover:text-gray-700"
+                      size={18}
+                    />
                   </button>
                 </Link>
               </td>
@@ -45,6 +48,7 @@ const HabitsList: FC<HabitsListProps> = ({ habits }) => {
   );
 };
 
+// TODO: use react-icons
 function getLoggedAndValidationChecks(
   wasLogged: boolean,
   wasValidated: boolean

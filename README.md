@@ -42,7 +42,7 @@ A personal habit-tracking app that fosters community accountability through vali
     - [Home `/` ✅](#home--)
     - [Profile `/profile` ✅](#profile-profile-)
     - [Habits `/habits` ✅](#habits-habits-)
-    - [View Habit `/habits/{id}`](#view-habit-habitsid)
+    - [View Habit `/habits/{id}` ✅](#view-habit-habitsid-)
     - [Create Habit `/habits/new` ✅](#create-habit-habitsnew-)
     - [Edit Habit `/habits/{id}/edit` ✅](#edit-habit-habitsidedit-)
     - [Log Habit `/logs/new` ✅](#log-habit-logsnew-)
@@ -746,7 +746,7 @@ If the request is sucessfull, we should display a "User successfully created" al
     - View/Edit button 📂: Redirects to `/habits/{id}`
 - The data for this page can be obtained by executing a GET request to `/api/habits`
 
-### View Habit `/habits/{id}`
+### View Habit `/habits/{id}` ✅
 
 - Displays the name of the Habit.
 - Displays an alert with information about whether the habit was not logged/validated yet (for the current day).
@@ -754,7 +754,7 @@ If the request is sucessfull, we should display a "User successfully created" al
 - Displays a Delete Habit button:
   - User must confirm before deleting the Habit.
   - Executes a DELETE request to `/api/habits/{id}`.
-  - After success deletion, redirects to `habits`.
+  - After success deletion, redirects to `/habits`.
 - Displays a label with information about the current streak, and the highest streak achieved.
   - Example: "Current Streak: 5 days (Highest: 14 days)"
 - The data for most of this page can be obtained by executing a GET request to `/api/habits/{id}`

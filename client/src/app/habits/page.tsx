@@ -29,7 +29,9 @@ const HabitsPage: FC = () => {
       </Link>
 
       {!habits || habits.length === 0 ? (
-        <p className="text-center text-gray-500 mt-4">No habits found.</p>
+        <p className="text-center text-gray-500 mt-4">
+          Comienza creando tu primer hábito!
+        </p>
       ) : (
         <HabitsList habits={habits} />
       )}

@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useFetchHabitLog } from '@/hooks/habitLogs';
-import { deletehabitlog, invalidateHabitLog, validateHabitLog } from '@/api';
+import { deleteHabitlog, invalidateHabitLog, validateHabitLog } from '@/api';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
@@ -68,7 +68,7 @@ const HabitLog: FC<HabitLogProps> = ({ habitLogId }) => {
     if (!userIsOwner) return;
 
     try {
-      await deletehabitlog(habitLogId);
+      await deleteHabitlog(habitLogId);
       alert('El Habit Log ha sido eliminado correctamente');
       router.push('/');
     } catch (error) {
@@ -134,6 +134,7 @@ const HabitLog: FC<HabitLogProps> = ({ habitLogId }) => {
                   onClick={handleValidateHabitLog}
                   disabled={actionLoading}
                 >
+                  {/* TODO: use react-icons */}
                   {hasUserValidated ? 'Invalidar Log ❌' : 'Validar Log ✅'}
                 </button>
               )}

@@ -70,6 +70,7 @@ const HabitLogFeedItem: FC<HabitLogFeedItemProps> = ({
           </span>
           {habitLog.habitName}{' '}
           {habitLogWasValidated && '✅'.repeat(validationCount)}
+          {/* TODO: use react-icons */}
         </p>
         <p className="text-xs text-gray-400 uppercase mt-1">
           {formatTimeAgo(habitLog.createdAt)}

@@ -32,12 +32,28 @@ export const fetchUserProfile = (): Promise<UserProfile> => {
   return fetchData('users/profile', userProfileSchema);
 };
 
+export const updateUserAvatar = (formData: FormData) => {
+  return putData('users/avatar', null, formData);
+};
+
 export const fetchHabits = (): Promise<Habit[]> => {
   return fetchData('habits', habitsSchema);
 };
 
 export const fetchHabit = (habitId: string): Promise<HabitDetails> => {
   return fetchData(`habits/${habitId}`, habitDetailsSchema);
+};
+
+export const createHabit = (data: CreateHabitRequest): Promise<string> => {
+  return postData('habits', createdEntityIdSchema, data);
+};
+
+export const updateHabit = (habitId: string, data: UpdateHabitRequest) => {
+  return putData(`habits/${habitId}`, null, data);
+};
+
+export const deleteHabit = (habitId: string) => {
+  return deleteData(`habits/${habitId}`);
 };
 
 export const fetchHabitLogs = (params: {
@@ -88,18 +104,6 @@ export const invalidateHabitLog = (habitLogId: string) => {
   return postData(`logs/${habitLogId}/invalidate`, null, null);
 };
 
-export const deletehabitlog = (habitLogId: string) => {
+export const deleteHabitlog = (habitLogId: string) => {
   return deleteData(`logs/${habitLogId}`);
-};
-
-export const createHabit = (data: CreateHabitRequest): Promise<string> => {
-  return postData('habits', createdEntityIdSchema, data);
-};
-
-export const updateHabit = (habitId: string, data: UpdateHabitRequest) => {
-  return putData(`habits/${habitId}`, null, data);
-};
-
-export const updateUserAvatar = (formData: FormData) => {
-  return putData('users/avatar', null, formData);
 };
