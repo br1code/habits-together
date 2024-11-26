@@ -5,8 +5,7 @@ import withAuth from '@/components/withAuth';
 import { useFetchUserProfile } from '@/hooks/users';
 import Image from 'next/image';
 import { updateUserAvatar } from '@/api';
-
-const DEFAULT_AVATAR_PICTURE_URL = '/default-avatar.png';
+import { DEFAULT_AVATAR_PICTURE_URL } from '@/constants';
 
 const ProfilePage: FC = () => {
   const { userProfile, loading, error, refresh } = useFetchUserProfile();

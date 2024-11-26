@@ -480,7 +480,6 @@ Example: `/api/logs/?habitId={uuid}&pageNumber={number}&pageSize={number}`
         "userId": "uuid",
         "username": "string",
         "userProfilePictureUrl": "string",
-        "isOwner": false,
         "photoUrl": "Photo Url",
         "createdAt": "date",
         "validatedBy": [
@@ -509,7 +508,6 @@ Retrieves a specific habit log.
       "id": "uuid",
       "userId": "uuid",
       "username": "string",
-      "isOwner": false,
       "habitId": "uuid",
       "habitName": "string",
       "textEntry": "string",

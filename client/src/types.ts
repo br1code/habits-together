@@ -52,7 +52,6 @@ export const habitLogSchema = z.object({
   userId: z.string().uuid(),
   username: z.string(),
   userProfilePictureUrl: z.string().nullable(),
-  isOwner: z.boolean(),
   photoUrl: z.string(),
   createdAt: z.string(),
   validatedBy: z.array(habitLogValidationSchema),
@@ -76,7 +75,6 @@ export const habitLogDetailsSchema = z.object({
   userId: z.string().uuid(),
   username: z.string(),
   userProfilePictureUrl: z.string().nullable(),
-  isOwner: z.boolean(),
   textEntry: z.string().optional(),
   photoUrl: z.string(),
   createdAt: z.string(),
@@ -122,3 +120,5 @@ export type UserProfile = z.infer<typeof userProfileSchema>;
 export type CreateHabitLogCommentRequest = z.infer<
   typeof createHabitLogCommentRequest
 >;
+export type HabitLogComment = z.infer<typeof habitLogCommentSchema>;
+export type HabitLogValidation = z.infer<typeof habitLogValidationSchema>;

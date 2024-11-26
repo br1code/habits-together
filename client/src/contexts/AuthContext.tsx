@@ -34,7 +34,6 @@ interface AuthContextProviderProps {
   children?: ReactNode | undefined;
 }
 
-// TODO: since we now have the information about the current user, we should stop depending on `isOwner` fields. Remove them from all endpoints
 const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
   children,
 }) => {

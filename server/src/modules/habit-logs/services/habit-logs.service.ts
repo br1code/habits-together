@@ -71,7 +71,6 @@ export class HabitLogsService {
       userId: log.habit.user.id,
       username: log.habit.user.username,
       userProfilePictureUrl: log.habit.user.profile_picture_url,
-      isOwner: userId === log.habit.user.id,
       photoUrl: log.photo_url,
       createdAt: formatDateForDisplay(log.created_at),
       validatedBy: log.validations.map((validation) => ({
@@ -165,7 +164,6 @@ export class HabitLogsService {
       userId: habitLog.habit.user.id,
       username: habitLog.habit.user.username,
       userProfilePictureUrl: habitLog.habit.user.profile_picture_url,
-      isOwner: userId === habitLog.habit.user.id,
       habitId: habitLog.habit.id,
       habitName: habitLog.habit.name,
       textEntry: habitLog.text_entry,

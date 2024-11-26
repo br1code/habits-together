@@ -5,7 +5,6 @@ export class ReadHabitLogDto {
   userId: string;
   username: string;
   userProfilePictureUrl: string;
-  isOwner: boolean;
   textEntry?: string;
   photoUrl: string;
   createdAt: string;
