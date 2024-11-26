@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { parse, formatDistanceToNow } from 'date-fns';
@@ -36,6 +36,11 @@ const HabitLog: FC<HabitLogProps> = ({ habitLogId }) => {
     error: habitlogError,
     refresh,
   } = useFetchHabitLog(habitLogId);
+
+  // Scroll to the top of the page
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleAddComment = async () => {
     if (!newComment.trim()) return;
