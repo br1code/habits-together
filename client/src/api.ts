@@ -20,6 +20,7 @@ import {
   UpdateHabitRequest,
   UserProfile,
   userProfileSchema,
+  userProfilesSchema,
 } from './types';
 
 export const login = (data: LoginRequest): Promise<LoginResult> => {
@@ -32,6 +33,10 @@ export const signup = (data: SignupRequest): Promise<string> => {
 
 export const fetchUserProfile = (): Promise<UserProfile> => {
   return fetchData('users/profile', userProfileSchema);
+};
+
+export const fetchFriendProfiles = (): Promise<UserProfile[]> => {
+  return fetchData('users/friends', userProfilesSchema);
 };
 
 export const fetchExperienceLogs = (params: {

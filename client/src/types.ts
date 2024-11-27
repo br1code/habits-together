@@ -114,6 +114,8 @@ export const userProfileSchema = z.object({
   requiredExperiencePoints: z.number(),
 });
 
+export const userProfilesSchema = z.array(userProfileSchema);
+
 export const experienceLogSchema = z.object({
   id: z.string().uuid(),
   relatedId: z.string().nullable(),

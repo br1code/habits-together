@@ -1,4 +1,8 @@
-import { fetchExperienceLogs, fetchUserProfile } from '@/api';
+import {
+  fetchExperienceLogs,
+  fetchUserProfile,
+  fetchFriendProfiles,
+} from '@/api';
 import { ExperienceLog, UserProfile } from '@/types';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -122,4 +126,41 @@ export const useFetchExperienceLogs = (
   };
 
   return { experienceLogs, loading, error, hasMore, loadMore };
+};
+
+interface UseFetchFriendProfilesResult {
+  friendProfiles: UserProfile[] | null;
+  loading: boolean;
+  error: string | null;
+}
+
+// TODO: use SWR package
+export const useFetchFriendProfiles = (): UseFetchFriendProfilesResult => {
+  const [friendProfiles, setFriendProfiles] = useState<UserProfile[] | null>(
+    null
+  );
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchAndSetFriendProfiles = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const fetchedFriendProfiles = await fetchFriendProfiles();
+        setFriendProfiles(fetchedFriendProfiles);
+      } catch (error) {
+        console.error('Error fetching friend profiles:', error);
+        setError('Failed to load friend profiles.');
+        setFriendProfiles(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAndSetFriendProfiles();
+  }, []);
+
+  return { friendProfiles, loading, error };
 };

@@ -21,7 +21,7 @@ const HabitsPage: FC = () => {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-start p-4">
+    <main className="min-h-[calc(100vh-4rem)] flex flex-col items-center p-4">
       <Link href="/habits/new">
         <button className="mb-6 px-6 py-2 text-xl text-white bg-indigo-700 hover:bg-indigo-800 rounded-lg shadow-md">
           Crear Hábito

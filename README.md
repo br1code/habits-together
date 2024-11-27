@@ -48,7 +48,7 @@ A personal habit-tracking app that fosters community accountability through vali
     - [Edit Habit `/habits/{id}/edit` ✅](#edit-habit-habitsidedit-)
     - [Log Habit `/logs/new` ✅](#log-habit-logsnew-)
     - [View Habit Log `/logs/{id}` ✅](#view-habit-log-logsid-)
-    - [Friends `/friends`](#friends-friends)
+    - [Friends `/friends` ✅](#friends-friends-)
     - [View Friend `/friends/{id}`](#view-friend-friendsid)
 
 ---
@@ -878,7 +878,7 @@ The information about the Habit Log can be obtained by executing a GET request t
 - Displays a text input for adding a new comment, including a Add Comment button.
   - Executes a POST request to `/api/logs/{logId}/comments`
 
-### Friends `/friends`
+### Friends `/friends` ✅
 
 Displays a list all users (except the current user):
 

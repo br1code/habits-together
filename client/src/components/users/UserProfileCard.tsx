@@ -17,6 +17,9 @@ const UserProfileCard: FC<UserProfileCardProps> = ({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleUpdatePicture = () => {
+    alert(
+      'Por favor intente utilizar una imágen con ratio 1:1 (cuadrado). Ejemplo: 500x500'
+    );
     fileInputRef.current?.click();
   };
 
