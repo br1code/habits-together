@@ -29,18 +29,16 @@ export class HabitLogsController {
 
   @Get()
   getHabitLogs(
-    @GetUser() user: AuthenticatedUser,
     @Query() query: ReadHabitLogsQueryDto,
   ): Promise<ReadHabitLogSummaryDto[]> {
-    return this.habitLogsService.getHabitLogs(user.userId, query);
+    return this.habitLogsService.getHabitLogs(query);
   }
 
   @Get(':id')
   getHabitLog(
-    @GetUser() user: AuthenticatedUser,
     @Param('id', new ParseUUIDPipe()) habitLogId: string,
   ): Promise<ReadHabitLogDto> {
-    return this.habitLogsService.getHabitLog(user.userId, habitLogId);
+    return this.habitLogsService.getHabitLog(habitLogId);
   }
 
   @Post()

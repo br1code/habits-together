@@ -40,13 +40,15 @@ const Habit: FC<HabitProps> = ({ habitId }) => {
 
         {habit.wasLoggedToday && habit.wasValidatedToday ? (
           <div className="mt-4 p-2 text-sm text-green-600 bg-green-100 rounded-md text-center">
-            Este hábito ha sido logueado y validado el día de hoy.
+            Este hábito ha sido logueado y validado el día de hoy
+          </div>
+        ) : habit.wasLoggedToday ? (
+          <div className="text-amber-600 bg-amber-100 mt-4 p-2 text-sm rounded-md text-center">
+            Este hábito no ha sido validado el día de hoy
           </div>
         ) : (
-          <div className="mt-4 p-2 text-sm text-red-600 bg-red-100 rounded-md text-center">
-            {habit.wasLoggedToday
-              ? 'Este hábito no ha sido validado el día de hoy.'
-              : 'Este hábito no ha sido logueado el día de hoy.'}
+          <div className="text-red-600 bg-red-100 mt-4 p-2 text-sm rounded-md text-center">
+            Este hábito no ha sido logueado el día de hoy
           </div>
         )}
 

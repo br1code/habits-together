@@ -41,7 +41,6 @@ export class HabitLogsService {
   ) {}
 
   async getHabitLogs(
-    userId: string,
     query: ReadHabitLogsQueryDto,
   ): Promise<ReadHabitLogSummaryDto[]> {
     const queryBuilder = this.habitLogsRepository
@@ -133,10 +132,7 @@ export class HabitLogsService {
     return habitLog.id;
   }
 
-  async getHabitLog(
-    userId: string,
-    habitLogId: string,
-  ): Promise<ReadHabitLogDto> {
+  async getHabitLog(habitLogId: string): Promise<ReadHabitLogDto> {
     const habitLog = await this.habitLogsRepository.findOne({
       where: { id: habitLogId },
       relations: [

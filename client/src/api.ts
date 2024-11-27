@@ -3,6 +3,8 @@ import {
   createdEntityIdSchema,
   CreateHabitLogCommentRequest,
   CreateHabitRequest,
+  ExperienceLog,
+  experienceLogsSchema,
   Habit,
   HabitDetails,
   habitDetailsSchema,
@@ -30,6 +32,27 @@ export const signup = (data: SignupRequest): Promise<string> => {
 
 export const fetchUserProfile = (): Promise<UserProfile> => {
   return fetchData('users/profile', userProfileSchema);
+};
+
+export const fetchExperienceLogs = (params: {
+  pageNumber?: number | null;
+  pageSize?: number | null;
+}): Promise<ExperienceLog[]> => {
+  const { pageNumber, pageSize } = params;
+
+  const searchParams = new URLSearchParams();
+
+  if (pageNumber) {
+    searchParams.append('pageNumber', pageNumber.toString());
+  }
+  if (pageSize) {
+    searchParams.append('pageSize', pageSize.toString());
+  }
+
+  const searchParamsValue = searchParams.toString();
+  const searchQuery = searchParamsValue ? `?${searchParamsValue}` : '';
+
+  return fetchData(`users/xp${searchQuery}`, experienceLogsSchema);
 };
 
 export const updateUserAvatar = (formData: FormData) => {

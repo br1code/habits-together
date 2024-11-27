@@ -6,6 +6,7 @@ import {
   Param,
   ParseUUIDPipe,
   Put,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -15,6 +16,8 @@ import { UsersService } from '../services/users.service';
 import { ReadUserDto } from '../dtos/read-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
+import { ReadExperienceLogDto } from '../dtos/read-experience-log.dto';
+import { ReadExperienceLogQueryDto } from '../dtos/read-experience-log-query.dto';
 
 @Controller('users')
 export class UsersController {
@@ -64,5 +67,13 @@ export class UsersController {
     @UploadedFile() photo: Express.Multer.File,
   ) {
     return this.usersService.updateAvatar(user.userId, photo);
+  }
+
+  @Get('xp')
+  getExperienceLogs(
+    @GetUser() user: AuthenticatedUser,
+    @Query() query: ReadExperienceLogQueryDto,
+  ): Promise<ReadExperienceLogDto[]> {
+    return this.usersService.getExperienceLogs(user.userId, query);
   }
 }

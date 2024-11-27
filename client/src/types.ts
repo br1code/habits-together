@@ -1,5 +1,14 @@
 import { z } from 'zod';
 
+// Enums
+
+export enum ExperienceLogActivityType {
+  HABIT_CREATION = 'habit_creation',
+  HABIT_LOG_CREATION = 'habit_log_creation',
+  HABIT_LOG_VALIDATION_PERFORMED = 'habit_log_validation_performed',
+  HABIT_LOG_VALIDATION_RECEIVED = 'habit_log_validation_received',
+}
+
 // Schemas
 
 export const loginRequestSchema = z.object({
@@ -105,6 +114,16 @@ export const userProfileSchema = z.object({
   requiredExperiencePoints: z.number(),
 });
 
+export const experienceLogSchema = z.object({
+  id: z.string().uuid(),
+  relatedId: z.string().nullable(),
+  xpGained: z.number(),
+  activityType: z.nativeEnum(ExperienceLogActivityType),
+  createdAt: z.string(),
+});
+
+export const experienceLogsSchema = z.array(experienceLogSchema);
+
 // Types
 
 export type LoginRequest = z.infer<typeof loginRequestSchema>;
@@ -122,3 +141,4 @@ export type CreateHabitLogCommentRequest = z.infer<
 >;
 export type HabitLogComment = z.infer<typeof habitLogCommentSchema>;
 export type HabitLogValidation = z.infer<typeof habitLogValidationSchema>;
+export type ExperienceLog = z.infer<typeof experienceLogSchema>;

@@ -17,6 +17,9 @@ import {
   FILE_STORAGE_PROVIDER,
   FileStorageProvider,
 } from 'src/modules/file-storage/interfaces/file-storage.interface';
+import { ReadExperienceLogQueryDto } from '../dtos/read-experience-log-query.dto';
+import { ReadExperienceLogDto } from '../dtos/read-experience-log.dto';
+import { formatDateForDisplay } from 'src/utils/dateUtils';
 
 @Injectable()
 export class UsersService {
@@ -181,6 +184,29 @@ export class UsersService {
       requiredXp: Math.round(requiredXp),
       leveledUp,
     };
+  }
+
+  async getExperienceLogs(
+    userId: string,
+    query: ReadExperienceLogQueryDto,
+  ): Promise<ReadExperienceLogDto[]> {
+    const queryBuilder = this.experienceLogsRepository
+      .createQueryBuilder('experienceLog')
+      .where('experienceLog.userId = :userId', { userId })
+      .orderBy('experienceLog.createdAt', 'DESC');
+
+    const experienceLogs = await queryBuilder
+      .skip((query.pageNumber - 1) * query.pageSize)
+      .take(query.pageSize)
+      .getMany();
+
+    return experienceLogs.map((xpLog) => ({
+      id: xpLog.id,
+      relatedId: xpLog.relatedId,
+      xpGained: xpLog.xpGained,
+      activityType: xpLog.activityType,
+      createdAt: formatDateForDisplay(xpLog.createdAt),
+    }));
   }
 
   private toReadUserDto(user: User): ReadUserDto {

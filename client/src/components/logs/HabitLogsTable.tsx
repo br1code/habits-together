@@ -20,17 +20,17 @@ const HabitLogsTable: FC<HabitLogsTableProps> = ({ habitId }) => {
   };
 
   return (
-    <section className="p-4 bg-white shadow rounded-lg mt-4">
+    <section className="bg-white shadow rounded-lg mt-4 p-4">
       <h2 className="text-lg font-bold text-gray-800 mb-4 text-center">
         Últimos Logs
       </h2>
 
       {/* TODO: show loading spinner */}
       {loading && habitLogs.length === 0 && (
-        <p className="text-gray-500">Cargando logs...</p>
+        <p className="text-gray-500 text-center">Cargando logs...</p>
       )}
 
-      {error && <p className="text-red-500">{error}</p>}
+      {error && <p className="text-red-500 text-center">{error}</p>}
 
       {habitLogs.length > 0 ? (
         <table className="w-full border-collapse border border-gray-200 text-center">
@@ -76,8 +76,9 @@ const HabitLogsTable: FC<HabitLogsTableProps> = ({ habitId }) => {
           <button
             onClick={handleLoadMore}
             className="px-4 py-2 bg-indigo-700 text-white font-medium rounded hover:bg-indigo-800"
+            disabled={loading}
           >
-            Cargar más
+            {loading ? 'Cargando...' : 'Cargar más'}
           </button>
         </div>
       )}

@@ -20,6 +20,7 @@ A personal habit-tracking app that fosters community accountability through vali
       - [`GET /api/users/profile` ✅](#get-apiusersprofile-)
       - [`GET api/users/friends` ✅](#get-apiusersfriends-)
       - [`GET /api/users/friends/{id}` ✅](#get-apiusersfriendsid-)
+      - [`GET /api/users/xp` ✅](#get-apiusersxp-)
     - [Habits](#habits)
       - [`GET /api/habits` ✅](#get-apihabits-)
       - [`GET /api/habits/{id}` ✅](#get-apihabitsid-)
@@ -340,6 +341,32 @@ Retrieves information about a friend.
     }
     ```
 
+#### `GET /api/users/xp` ✅
+
+Retrieves experience points logs. Sorted by date (recent first). Paginated.
+
+- `pageNumber`: Optional page number for pagination. Defaults to 1.
+- `pageSize`: Optional page size for pagination. Defaults to 10.
+
+Example: `/api/users/xp?pageNumber={number}&pageSize={number}`
+
+- **Response:**
+
+  - **Status:** `200 OK`
+  - **Body:**
+
+    ```json
+    [
+      {
+        "id": "uuid",
+        "relatedId": "uuid",
+        "xpGained": 10,
+        "activityType": "string",
+        "createdAt": "date"
+      }
+    ]
+    ```
+
 ### Habits
 
 #### `GET /api/habits` ✅
@@ -462,7 +489,7 @@ Retrieves habit logs, optionally filtered by habitId. Sorted by date (recent fir
     - If `habitId` isn't provided, the endpoint returns logs from any user.
     - Otherwise the endpoint returns only logs from the given habit (for the owner user).
   - `pageNumber`: Optional page number for pagination. Defaults to 1.
-  - `pageSize`: Optional page size for pagination. If not provided, all matching questions are returned.
+  - `pageSize`: Optional page size for pagination. Defaults to 10.
 
 Example: `/api/logs/?habitId={uuid}&pageNumber={number}&pageSize={number}`
 
@@ -732,7 +759,15 @@ If the request is sucessfull, we should display a "User successfully created" al
   - Username
   - Level
   - Experience points (example: "0/100")
-- This data can be obtained by executing a GET request to `/api/users/profile`
+  - This data can be obtained by executing a GET request to `/api/users/profile`
+- Displays a list of the experience points received recently, with the ability to load more (paginated table).
+  - Each item should display the following data:
+    - Amount of experience points gained
+    - Reason based on activityType
+    - Date (relative)
+    - Link to related entity Id
+  - There should be a button to load more records.
+  - This data can be obtained by executing a GET request to `/api/users/xp`
 
 ### Habits `/habits` ✅
 
