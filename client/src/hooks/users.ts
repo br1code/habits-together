@@ -14,7 +14,9 @@ interface UseFetchUserProfileResult {
 }
 
 // TODO: use SWR package
-export const useFetchUserProfile = (): UseFetchUserProfileResult => {
+export const useFetchUserProfile = (
+  userId?: string
+): UseFetchUserProfileResult => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +26,7 @@ export const useFetchUserProfile = (): UseFetchUserProfileResult => {
       setLoading(true);
       setError(null);
 
-      const fetchedUserProfile = await fetchUserProfile();
+      const fetchedUserProfile = await fetchUserProfile(userId);
       setUserProfile(fetchedUserProfile);
     } catch (error) {
       console.error('Error fetching user profile:', error);
@@ -33,7 +35,7 @@ export const useFetchUserProfile = (): UseFetchUserProfileResult => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     fetchAndSetUserProfile();

@@ -19,7 +19,6 @@ A personal habit-tracking app that fosters community accountability through vali
     - [Users](#users)
       - [`GET /api/users/profile` ✅](#get-apiusersprofile-)
       - [`GET api/users/friends` ✅](#get-apiusersfriends-)
-      - [`GET /api/users/friends/{id}` ✅](#get-apiusersfriendsid-)
       - [`GET /api/users/xp` ✅](#get-apiusersxp-)
     - [Habits](#habits)
       - [`GET /api/habits` ✅](#get-apihabits-)
@@ -49,7 +48,7 @@ A personal habit-tracking app that fosters community accountability through vali
     - [Log Habit `/logs/new` ✅](#log-habit-logsnew-)
     - [View Habit Log `/logs/{id}` ✅](#view-habit-log-logsid-)
     - [Friends `/friends` ✅](#friends-friends-)
-    - [View Friend `/friends/{id}` 🔨](#view-friend-friendsid-)
+    - [View Friend `/friends/{id}` ✅](#view-friend-friendsid-)
 
 ---
 
@@ -279,7 +278,15 @@ Login existing user with their credentials.
 
 #### `GET /api/users/profile` ✅
 
-Retrieves information about the authenticated user.
+Retrieves information about a User.
+
+- **Query Parameters:**
+
+  - `userId` (optional): Optional user to filter by.
+    - If `userId` isn't provided, the endpoint returns information about the authenticated user.
+    - Otherwise the endpoint returns information about the given user.
+
+Example: `/api/users/profile?userId={uuid}`
 
 - **Response:**
 
@@ -321,29 +328,11 @@ Retrieves a list of the user's friends.
     ]
     ```
 
-#### `GET /api/users/friends/{id}` ✅
-
-Retrieves information about a friend.
-
-- **Response:**
-
-  - **Status:** `200 OK`
-  - **Body:**
-
-    ```json
-    {
-      "id": "876b197c-a2d1-485d-9fb2-e933ef0853a5",
-      "username": "cassie",
-      "profile_picture_url": null,
-      "level": 1,
-      "currentExperiencePoints": 1,
-      "requiredExperiencePoints": 100
-    }
-    ```
-
 #### `GET /api/users/xp` ✅
 
 Retrieves experience points logs. Sorted by date (recent first). Paginated.
+
+- **Query Parameters:**
 
 - `pageNumber`: Optional page number for pagination. Defaults to 1.
 - `pageSize`: Optional page size for pagination. Defaults to 10.
@@ -378,6 +367,8 @@ Retrieves all non-deleted habits of the authenticated User. If `userId` is provi
   - `userId` (optional): Optional user to filter habits by.
     - If `userId` isn't provided, the endpoint returns habits from the authenticated user.
     - Otherwise the endpoint returns only logs from the given user.
+
+Example: `/api/habits?userId={uuid}`
 
 - **Response:**
 
@@ -898,16 +889,15 @@ Displays a list all users (except the current user):
   - View button: Redirects to `/friends/{id}`
 - This data can be obtained by executing a GET request to `/api/users/friends`
 
-### View Friend `/friends/{id}` 🔨
+### View Friend `/friends/{id}` ✅
 
 - Displays a section with information about the friend:
   - Fields:
     - Profile picture
     - Username
-    - Email
     - Level
     - Experience points (example: "0/100")
-  - This data can be obtained by executing a GET request to `/api/users/friends/{id}`
+  - This data can be obtained by executing a GET request to `/api/users/profile?userId={id}`
 - Display a section with information about its habits:
   - Displays a header with the number of logged habits vs total habits (example: "Logged habits: 1/4")
   - Displays a list of your habits:

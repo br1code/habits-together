@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   HttpCode,
-  Param,
   ParseUUIDPipe,
   Put,
   Query,
@@ -24,21 +23,17 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('profile')
-  getProfile(@GetUser() user: AuthenticatedUser): Promise<ReadUserDto> {
-    return this.usersService.getUserProfile(user.userId);
+  getProfile(
+    @GetUser() user: AuthenticatedUser,
+    @Query('userId', new ParseUUIDPipe({ optional: true })) userId?: string,
+  ): Promise<ReadUserDto> {
+    const targetUserId = userId ? userId : user.userId;
+    return this.usersService.getUserProfile(targetUserId);
   }
 
   @Get('friends')
   getFriends(@GetUser() user: AuthenticatedUser): Promise<ReadUserDto[]> {
     return this.usersService.getFriendsProfiles(user.userId);
-  }
-
-  @Get('friends/:id')
-  getFriend(
-    @GetUser() user: AuthenticatedUser,
-    @Param('id', new ParseUUIDPipe()) friendId: string,
-  ): Promise<ReadUserDto> {
-    return this.usersService.getFriendProfile(user.userId, friendId);
   }
 
   @Put('avatar')

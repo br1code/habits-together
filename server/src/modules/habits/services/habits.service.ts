@@ -50,7 +50,7 @@ export class HabitsService {
     }));
   }
 
-  async getHabit(userId: string, habitId: string): Promise<ReadHabitDto> {
+  async getHabit(habitId: string): Promise<ReadHabitDto> {
     const today = getCurrentDateISO();
 
     const habit = await this.habitsRepository
@@ -64,7 +64,6 @@ export class HabitsService {
       )
       .leftJoinAndSelect('habit.user', 'user')
       .where('habit.id = :habitId', { habitId })
-      .andWhere('habit.userId = :userId', { userId })
       .andWhere('habit.isDeleted = false')
       .orderBy('habitLog.date', 'DESC')
       .getOne();

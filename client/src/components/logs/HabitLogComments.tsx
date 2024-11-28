@@ -4,6 +4,9 @@ import Image from 'next/image';
 import { createHabitLogComment } from '@/api';
 import { formatTimeAgo } from '@/utils/dateUtils';
 import { DEFAULT_AVATAR_PICTURE_URL } from '@/constants';
+import Link from 'next/link';
+import { getProfileLink } from '@/utils/utils';
+import { useAuthContext } from '@/contexts/AuthContext';
 
 interface HabitLogCommentsProps {
   habitLogId: string;
@@ -17,6 +20,8 @@ const HabitLogComments: FC<HabitLogCommentsProps> = ({
   refreshHabitLog,
 }) => {
   const [newComment, setNewComment] = useState<string>('');
+
+  const { user: authenticatedUser } = useAuthContext();
 
   const handleAddComment = async () => {
     if (!newComment.trim()) return;
@@ -40,24 +45,35 @@ const HabitLogComments: FC<HabitLogCommentsProps> = ({
               <div key={comment.id} className="flex items-start space-x-4">
                 {/* Avatar */}
                 <div className="w-8 h-8 relative rounded-full overflow-hidden">
-                  <Image
-                    src={
-                      comment.userProfilePictureUrl ||
-                      DEFAULT_AVATAR_PICTURE_URL
-                    }
-                    alt={`${comment.username}'s avatar`}
-                    fill
-                    className="object-cover"
-                    sizes="32px"
-                  />
+                  <Link
+                    href={getProfileLink(comment.userId, authenticatedUser!.id)}
+                  >
+                    <Image
+                      src={
+                        comment.userProfilePictureUrl ||
+                        DEFAULT_AVATAR_PICTURE_URL
+                      }
+                      alt={`${comment.username}'s avatar`}
+                      fill
+                      className="object-cover"
+                      sizes="32px"
+                    />
+                  </Link>
                 </div>
 
                 {/* Comment Content */}
                 <div>
                   <p className="text-sm">
-                    <span className="font-semibold mr-1">
-                      {comment.username}
-                    </span>
+                    <Link
+                      href={getProfileLink(
+                        comment.userId,
+                        authenticatedUser!.id
+                      )}
+                    >
+                      <span className="font-semibold mr-1">
+                        {comment.username}
+                      </span>
+                    </Link>
                     {comment.text}
                   </p>
                   <p className="text-xs text-gray-400 mt-1">

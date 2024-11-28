@@ -12,22 +12,24 @@ const ProfilePage: FC = () => {
   // TODO: show loading spinner
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        Cargando...
-      </div>
+      <main className="max-w-screen-sm mx-auto p-4">
+        <p className="text-red-500 text-center">Cargando...</p>
+      </main>
     );
   }
 
   if (error || !userProfile) {
     return (
-      <div className="flex justify-center items-center h-screen text-red-500">
-        Ocurrió un error al cargar los datos del perfil.
-      </div>
+      <main className="max-w-screen-sm mx-auto p-4">
+        <p className="text-red-500 text-center">
+          Ocurrió un error al cargar los datos del perfil.
+        </p>
+      </main>
     );
   }
 
   return (
-    <main className="max-w-screen-sm mx-auto">
+    <main className="max-w-screen-sm mx-auto p-4">
       <UserProfileCard userProfile={userProfile} refreshUserProfile={refresh} />
       <ExperienceLogsTable />
     </main>

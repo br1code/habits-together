@@ -1,6 +1,5 @@
 import { updateHabit } from '@/api';
 import { HabitDetails } from '@/types';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FC, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -103,13 +102,14 @@ const EditHabitForm: FC<EditHabitFormProps> = ({ habit }) => {
           {isSubmitting ? 'Guardando ...' : 'Guardar'}
         </button>
 
-        <p className="mt-6 text-center text-sm">
-          <Link
-            href={`/habits/${habit.id}`}
+        <p className="mt-6 text-sm text-center">
+          <button
+            type="button"
+            onClick={() => router.back()}
             className="text-indigo-700 underline hover:text-indigo-800"
           >
             Volver
-          </Link>
+          </button>
         </p>
       </form>
     </section>

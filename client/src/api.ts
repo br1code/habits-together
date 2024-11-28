@@ -31,8 +31,17 @@ export const signup = (data: SignupRequest): Promise<string> => {
   return postData('auth/signup', createdEntityIdSchema, data);
 };
 
-export const fetchUserProfile = (): Promise<UserProfile> => {
-  return fetchData('users/profile', userProfileSchema);
+export const fetchUserProfile = (userId?: string): Promise<UserProfile> => {
+  const searchParams = new URLSearchParams();
+
+  if (userId) {
+    searchParams.append('userId', userId);
+  }
+
+  const searchParamsValue = searchParams.toString();
+  const searchQuery = searchParamsValue ? `?${searchParamsValue}` : '';
+
+  return fetchData(`users/profile${searchQuery}`, userProfileSchema);
 };
 
 export const fetchFriendProfiles = (): Promise<UserProfile[]> => {

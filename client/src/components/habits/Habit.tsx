@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { useFetchHabit } from '@/hooks/habits';
 import { deleteHabit } from '@/api';
 import HabitLogsTable from '../logs/HabitLogsTable';
@@ -90,12 +89,13 @@ const Habit: FC<HabitProps> = ({ habitId }) => {
         </p>
 
         <p className="mt-6 text-sm text-center">
-          <Link
-            href="/habits"
+          <button
+            type="button"
+            onClick={() => router.back()}
             className="text-indigo-700 underline hover:text-indigo-800"
           >
             Volver
-          </Link>
+          </button>
         </p>
       </section>
 

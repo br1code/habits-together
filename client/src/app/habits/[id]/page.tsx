@@ -9,7 +9,7 @@ const ViewHabitPage: FC = () => {
   const { id } = useParams<{ id: string }>();
 
   return (
-    <main className="max-w-screen-sm mx-auto">
+    <main className="max-w-screen-sm mx-auto p-4">
       <Habit habitId={id} />
     </main>
   );

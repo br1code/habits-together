@@ -1,7 +1,6 @@
 import { FC, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import Link from 'next/link';
 import { createHabit } from '@/api';
 
 interface NewHabitFormValues {
@@ -91,13 +90,14 @@ const NewHabitForm: FC = () => {
           {isSubmitting ? 'Guardando ...' : 'Guardar'}
         </button>
 
-        <p className="mt-6 text-center text-sm">
-          <Link
-            href={'/habits/'}
+        <p className="mt-6 text-sm text-center">
+          <button
+            type="button"
+            onClick={() => router.back()}
             className="text-indigo-700 underline hover:text-indigo-800"
           >
             Volver
-          </Link>
+          </button>
         </p>
       </form>
     </section>

@@ -36,11 +36,9 @@ const HabitLogsTable: FC<HabitLogsTableProps> = ({ habitId }) => {
         <table className="w-full border-collapse border border-gray-200 text-center">
           <thead>
             <tr>
-              <th className="border border-gray-200 px-4 py-2 ">Fecha</th>
-              <th className="border border-gray-200 px-4 py-2 ">Validado</th>
-              <th className="border border-gray-200 px-4 py-2 ">
-                Ver Detalles
-              </th>
+              <th className="border border-gray-200 px-4 py-2">Fecha</th>
+              <th className="border border-gray-200 px-4 py-2">Validado</th>
+              <th className="border border-gray-200 px-4 py-2">Ver Detalles</th>
             </tr>
           </thead>
           <tbody>
@@ -56,7 +54,7 @@ const HabitLogsTable: FC<HabitLogsTableProps> = ({ habitId }) => {
                 <td className="border border-gray-200 px-4 py-2 text-center flex justify-center items-center">
                   <Link
                     href={`/logs/${log.id}`}
-                    className=" bg-gray-200 text-gray-600 hover:text-gray-700 rounded-full p-2"
+                    className=" bg-gray-200 text-gray-600 hover:text-gray-700 rounded-full p-4"
                   >
                     <HiArrowRight className="text-xl" />
                   </Link>

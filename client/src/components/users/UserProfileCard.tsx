@@ -3,10 +3,11 @@ import Image from 'next/image';
 import { updateUserAvatar } from '@/api';
 import { UserProfile } from '@/types';
 import { DEFAULT_AVATAR_PICTURE_URL } from '@/constants';
+import { useAuthContext } from '@/contexts/AuthContext';
 
 interface UserProfileCardProps {
   userProfile: UserProfile;
-  refreshUserProfile: () => Promise<void>;
+  refreshUserProfile?: () => Promise<void>;
 }
 
 const UserProfileCard: FC<UserProfileCardProps> = ({
@@ -16,7 +17,14 @@ const UserProfileCard: FC<UserProfileCardProps> = ({
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  const { user } = useAuthContext();
+  const isCurrentUserProfile = user?.id === userProfile.id;
+
   const handleUpdatePicture = () => {
+    if (!isCurrentUserProfile) {
+      return;
+    }
+
     alert(
       'Por favor intente utilizar una imágen con ratio 1:1 (cuadrado). Ejemplo: 500x500'
     );
@@ -26,6 +34,10 @@ const UserProfileCard: FC<UserProfileCardProps> = ({
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    if (!isCurrentUserProfile) {
+      return;
+    }
+
     const file = event.target.files?.[0];
     if (file) {
       const formData = new FormData();
@@ -34,7 +46,11 @@ const UserProfileCard: FC<UserProfileCardProps> = ({
       try {
         setIsUploading(true);
         await updateUserAvatar(formData);
-        await refreshUserProfile();
+
+        if (refreshUserProfile) {
+          await refreshUserProfile();
+        }
+
         alert('La foto de perfil ha sido actualizada correctamente');
       } catch (error) {
         console.error('Failed to upload picture:', error);
@@ -60,15 +76,17 @@ const UserProfileCard: FC<UserProfileCardProps> = ({
       </div>
 
       {/* Update Picture Button */}
-      <button
-        onClick={handleUpdatePicture}
-        className={`text-blue-500 underline text-base mb-2 ${
-          isUploading ? 'opacity-50 cursor-not-allowed' : ''
-        }`}
-        disabled={isUploading}
-      >
-        {isUploading ? 'Subiendo...' : 'Actualizar Avatar'}
-      </button>
+      {isCurrentUserProfile && (
+        <button
+          onClick={handleUpdatePicture}
+          className={`text-blue-500 underline text-base mb-2 ${
+            isUploading ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+          disabled={isUploading}
+        >
+          {isUploading ? 'Subiendo...' : 'Actualizar Avatar'}
+        </button>
+      )}
 
       {/* Hidden File Input */}
       <input

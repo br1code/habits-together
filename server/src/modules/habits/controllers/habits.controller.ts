@@ -25,7 +25,7 @@ export class HabitsController {
   @Get()
   getHabits(
     @GetUser() user: AuthenticatedUser,
-    @Query('userId') userId?: string,
+    @Query('userId', new ParseUUIDPipe({ optional: true })) userId?: string,
   ): Promise<ReadHabitSummaryDto[]> {
     const targetUserId = userId ? userId : user.userId;
     return this.habitsService.getHabits(targetUserId);
@@ -33,10 +33,9 @@ export class HabitsController {
 
   @Get(':id')
   getHabit(
-    @GetUser() user: AuthenticatedUser,
     @Param('id', new ParseUUIDPipe()) habitId: string,
   ): Promise<ReadHabitDto> {
-    return this.habitsService.getHabit(user.userId, habitId);
+    return this.habitsService.getHabit(habitId);
   }
 
   @Post()
