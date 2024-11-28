@@ -43,13 +43,13 @@ A personal habit-tracking app that fosters community accountability through vali
     - [Home `/` ✅](#home--)
     - [Profile `/profile` ✅](#profile-profile-)
     - [Habits `/habits` ✅](#habits-habits-)
-    - [View Habit `/habits/{id}` ✅](#view-habit-habitsid-)
+    - [View Habit `/habits/{id}` 🔨](#view-habit-habitsid-)
     - [Create Habit `/habits/new` ✅](#create-habit-habitsnew-)
-    - [Edit Habit `/habits/{id}/edit` ✅](#edit-habit-habitsidedit-)
+    - [Edit Habit `/habits/{id}/edit` 🔨](#edit-habit-habitsidedit-)
     - [Log Habit `/logs/new` ✅](#log-habit-logsnew-)
     - [View Habit Log `/logs/{id}` ✅](#view-habit-log-logsid-)
     - [Friends `/friends` ✅](#friends-friends-)
-    - [View Friend `/friends/{id}`](#view-friend-friendsid)
+    - [View Friend `/friends/{id}` 🔨](#view-friend-friendsid-)
 
 ---
 
@@ -371,7 +371,13 @@ Example: `/api/users/xp?pageNumber={number}&pageSize={number}`
 
 #### `GET /api/habits` ✅
 
-Retrieves all non-deleted habits of the authenticated User.
+Retrieves all non-deleted habits of the authenticated User. If `userId` is provided, it returns the Habits of that user.
+
+- **Query Parameters:**
+
+  - `userId` (optional): Optional user to filter habits by.
+    - If `userId` isn't provided, the endpoint returns habits from the authenticated user.
+    - Otherwise the endpoint returns only logs from the given user.
 
 - **Response:**
 
@@ -781,15 +787,17 @@ If the request is sucessfull, we should display a "User successfully created" al
     - View/Edit button 📂: Redirects to `/habits/{id}`
 - The data for this page can be obtained by executing a GET request to `/api/habits`
 
-### View Habit `/habits/{id}` ✅
+### View Habit `/habits/{id}` 🔨
 
 - Displays the name of the Habit.
 - Displays an alert with information about whether the habit was not logged/validated yet (for the current day).
 - Displays an Edit Habit button: Redirects to `/habits/{id}/edit`
+  - Only visible if the user owns the Habit.
 - Displays a Delete Habit button:
   - User must confirm before deleting the Habit.
   - Executes a DELETE request to `/api/habits/{id}`.
   - After success deletion, redirects to `/habits`.
+  - Only visible/allowed if the user owns the Habit.
 - Displays a label with information about the current streak, and the highest streak achieved.
   - Example: "Current Streak: 5 days (Highest: 14 days)"
 - The data for most of this page can be obtained by executing a GET request to `/api/habits/{id}`
@@ -811,9 +819,11 @@ Allows users to create a new habit.
   - Create button.
 - Submitting the form will send a POST request to `/api/habits`
 
-### Edit Habit `/habits/{id}/edit` ✅
+### Edit Habit `/habits/{id}/edit` 🔨
 
 Allows users to update an existing habit.
+
+If the current user is not the owner of the Habit, it gets redirected to `/`.
 
 - Displays a form with the following fields:
   - Name: input text, required.
@@ -887,12 +897,22 @@ Displays a list all users (except the current user):
   - View button: Redirects to `/friends/{id}`
 - This data can be obtained by executing a GET request to `/api/users/friends`
 
-### View Friend `/friends/{id}`
+### View Friend `/friends/{id}` 🔨
 
-- Displays the following information about the friend:
-  - Profile picture
-  - Username
-  - Email
-  - Level
-  - Experience points (example: "0/100")
-- This data can be obtained by executing a GET request to `/api/users/friends/{id}`
+- Displays a section with information about the friend:
+  - Fields:
+    - Profile picture
+    - Username
+    - Email
+    - Level
+    - Experience points (example: "0/100")
+  - This data can be obtained by executing a GET request to `/api/users/friends/{id}`
+- Display a section with information about its habits:
+  - Displays a header with the number of logged habits vs total habits (example: "Logged habits: 1/4")
+  - Displays a list of your habits:
+    - Each item contains the following data or action items:
+      - Habit Name
+      - Habit Was Logged Icon (☑️)
+      - Habit Was Validated Icon (✅)
+      - View/Edit button 📂: Redirects to `/habits/{id}`
+    - This data can be obtained by executing a GET request to `/api/habits?userId={id}`

@@ -9,7 +9,7 @@ interface UseFetchHabitsResult {
 }
 
 // TODO: use SWR package
-export const useFetchHabits = (): UseFetchHabitsResult => {
+export const useFetchHabits = (userId?: string): UseFetchHabitsResult => {
   const [habits, setHabits] = useState<Habit[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,7 +20,7 @@ export const useFetchHabits = (): UseFetchHabitsResult => {
         setLoading(true);
         setError(null);
 
-        const fetchedHabits = await fetchHabits();
+        const fetchedHabits = await fetchHabits(userId);
         setHabits(fetchedHabits);
       } catch (error) {
         console.error('Error fetching habits:', error);
@@ -32,7 +32,7 @@ export const useFetchHabits = (): UseFetchHabitsResult => {
     };
 
     fetchAndSetHabits();
-  }, []);
+  }, [userId]);
 
   return { habits, loading, error };
 };

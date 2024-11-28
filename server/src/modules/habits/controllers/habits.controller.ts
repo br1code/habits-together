@@ -8,6 +8,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { HabitsService } from '../services/habits.service';
 import { GetUser } from 'src/modules/auth/decorators/get-user.decorator';
@@ -24,8 +25,10 @@ export class HabitsController {
   @Get()
   getHabits(
     @GetUser() user: AuthenticatedUser,
+    @Query('userId') userId?: string,
   ): Promise<ReadHabitSummaryDto[]> {
-    return this.habitsService.getHabits(user.userId);
+    const targetUserId = userId ? userId : user.userId;
+    return this.habitsService.getHabits(targetUserId);
   }
 
   @Get(':id')

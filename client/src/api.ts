@@ -64,8 +64,17 @@ export const updateUserAvatar = (formData: FormData) => {
   return putData('users/avatar', null, formData);
 };
 
-export const fetchHabits = (): Promise<Habit[]> => {
-  return fetchData('habits', habitsSchema);
+export const fetchHabits = (userId?: string): Promise<Habit[]> => {
+  const searchParams = new URLSearchParams();
+
+  if (userId) {
+    searchParams.append('userId', userId);
+  }
+
+  const searchParamsValue = searchParams.toString();
+  const searchQuery = searchParamsValue ? `?${searchParamsValue}` : '';
+
+  return fetchData(`habits${searchQuery}`, habitsSchema);
 };
 
 export const fetchHabit = (habitId: string): Promise<HabitDetails> => {
