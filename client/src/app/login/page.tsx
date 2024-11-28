@@ -1,12 +1,13 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { login } from '@/api';
 import withoutAuth from '@/components/withoutAuth';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 interface LoginFormValues {
   username: string;
@@ -19,17 +20,21 @@ const LoginPage: FC = () => {
     handleSubmit,
     formState: { errors: formErrors },
   } = useForm<LoginFormValues>();
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const authContext = useAuthContext();
   const router = useRouter();
 
   const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
     try {
+      setIsSubmitting(true);
       const result = await login(data);
       authContext.login(result.accessToken);
       router.push('/');
     } catch (error) {
       console.log('An error occurred during login:', error);
       alert('Usuario o contraseña incorrectos. Por favor intente de nuevo.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -83,9 +88,10 @@ const LoginPage: FC = () => {
 
         <button
           type="submit"
-          className="w-full py-2 bg-indigo-700 hover:bg-indigo-800 rounded-lg text-white font-semibold transition"
+          className="w-full py-2 bg-indigo-700 hover:bg-indigo-800 disabled:bg-gray-300 rounded-lg text-white font-semibold flex justify-center items-center"
+          disabled={isSubmitting}
         >
-          Iniciar Sesión
+          {isSubmitting ? <LoadingSpinner /> : 'Iniciar Sesión'}
         </button>
 
         <p className="mt-6 text-center text-sm">

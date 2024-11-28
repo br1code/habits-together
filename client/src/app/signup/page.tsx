@@ -1,11 +1,12 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import withoutAuth from '@/components/withoutAuth';
 import { signup } from '@/api';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 interface SignupFormValues {
   username: string;
@@ -19,16 +20,20 @@ const SignupPage: FC = () => {
     handleSubmit,
     formState: { errors: formErrors },
   } = useForm<SignupFormValues>();
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const router = useRouter();
 
   const onSubmit: SubmitHandler<SignupFormValues> = async (data) => {
     try {
+      setIsSubmitting(true);
       await signup(data);
       alert('Tu cuenta ha sido creada. Ya puedes iniciar sesión');
       router.push('/login');
     } catch (error) {
       console.log('An error occured during signup', error);
       alert('Error al registrarse. Por favor intente de nuevo.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -102,9 +107,10 @@ const SignupPage: FC = () => {
 
         <button
           type="submit"
-          className="w-full py-2 bg-indigo-700 hover:bg-indigo-800 rounded-lg text-white font-semibold transition"
+          className="w-full py-2 bg-indigo-700 hover:bg-indigo-800 disabled:bg-gray-300 rounded-lg text-white font-semibold flex justify-center items-center"
+          disabled={isSubmitting}
         >
-          Registrarse
+          {isSubmitting ? <LoadingSpinner /> : 'Registrarse'}
         </button>
 
         <p className="mt-6 text-center text-sm">
