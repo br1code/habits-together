@@ -267,46 +267,6 @@ export class HabitLogsService {
     );
   }
 
-  async invalidateHabitLog(userId: string, habitLogId: string): Promise<void> {
-    const habitLog = await this.habitLogsRepository.findOne({
-      where: { id: habitLogId },
-      relations: [
-        'habit',
-        'habit.user',
-        'validations',
-        'validations.validatorUser',
-      ],
-    });
-
-    if (!habitLog) {
-      throw new NotFoundException(
-        `Habit Log with Id ${habitLogId} was not found.`,
-      );
-    }
-
-    if (!habitLog.habit || habitLog.habit.isDeleted) {
-      throw new NotFoundException(`Habit not found.`);
-    }
-
-    if (habitLog.habit.user.id === userId) {
-      throw new UnauthorizedException(
-        `You are not authorized to invalidate this Habit Log.`,
-      );
-    }
-
-    const existingValidation = habitLog.validations.find(
-      (validation) => validation.validatorUser.id === userId,
-    );
-
-    if (!existingValidation) {
-      throw new NotFoundException(
-        'Validation by the user for this Habit Log was not found.',
-      );
-    }
-
-    await this.habitLogValidationsRepository.remove(existingValidation);
-  }
-
   async addComment(
     userId: string,
     habitLogId: string,

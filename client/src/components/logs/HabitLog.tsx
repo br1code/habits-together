@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useFetchHabitLog } from '@/hooks/habitLogs';
-import { deleteHabitlog, invalidateHabitLog, validateHabitLog } from '@/api';
+import { deleteHabitlog, validateHabitLog } from '@/api';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
@@ -48,16 +48,12 @@ const HabitLog: FC<HabitLogProps> = ({ habitLogId }) => {
     try {
       setActionLoading(true);
 
-      if (hasUserValidated) {
-        await invalidateHabitLog(habitLogId);
-      } else {
-        await validateHabitLog(habitLogId);
-      }
+      await validateHabitLog(habitLogId);
 
       refresh();
       setShowActions(false);
     } catch (error) {
-      console.error('Error validating/invalidating habit log:', error);
+      console.error('Error validating habit log:', error);
       alert('Ocurrió un error, intente nuevamente');
     } finally {
       setActionLoading(false);
@@ -66,6 +62,8 @@ const HabitLog: FC<HabitLogProps> = ({ habitLogId }) => {
 
   const handleDeleteHabitLog = async () => {
     if (!userIsOwner) return;
+
+    if (!confirm('Estás seguro de eliminar este Log?')) return;
 
     try {
       await deleteHabitlog(habitLogId);
@@ -119,37 +117,37 @@ const HabitLog: FC<HabitLogProps> = ({ habitLogId }) => {
         </Link>
 
         {/* Actions Button */}
-        <div className="ml-auto relative">
-          <button
-            className="p-2 rounded-full hover:bg-gray-200 focus:outline-none"
-            onClick={toggleActions}
-          >
-            <FiMoreHorizontal size={20} />
-          </button>
-          {showActions && (
-            <div className="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-lg z-50">
-              {!userIsOwner && (
-                <button
-                  className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                  onClick={handleValidateHabitLog}
-                  disabled={actionLoading}
-                >
-                  {/* TODO: use react-icons */}
-                  {hasUserValidated ? 'Invalidar Log ❌' : 'Validar Log ✅'}
-                </button>
-              )}
-
-              {userIsOwner && (
-                <button
-                  className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50"
-                  onClick={handleDeleteHabitLog}
-                >
-                  Eliminar
-                </button>
-              )}
-            </div>
-          )}
-        </div>
+        {(userIsOwner || !hasUserValidated) && (
+          <div className="ml-auto relative">
+            <button
+              className="p-2 rounded-full hover:bg-gray-200 focus:outline-none"
+              onClick={toggleActions}
+            >
+              <FiMoreHorizontal size={20} />
+            </button>
+            {showActions && (
+              <div className="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-lg z-50">
+                {!userIsOwner && !hasUserValidated && (
+                  <button
+                    className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                    onClick={handleValidateHabitLog}
+                    disabled={actionLoading}
+                  >
+                    Validar Log ✅
+                  </button>
+                )}
+                {userIsOwner && (
+                  <button
+                    className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50"
+                    onClick={handleDeleteHabitLog}
+                  >
+                    Eliminar
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </section>
 
       {/* Habit Log Picture */}

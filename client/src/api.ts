@@ -146,10 +146,6 @@ export const validateHabitLog = (habitLogId: string) => {
   return postData(`logs/${habitLogId}/validate`, null, null);
 };
 
-export const invalidateHabitLog = (habitLogId: string) => {
-  return postData(`logs/${habitLogId}/invalidate`, null, null);
-};
-
 export const deleteHabitlog = (habitLogId: string) => {
   return deleteData(`logs/${habitLogId}`);
 };

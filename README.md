@@ -32,7 +32,6 @@ A personal habit-tracking app that fosters community accountability through vali
       - [`POST /api/logs` ✅](#post-apilogs-)
       - [`DELETE /api/logs/{id}` ✅](#delete-apilogsid-)
       - [`POST /api/logs/{id}/validate` ✅](#post-apilogsidvalidate-)
-      - [`POST /api/logs/{id}/invalidate` ✅](#post-apilogsidinvalidate-)
       - [`POST /api/logs/{logId}/comments` ✅](#post-apilogslogidcomments-)
       - [`DELETE /api/logs/{logId}/comments/{commentId}` ✅](#delete-apilogslogidcommentscommentid-)
   - [Frontend Pages/Routes](#frontend-pagesroutes)
@@ -598,14 +597,6 @@ Deletes a habit log.
 #### `POST /api/logs/{id}/validate` ✅
 
 Validates a Habit Log from a friend (can be performed only once by the same user).
-
-- **Response:**
-
-  - **Status:** `204 No Content`
-
-#### `POST /api/logs/{id}/invalidate` ✅
-
-Removes the validation made by the current user to a Habit Log from a friend.
 
 - **Response:**
 

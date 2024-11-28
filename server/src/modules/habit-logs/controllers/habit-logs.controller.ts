@@ -88,15 +88,6 @@ export class HabitLogsController {
     return this.habitLogsService.validateHabitLog(user.userId, habitLogId);
   }
 
-  @Post(':id/invalidate')
-  @HttpCode(204)
-  invalidateHabitLog(
-    @GetUser() user: AuthenticatedUser,
-    @Param('id', new ParseUUIDPipe()) habitLogId: string,
-  ) {
-    return this.habitLogsService.invalidateHabitLog(user.userId, habitLogId);
-  }
-
   // TODO: stop returning plain values like strings, always return a JSON content or no content at all
   @Post(':id/comments')
   @HttpCode(204)

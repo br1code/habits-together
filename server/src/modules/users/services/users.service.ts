@@ -98,8 +98,6 @@ export class UsersService {
     return this.toReadUserDto(friend);
   }
 
-  // TODO: review this logic, currently users can obtain infinite XP by multiple ways:
-  // validating and invalidating a log, creating and deleting habits, etc
   async addExperience(
     userId: string,
     activityType: ActivityType,
