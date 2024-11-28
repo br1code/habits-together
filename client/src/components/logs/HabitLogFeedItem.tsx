@@ -25,7 +25,7 @@ const HabitLogFeedItem: FC<HabitLogFeedItemProps> = ({
   return (
     <>
       <div className="flex items-center px-4 py-2">
-        <Link href={getProfileLink(habitLog.userId, authenticatedUser!.userId)}>
+        <Link href={getProfileLink(habitLog.userId, authenticatedUser!.id)}>
           <div className="w-10 h-10 relative rounded-full overflow-hidden">
             <Image
               src={habitLog.userProfilePictureUrl || DEFAULT_AVATAR_PICTURE_URL}
@@ -39,7 +39,7 @@ const HabitLogFeedItem: FC<HabitLogFeedItemProps> = ({
         </Link>
 
         {/* Username */}
-        <Link href={getProfileLink(habitLog.userId, authenticatedUser!.userId)}>
+        <Link href={getProfileLink(habitLog.userId, authenticatedUser!.id)}>
           <p className="font-semibold text-lg ml-2">{habitLog.username}</p>
         </Link>
       </div>
@@ -62,9 +62,7 @@ const HabitLogFeedItem: FC<HabitLogFeedItemProps> = ({
       <div className="px-4 py-2">
         <p className="text-sm">
           <span className="font-semibold mr-1">
-            <Link
-              href={getProfileLink(habitLog.userId, authenticatedUser!.userId)}
-            >
+            <Link href={getProfileLink(habitLog.userId, authenticatedUser!.id)}>
               {habitLog.username}
             </Link>
           </span>

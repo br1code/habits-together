@@ -1,22 +1,20 @@
 import { updateHabit } from '@/api';
-import { useFetchHabit } from '@/hooks/habits';
+import { HabitDetails } from '@/types';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FC, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 interface EditHabitFormProps {
-  habitId: string;
+  habit: HabitDetails;
 }
 
 interface EditHabitFormValues {
   name: string;
   rules: string;
 }
-const EditHabitForm: FC<EditHabitFormProps> = ({ habitId }) => {
+const EditHabitForm: FC<EditHabitFormProps> = ({ habit }) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-
-  const { habit, loading, error } = useFetchHabit(habitId);
 
   const {
     register,
@@ -37,9 +35,9 @@ const EditHabitForm: FC<EditHabitFormProps> = ({ habitId }) => {
   const onSubmit: SubmitHandler<EditHabitFormValues> = async (data) => {
     try {
       setIsSubmitting(true);
-      await updateHabit(habitId, data);
+      await updateHabit(habit.id, data);
       alert('El Hábito ha sido actualizado correctamente');
-      router.push(`/habits/${habitId}`);
+      router.push(`/habits/${habit.id}`);
     } catch (error) {
       console.log('An error occurred during Habit update:', error);
       alert(
@@ -50,19 +48,8 @@ const EditHabitForm: FC<EditHabitFormProps> = ({ habitId }) => {
     }
   };
 
-  // TODO: use loading spinner
-  if (loading) {
-    return <div className="text-center">Cargando...</div>;
-  }
-
-  if (error) {
-    return (
-      <div className="text-center text-red-500">Error cargando el Hábito</div>
-    );
-  }
-
   return (
-    <section className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4">
+    <section className="flex items-center justify-center p-4">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md"
@@ -118,7 +105,7 @@ const EditHabitForm: FC<EditHabitFormProps> = ({ habitId }) => {
 
         <p className="mt-6 text-center text-sm">
           <Link
-            href={`/habits/${habitId}`}
+            href={`/habits/${habit.id}`}
             className="text-indigo-700 underline hover:text-indigo-800"
           >
             Volver

@@ -39,6 +39,7 @@ export const habitsSchema = z.array(habitSchema);
 
 export const habitDetailsSchema = z.object({
   id: z.string().uuid(),
+  userId: z.string().uuid(),
   name: z.string(),
   rules: z.string(),
   wasLoggedToday: z.boolean(),

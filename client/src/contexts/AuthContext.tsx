@@ -18,7 +18,7 @@ interface DecodedToken {
 
 interface User {
   username: string;
-  userId: string;
+  id: string;
 }
 
 interface AuthContextProps {
@@ -46,7 +46,7 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
     setIsAuthenticated(true);
     setUser({
       username: decoded.username,
-      userId: decoded.sub,
+      id: decoded.sub,
     }); // Store user details
   };
 
@@ -69,7 +69,7 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
       setIsAuthenticated(true);
       setUser({
         username: decoded.username,
-        userId: decoded.sub,
+        id: decoded.sub,
       }); // Set user details on page load
     } else {
       localStorage.removeItem('accessToken');

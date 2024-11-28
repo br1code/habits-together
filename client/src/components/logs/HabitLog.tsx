@@ -37,9 +37,9 @@ const HabitLog: FC<HabitLogProps> = ({ habitLogId }) => {
     window.scrollTo(0, 0);
   }, []);
 
-  const userIsOwner = habitLog?.userId === authenticatedUser?.userId;
+  const userIsOwner = habitLog?.userId === authenticatedUser?.id;
   const hasUserValidated = habitLog?.validatedBy.some(
-    (validator) => validator.userId === authenticatedUser!.userId
+    (validator) => validator.userId === authenticatedUser!.id
   );
 
   const toggleActions = () => setShowActions((prev) => !prev);
@@ -100,7 +100,7 @@ const HabitLog: FC<HabitLogProps> = ({ habitLogId }) => {
     <>
       {/* Habit Log Header */}
       <section className="flex items-center px-4 py-2">
-        <Link href={getProfileLink(habitLog.userId, authenticatedUser!.userId)}>
+        <Link href={getProfileLink(habitLog.userId, authenticatedUser!.id)}>
           <div className="w-10 h-10 relative rounded-full overflow-hidden">
             <Image
               src={habitLog.userProfilePictureUrl || DEFAULT_AVATAR_PICTURE_URL}
@@ -114,7 +114,7 @@ const HabitLog: FC<HabitLogProps> = ({ habitLogId }) => {
         </Link>
 
         {/* Username */}
-        <Link href={getProfileLink(habitLog.userId, authenticatedUser!.userId)}>
+        <Link href={getProfileLink(habitLog.userId, authenticatedUser!.id)}>
           <p className="font-semibold text-lg ml-2">{habitLog.username}</p>
         </Link>
 

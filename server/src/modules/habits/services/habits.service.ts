@@ -62,6 +62,7 @@ export class HabitsService {
         '"habitLogValidation"."validated_at"::date = :today',
         { today },
       )
+      .leftJoinAndSelect('habit.user', 'user')
       .where('habit.id = :habitId', { habitId })
       .andWhere('habit.userId = :userId', { userId })
       .andWhere('habit.isDeleted = false')
@@ -80,6 +81,7 @@ export class HabitsService {
 
     return {
       id: habit.id,
+      userId: habit.user.id,
       name: habit.name,
       rules: habit.rules,
       wasLoggedToday: logDates.includes(today),
