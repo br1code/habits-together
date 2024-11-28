@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useFetchHabit } from '@/hooks/habits';
 import { deleteHabit } from '@/api';
 import HabitLogsTable from '../logs/HabitLogsTable';
+import { useAuthContext } from '@/contexts/AuthContext';
 
 interface HabitProps {
   habitId: string;
@@ -11,6 +12,7 @@ interface HabitProps {
 
 const Habit: FC<HabitProps> = ({ habitId }) => {
   const router = useRouter();
+  const { user } = useAuthContext();
   const { habit, loading, error } = useFetchHabit(habitId);
 
   const handleDelete = async () => {
@@ -25,9 +27,15 @@ const Habit: FC<HabitProps> = ({ habitId }) => {
     }
   };
 
-  if (loading) return <p className="mt-4 text-gray-500">Loading...</p>;
-  if (error || !habit)
+  // TODO: show loading spinner
+  if (loading) {
+    return <p className="mt-4 text-gray-500">Loading...</p>;
+  }
+  if (error || !habit) {
     return <p className="mt-4 text-red-500">Failed to load habit details.</p>;
+  }
+
+  const userIsOwner = user?.id === habit.userId;
 
   return (
     <>
@@ -52,20 +60,22 @@ const Habit: FC<HabitProps> = ({ habitId }) => {
           </div>
         )}
 
-        <div className="mt-6 flex space-x-2">
-          <button
-            onClick={() => router.push(`/habits/${habitId}/edit`)}
-            className="flex-1 px-4 py-2 bg-indigo-700 text-white font-medium rounded hover:bg-indigo-800"
-          >
-            Editar Hábito
-          </button>
-          <button
-            onClick={handleDelete}
-            className="flex-1 px-4 py-2 bg-red-600 text-white font-medium rounded hover:bg-red-700"
-          >
-            Eliminar Hábito
-          </button>
-        </div>
+        {userIsOwner && (
+          <div className="mt-6 flex space-x-2">
+            <button
+              onClick={() => router.push(`/habits/${habitId}/edit`)}
+              className="flex-1 px-4 py-2 bg-indigo-700 text-white font-medium rounded hover:bg-indigo-800"
+            >
+              Editar Hábito
+            </button>
+            <button
+              onClick={handleDelete}
+              className="flex-1 px-4 py-2 bg-red-600 text-white font-medium rounded hover:bg-red-700"
+            >
+              Eliminar Hábito
+            </button>
+          </div>
+        )}
 
         <p className="mt-6 text-gray-600 text-center">
           Racha actual:{' '}
