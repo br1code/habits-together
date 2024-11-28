@@ -21,6 +21,7 @@ const SignupPage: FC = () => {
     formState: { errors: formErrors },
   } = useForm<SignupFormValues>();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const router = useRouter();
 
   const onSubmit: SubmitHandler<SignupFormValues> = async (data) => {
@@ -38,10 +39,10 @@ const SignupPage: FC = () => {
   };
 
   return (
-    <main className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4">
+    <main className="min-h-[calc(100vh-4rem)] max-w-screen-sm mx-auto flex items-center justify-center p-4">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md"
+        className="bg-white p-8 rounded-lg shadow-lg w-full"
       >
         <h1 className="text-4xl font-bold mb-6 text-center">Nuevo Usuario</h1>
 
@@ -66,7 +67,7 @@ const SignupPage: FC = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="username" className="block mb-2 text-sm font-medium">
+          <label htmlFor="email" className="block mb-2 text-sm font-medium">
             Email
           </label>
           <input
@@ -89,15 +90,25 @@ const SignupPage: FC = () => {
           <label htmlFor="password" className="block mb-2 text-sm font-medium">
             Contraseña
           </label>
-          <input
-            id="password"
-            type="password"
-            autoComplete="new-password"
-            className="w-full p-2 bg-gray-50 border border-gray-500 rounded focus:outline-none focus:ring focus:ring-indigo-700"
-            {...register('password', {
-              required: 'La contraseña es requerida',
-            })}
-          />
+          <div className="relative">
+            <input
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              autoComplete="new-password"
+              className="w-full p-2 bg-gray-50 border border-gray-500 rounded focus:outline-none focus:ring focus:ring-indigo-700"
+              {...register('password', {
+                required: 'La contraseña es requerida',
+              })}
+            />
+            <button
+              type="button"
+              className="absolute right-2 top-2 text-gray-500"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label="Toggle password visibility"
+            >
+              {showPassword ? '🙈' : '👁️'}
+            </button>
+          </div>
           {formErrors.password && (
             <p className="text-red-600 text-sm mt-1">
               {formErrors.password.message}

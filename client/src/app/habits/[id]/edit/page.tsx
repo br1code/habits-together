@@ -6,6 +6,7 @@ import withAuth from '@/components/withAuth';
 import EditHabitForm from '@/components/habits/EditHabitForm';
 import { useFetchHabit } from '@/hooks/habits';
 import { useAuthContext } from '@/contexts/AuthContext';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 const EditHabitPage: FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,20 +21,21 @@ const EditHabitPage: FC = () => {
     }
   }, [loading, habit, user, router]);
 
-  // TODO: use loading spinner
-  if (loading) {
-    return <div className="text-center">Cargando...</div>;
-  }
-
-  if (error || !habit) {
-    return (
-      <div className="text-center text-red-500">Error cargando el Hábito</div>
-    );
-  }
-
   return (
-    <main>
-      <EditHabitForm habit={habit} />
+    <main className="min-h-[calc(100vh-4rem)] max-w-screen-sm mx-auto flex items-center justify-center p-4">
+      {loading ? (
+        <div>
+          <LoadingSpinner size={40} />
+        </div>
+      ) : error || !habit ? (
+        <p className="text-red-500 text-center">
+          Ocurrió un error al cargar los datos del perfil.
+        </p>
+      ) : (
+        <>
+          <EditHabitForm habit={habit} />
+        </>
+      )}
     </main>
   );
 };

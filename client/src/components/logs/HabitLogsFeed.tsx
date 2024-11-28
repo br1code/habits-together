@@ -1,6 +1,7 @@
 import { FC, useRef, useCallback } from 'react';
 import { useFetchHabitLogs } from '@/hooks/habitLogs';
 import HabitLogFeedItem from './HabitLogFeedItem';
+import LoadingSpinner from '../LoadingSpinner';
 
 const HabitLogsFeed: FC = () => {
   const { habitLogs, loading, error, hasMore, loadMore } = useFetchHabitLogs();
@@ -22,32 +23,40 @@ const HabitLogsFeed: FC = () => {
     [loading, hasMore, loadMore]
   );
 
-  if (error) {
-    return (
-      <section className="bg-black text-white">
-        <h1 className="text-xl font-bold mb-4">Error: {error}</h1>
-      </section>
-    );
-  }
-
   return (
     <section className="bg-black text-white">
-      {habitLogs.map((habitLog, index) => {
-        const isLastItem = habitLogs.length === index + 1;
-        const isFirstItem = index === 0;
+      {loading ? (
+        <div className="flex justify-center items-center min-h-[calc(100vh-4rem)]">
+          <LoadingSpinner size={30} color="white" />
+        </div>
+      ) : error ? (
+        <div className="flex justify-center items-center min-h-[calc(100vh-4rem)]">
+          <p className="text-red-500 text-center">
+            Ocurrió un error al cargar el feed.
+          </p>
+        </div>
+      ) : habitLogs.length > 0 ? (
+        habitLogs.map((habitLog, index) => {
+          const isLastItem = habitLogs.length === index + 1;
+          const isFirstItem = index === 0;
 
-        return (
-          <div
-            key={habitLog.id}
-            ref={isLastItem ? lastHabitLogRef : undefined}
-            className="overflow-hidden border-b border-gray-800"
-          >
-            {/* Habit Log Content */}
-            <HabitLogFeedItem habitLog={habitLog} isFirstItem={isFirstItem} />
-          </div>
-        );
-      })}
-      {loading && <p className="text-center py-4">Loading...</p>}
+          return (
+            <div
+              key={habitLog.id}
+              ref={isLastItem ? lastHabitLogRef : undefined}
+              className="overflow-hidden border-b border-gray-800"
+            >
+              <HabitLogFeedItem habitLog={habitLog} isFirstItem={isFirstItem} />
+            </div>
+          );
+        })
+      ) : (
+        <div className="flex justify-center items-center min-h-[calc(100vh-4rem)]">
+          <p className="text-center">
+            Parece que nadie ha logueado sus hábitos recientemente...
+          </p>
+        </div>
+      )}
     </section>
   );
 };

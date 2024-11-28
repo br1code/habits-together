@@ -7,7 +7,7 @@ interface LoadingSpinnerProps {
 
 const LoadingSpinner: FC<LoadingSpinnerProps> = ({
   size = 24,
-  color = 'currentColor',
+  color = 'gray',
 }) => {
   return (
     <svg

@@ -7,9 +7,11 @@ import HabitLogsFeed from '@/components/logs/HabitLogsFeed';
 
 const HomePage: FC = () => {
   return (
-    <main className="max-w-screen-sm mx-auto">
-      <HabitStats />
-      <HabitLogsFeed />
+    <main className="bg-black">
+      <section className="max-w-screen-sm mx-auto">
+        <HabitStats />
+        <HabitLogsFeed />
+      </section>
     </main>
   );
 };

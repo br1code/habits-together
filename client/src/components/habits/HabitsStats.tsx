@@ -5,20 +5,8 @@ import Link from 'next/link';
 const HabitStats: FC = () => {
   const { habits, loading, error } = useFetchHabits();
 
-  if (loading) {
-    return (
-      <section className="flex justify-center items-center bg-indigo-700 text-white p-4 border border-gray-500 min-h-[75px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-white"></div>
-      </section>
-    );
-  }
-
-  if (error) {
-    return (
-      <section className="flex justify-center items-center bg-red-700 text-white p-4 border border-gray-500 min-h-[75px]">
-        <h1>Error: {error}</h1>
-      </section>
-    );
+  if (loading || error) {
+    return;
   }
 
   const totalHabitsCount = habits?.length || 0;

@@ -2,6 +2,7 @@ import { useFetchHabits } from '@/hooks/habits';
 import Link from 'next/link';
 import { FC } from 'react';
 import { HiArrowRight } from 'react-icons/hi';
+import LoadingSpinner from '../LoadingSpinner';
 
 interface HabitsListProps {
   userId?: string;
@@ -10,31 +11,31 @@ interface HabitsListProps {
 const HabitsList: FC<HabitsListProps> = ({ userId }) => {
   const { habits, loading, error } = useFetchHabits(userId);
 
-  // TODO: use loading spinner
-  if (loading) {
-    return <div className="text-center">Cargando...</div>;
-  }
-
-  if (error) {
-    return (
-      <div className="text-center text-red-500">Error cargando los Hábitos</div>
-    );
-  }
-
   const loggedHabits =
     habits?.filter((habit) => habit.wasLoggedToday).length || 0;
   const totalHabitsCount = habits?.length || 0;
 
   return (
-    <div className="w-full max-w-md bg-white rounded-lg shadow-lg mt-4 p-4">
-      {!habits || habits.length === 0 ? (
-        <p className="text-center text-gray-500 mt-4">
-          Comienza creando tu primer hábito!
-        </p>
+    <div className="bg-white rounded-lg shadow-lg mt-4 p-4">
+      {loading ? (
+        <div className="flex justify-center items-center">
+          <LoadingSpinner size={40} />
+        </div>
+      ) : error ? (
+        <div className="text-center text-red-500">
+          Error cargando los Hábitos
+        </div>
+      ) : !habits || habits.length === 0 ? (
+        <>
+          <h2 className="text-lg font-bold text-center mb-4">Hábitos</h2>
+          <p className="text-center text-gray-500">
+            Todavía no hay hábitos para mostrar
+          </p>
+        </>
       ) : (
         <>
           <h2 className="text-lg font-bold text-center mb-4">
-            Habitos Logueados: {loggedHabits}/{totalHabitsCount}
+            Hábitos Logueados: {loggedHabits}/{totalHabitsCount}
           </h2>
           <table className="w-full text-left border-collapse">
             <tbody>
@@ -69,7 +70,6 @@ const HabitsList: FC<HabitsListProps> = ({ userId }) => {
   );
 };
 
-// TODO: use react-icons
 function getLoggedAndValidationChecks(
   wasLogged: boolean,
   wasValidated: boolean
