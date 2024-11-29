@@ -18,9 +18,5 @@ export function parseDate(date: Date): DateTime {
 }
 
 export function formatDateForDisplay(date: Date): string {
-  const formattedDate = DateTime.fromJSDate(date)
-    .setZone(ARGENTINA_TIMEZONE)
-    .toFormat('dd/MM/yyyy HH:mm');
-  console.log(`Date: ${date}, Formatted: ${formattedDate}`);
-  return formattedDate;
+  return DateTime.fromJSDate(date).toFormat('dd/MM/yyyy HH:mm');
 }
