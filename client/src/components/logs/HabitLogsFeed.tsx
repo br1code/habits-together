@@ -7,6 +7,8 @@ const HabitLogsFeed: FC = () => {
   const { habitLogs, loading, error, hasMore, loadMore } = useFetchHabitLogs();
   const observer = useRef<IntersectionObserver | null>(null);
 
+  const isInitialLoading = loading && habitLogs.length === 0;
+
   const lastHabitLogRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (loading) return;
@@ -24,8 +26,8 @@ const HabitLogsFeed: FC = () => {
   );
 
   return (
-    <section className="bg-black text-white">
-      {loading ? (
+    <section className="text-white">
+      {isInitialLoading ? (
         <div className="flex justify-center items-center min-h-[calc(100vh-4rem)]">
           <LoadingSpinner size={30} color="white" />
         </div>
@@ -36,20 +38,30 @@ const HabitLogsFeed: FC = () => {
           </p>
         </div>
       ) : habitLogs.length > 0 ? (
-        habitLogs.map((habitLog, index) => {
-          const isLastItem = habitLogs.length === index + 1;
-          const isFirstItem = index === 0;
+        <>
+          {habitLogs.map((habitLog, index) => {
+            const isLastItem = habitLogs.length === index + 1;
+            const isFirstItem = index === 0;
 
-          return (
-            <div
-              key={habitLog.id}
-              ref={isLastItem ? lastHabitLogRef : undefined}
-              className="overflow-hidden border-b border-gray-800"
-            >
-              <HabitLogFeedItem habitLog={habitLog} isFirstItem={isFirstItem} />
+            return (
+              <div
+                key={habitLog.id}
+                ref={isLastItem ? lastHabitLogRef : undefined}
+                className="overflow-hidden border-b border-gray-800"
+              >
+                <HabitLogFeedItem
+                  habitLog={habitLog}
+                  isFirstItem={isFirstItem}
+                />
+              </div>
+            );
+          })}
+          {loading && (
+            <div className="flex justify-center items-center py-4">
+              <LoadingSpinner size={20} color="white" />
             </div>
-          );
-        })
+          )}
+        </>
       ) : (
         <div className="flex justify-center items-center min-h-[calc(100vh-4rem)]">
           <p className="text-center">
