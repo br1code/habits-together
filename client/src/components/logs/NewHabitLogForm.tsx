@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { createHabitLog } from '@/api';
@@ -8,7 +8,7 @@ import LoadingSpinner from '../LoadingSpinner';
 interface NewHabitLogFormValues {
   habitId: string;
   text?: string;
-  photo: FileList;
+  photo: File;
 }
 
 const NewHabitLogForm: FC = () => {
@@ -17,6 +17,7 @@ const NewHabitLogForm: FC = () => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors: formErrors },
   } = useForm<NewHabitLogFormValues>({
     defaultValues: {
@@ -32,18 +33,17 @@ const NewHabitLogForm: FC = () => {
     error: habitsError,
   } = useFetchHabits();
 
+  useEffect(() => {
+    register('photo', { required: 'La foto es requerida' });
+  }, [register]);
+
   const onSubmit: SubmitHandler<NewHabitLogFormValues> = async (data) => {
     try {
       const formData = new FormData();
 
-      const photoFile = data.photo[0];
-
-      if (photoFile) {
-        formData.append('photo', photoFile);
-      }
-
       formData.append('habitId', data.habitId);
       formData.append('text', data.text || '');
+      formData.append('photo', data.photo);
 
       setIsSubmitting(true);
       const result = await createHabitLog(formData);
@@ -62,7 +62,7 @@ const NewHabitLogForm: FC = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md"
+      className="bg-white p-8 rounded-lg shadow-lg w-full"
     >
       <h1 className="text-4xl font-bold mb-6 text-center">Loguear Hábito</h1>
 
@@ -110,17 +110,50 @@ const NewHabitLogForm: FC = () => {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="photo" className="block mb-2 text-sm font-medium">
-          Foto
-        </label>
-        <input
-          id="photo"
-          type="file"
-          accept="image/*"
-          capture="environment"
-          {...register('photo', { required: 'La foto es requerida' })}
-          className="w-full p-2 bg-gray-50 border border-gray-500 rounded focus:outline-none focus:ring focus:ring-indigo-700"
-        />
+        <label className="block mb-2 text-sm font-medium">Foto</label>
+        <div className="flex gap-2">
+          {/* Camera Button */}
+          <input
+            id="camera"
+            type="file"
+            accept="image/*"
+            capture="environment"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0] || null;
+              if (file) {
+                setValue('photo', file, { shouldValidate: true });
+              }
+            }}
+          />
+          <label
+            htmlFor="camera"
+            className="py-2 px-4 bg-stone-700 hover:bg-stone-800 text-white rounded-lg cursor-pointer text-center font-semibold flex-1"
+          >
+            Tomar Foto
+          </label>
+
+          {/* Gallery Button */}
+          <input
+            id="gallery"
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0] || null;
+              if (file) {
+                setValue('photo', file, { shouldValidate: true });
+              }
+            }}
+          />
+          <label
+            htmlFor="gallery"
+            className="py-2 px-4 bg-stone-700 hover:bg-stone-800 text-white rounded-lg cursor-pointer text-center font-semibold flex-1"
+          >
+            Seleccionar Foto
+          </label>
+        </div>
+
         {formErrors.photo && (
           <p className="text-red-600 text-sm mt-1">
             {formErrors.photo.message}
