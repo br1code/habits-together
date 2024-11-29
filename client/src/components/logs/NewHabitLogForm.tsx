@@ -117,6 +117,7 @@ const NewHabitLogForm: FC = () => {
           id="photo"
           type="file"
           accept="image/*"
+          capture="environment"
           {...register('photo', { required: 'La foto es requerida' })}
           className="w-full p-2 bg-gray-50 border border-gray-500 rounded focus:outline-none focus:ring focus:ring-indigo-700"
         />
