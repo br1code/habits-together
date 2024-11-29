@@ -36,7 +36,7 @@ const HabitLogComments: FC<HabitLogCommentsProps> = ({
   };
 
   return (
-    <section>
+    <section className="mb-4">
       <div className="px-4 py-2">
         <p className="text-base font-semibold mb-2">Comentarios</p>
         <div className="space-y-4">
