@@ -1,12 +1,11 @@
 import { FC } from 'react';
-import { parse, formatDistanceToNow } from 'date-fns';
-import { es } from 'date-fns/locale';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { getProfileLink } from '@/utils/utils';
 import { HabitLog } from '@/types';
 import { DEFAULT_AVATAR_PICTURE_URL } from '@/constants';
+import { formatTimeAgo } from '@/utils/dateUtils';
 
 interface HabitLogFeedItemProps {
   habitLog: HabitLog;
@@ -77,10 +76,5 @@ const HabitLogFeedItem: FC<HabitLogFeedItemProps> = ({
     </>
   );
 };
-
-function formatTimeAgo(dateString: string) {
-  const date = parse(dateString, 'dd/MM/yyyy HH:mm', new Date());
-  return formatDistanceToNow(date, { addSuffix: true, locale: es });
-}
 
 export default HabitLogFeedItem;
