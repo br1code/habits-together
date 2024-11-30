@@ -43,7 +43,7 @@ const LoginPage: FC = () => {
     <main className="min-h-[calc(100vh-4rem)] max-w-screen-sm mx-auto flex items-center justify-center p-4">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white p-8 rounded-lg shadow-lg w-full"
+        className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm"
       >
         <h1 className="text-4xl font-bold mb-6 text-center">Bienvenido</h1>
 

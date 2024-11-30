@@ -42,7 +42,7 @@ const SignupPage: FC = () => {
     <main className="min-h-[calc(100vh-4rem)] max-w-screen-sm mx-auto flex items-center justify-center p-4">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white p-8 rounded-lg shadow-lg w-full"
+        className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm"
       >
         <h1 className="text-4xl font-bold mb-6 text-center">Nuevo Usuario</h1>
 
@@ -57,6 +57,12 @@ const SignupPage: FC = () => {
             className="w-full p-2 bg-gray-50 border border-gray-500 rounded focus:outline-none focus:ring focus:ring-indigo-700"
             {...register('username', {
               required: 'El nombre de usuario es requerido',
+              validate: (value) => {
+                return (
+                  !/\s/.test(value) ||
+                  'El nombre de usuario no debe contener espacios'
+                );
+              },
             })}
           />
           {formErrors.username && (
@@ -97,7 +103,8 @@ const SignupPage: FC = () => {
               autoComplete="new-password"
               className="w-full p-2 bg-gray-50 border border-gray-500 rounded focus:outline-none focus:ring focus:ring-indigo-700"
               {...register('password', {
-                required: 'La contraseña es requerida',
+                required: 'La contraseña es requerida.',
+                minLength: 6,
               })}
             />
             <button

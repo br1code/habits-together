@@ -3,12 +3,16 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  Matches,
   MinLength,
 } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
+  @Matches(/^\S+$/, {
+    message: 'El nombre de usuario no debe contener espacios',
+  })
   username: string;
 
   @IsEmail()
