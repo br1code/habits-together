@@ -12,31 +12,39 @@ interface SignupFormValues {
   username: string;
   email: string;
   password: string;
+  confirmPassword: string;
 }
 
 const SignupPage: FC = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors: formErrors },
   } = useForm<SignupFormValues>();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState<boolean>(false);
   const router = useRouter();
 
   const onSubmit: SubmitHandler<SignupFormValues> = async (data) => {
     try {
       setIsSubmitting(true);
-      await signup(data);
+      const { password, email, username } = data; // Excluding confirmPassword
+      const signupData = { password, email, username };
+      await signup(signupData);
       alert('Tu cuenta ha sido creada. Ya puedes iniciar sesión');
       router.push('/login');
     } catch (error) {
-      console.log('An error occured during signup', error);
+      console.log('An error occurred during signup', error);
       alert('Error al registrarse. Por favor intente de nuevo.');
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const currentPasswordValue = watch('password');
 
   return (
     <main className="min-h-[calc(100vh-4rem)] max-w-screen-sm mx-auto flex items-center justify-center p-4">
@@ -104,7 +112,10 @@ const SignupPage: FC = () => {
               className="w-full p-2 bg-gray-50 border border-gray-500 rounded focus:outline-none focus:ring focus:ring-indigo-700"
               {...register('password', {
                 required: 'La contraseña es requerida.',
-                minLength: 6,
+                minLength: {
+                  value: 6,
+                  message: 'La contraseña debe tener al menos 6 caracteres.',
+                },
               })}
             />
             <button
@@ -119,6 +130,42 @@ const SignupPage: FC = () => {
           {formErrors.password && (
             <p className="text-red-600 text-sm mt-1">
               {formErrors.password.message}
+            </p>
+          )}
+        </div>
+
+        <div className="mb-4">
+          <label
+            htmlFor="confirmPassword"
+            className="block mb-2 text-sm font-medium"
+          >
+            Confirmar Contraseña
+          </label>
+          <div className="relative">
+            <input
+              id="confirmPassword"
+              type={showConfirmPassword ? 'text' : 'password'}
+              autoComplete="new-password"
+              className="w-full p-2 bg-gray-50 border border-gray-500 rounded focus:outline-none focus:ring focus:ring-indigo-700"
+              {...register('confirmPassword', {
+                required: 'Por favor confirma tu contraseña.',
+                validate: (value) =>
+                  value === currentPasswordValue ||
+                  'Las contraseñas no coinciden.',
+              })}
+            />
+            <button
+              type="button"
+              className="absolute right-2 top-2 text-gray-500"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              aria-label="Toggle confirm password visibility"
+            >
+              {showConfirmPassword ? '🙈' : '👁️'}
+            </button>
+          </div>
+          {formErrors.confirmPassword && (
+            <p className="text-red-600 text-sm mt-1">
+              {formErrors.confirmPassword.message}
             </p>
           )}
         </div>
