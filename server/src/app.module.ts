@@ -10,6 +10,7 @@ import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { HabitLogsModule } from './modules/habit-logs/habit-logs.module';
 import { FileStorageModule } from './modules/file-storage/file-storage.module';
 import { ARGENTINA_TIMEZONE } from './constants';
+import * as fs from 'fs';
 
 @Module({
   imports: [
@@ -27,6 +28,12 @@ import { ARGENTINA_TIMEZONE } from './constants';
         database: configService.get('DATABASE_NAME'),
         synchronize: configService.get('DATABASE_SYNCHRONIZE') === 'true',
         autoLoadEntities: true,
+        ssl: {
+          ca: fs
+            .readFileSync(configService.get('DATABASE_CERT_PATH'))
+            .toString(),
+        },
+
         extra: {
           options: `-c timezone=${ARGENTINA_TIMEZONE}`,
         },
