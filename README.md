@@ -2,9 +2,14 @@
 
 A personal habit-tracking app that fosters community accountability through validations, comments, and gamification elements to make habit-building engaging and fun.
 
+## Disclaimer
+
+This was created as a personal project for learning and experimentation, with the primary goal of finishing a first version as quickly as possible (so I can start using it with my friends). **The initial version was completed in just three weeks**. As such, the code quality and structure may not reflect best practices or production-ready standards. Feedback and suggestions for improvement are welcome!
+
 ## Table of Contents
 
 - [Habits Together](#habits-together)
+  - [Disclaimer](#disclaimer)  
   - [Table of Contents](#table-of-contents)
   - [Description](#description)
   - [Features](#features)
